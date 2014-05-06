@@ -1,8 +1,11 @@
 package com.example.try_masterdetailflow;
 
+import java.util.ArrayList;
+
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +18,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.try_masterdetailflow.adapter.NavDrawerListAdapter;
+import com.example.try_masterdetailflow.model.NavDrawerItem;
 
 /**
  * An activity representing a list of Websites. This activity has different
@@ -47,7 +53,14 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	private String[] mPlanetTitles;
+	// private String[] mPlanetTitles; //not used anymore!
+
+	// new slide menu items
+	private String[] navMenuTitles;
+	private TypedArray navMenuIcons;
+
+	private ArrayList<NavDrawerItem> navDrawerItems;
+	private NavDrawerListAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +80,51 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 					.setActivateOnItemClick(true);
 		}
 
+		/*
+		 * Making NavBar - START
+		 */
+
 		mTitle = mDrawerTitle = getTitle();
-		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+		// mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+
+		// New NavBar _ START
+		// http://www.androidhive.info/2013/11/android-sliding-menu-using-navigation-drawer/
+
+		// load slide menu items
+		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+		// nav drawer icons from resources
+		navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+		navDrawerItems = new ArrayList<NavDrawerItem>();
+
+		// adding nav drawer items to array
+		// Home
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+		// Find People
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+		// Photos
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+		// Communities, Will add a counter here
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
+		// Pages
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+		// What's hot, We will add a counter here
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1), true, "50+"));
+
+		// Recycle the typed array
+		navMenuIcons.recycle();
 
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		// set up the drawer's list view with items and click listener
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
+		// mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+		// R.layout.drawer_list_item, mPlanetTitles));
+		adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
+		mDrawerList.setAdapter(adapter);
+
+		// New NavBar _ OVER
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -102,6 +150,10 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 											// onPrepareOptionsMenu()
 			}
 		};
+
+		/*
+		 * Making NavBar - END
+		 */
 	}
 
 	/**
