@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.util.Log;
+
 /**
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
@@ -39,11 +41,13 @@ public class DummyContent {
 	 * A dummy item representing a piece of content.
 	 */
 	public static class DummyItem {
+		
 		public String id;
 		public String website_name;
 		public String website_url;
 
 		public DummyItem(String id, String website_name, String website_url) {
+			Log.d("Top5", "in "+getClass().getSimpleName());
 			this.id = id;
 			this.website_name = website_name;
 			this.website_url = website_url;

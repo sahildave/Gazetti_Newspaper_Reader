@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
 /**
@@ -18,6 +19,7 @@ public class WebsiteDetailActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d("Top5", "in "+getClass().getSimpleName());
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_website_detail);
 

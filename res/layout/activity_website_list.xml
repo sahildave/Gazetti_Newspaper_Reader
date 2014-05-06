@@ -1,4 +1,11 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- Framelayout to display Fragments -->
+    
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/website_list"
     android:name="com.example.try_masterdetailflow.WebsiteListFragment"
@@ -9,3 +16,17 @@
     tools:context="com.example.try_masterdetailflow.WebsiteListActivity"
     tools:layout="@android:layout/list_content" />
 
+<!-- Listview to display slider menu -->
+
+    <ListView
+        android:id="@+id/list_slidermenu"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/list_background"
+        android:choiceMode="singleChoice"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_selector" />
+
+</android.support.v4.widget.DrawerLayout>
