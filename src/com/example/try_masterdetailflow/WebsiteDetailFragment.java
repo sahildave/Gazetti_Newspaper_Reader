@@ -6,44 +6,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.widget.TextView;
 
-import com.example.try_masterdetailflow.dummy.DummyContent;
+import com.example.try_masterdetailflow.adapter.CustomAdapter;
 
-/**
- * A fragment representing a single Website detail screen. This fragment is
- * either contained in a {@link WebsiteListActivity} in two-pane mode (on
- * tablets) or a {@link WebsiteDetailActivity} on handsets.
- */
 public class WebsiteDetailFragment extends Fragment {
-	/**
-	 * The fragment argument representing the item ID that this fragment
-	 * represents.
-	 */
+	private static final String TAG = "MasterDetail";
 	public static final String ARG_ITEM_ID = "item_id";
 
-	/**
-	 * The dummy content this fragment is presenting.
-	 */
-	private DummyContent.DummyItem mItem;
+	private String mItem;
 
-	/**
-	 * Mandatory empty constructor for the fragment manager to instantiate the
-	 * fragment (e.g. upon screen orientation changes).
-	 */
 	public WebsiteDetailFragment() {
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d("Top5", "in "+getClass().getSimpleName());
+		Log.d(TAG, "in " + getClass().getSimpleName());
 		super.onCreate(savedInstanceState);
 
 		if (getArguments().containsKey(ARG_ITEM_ID)) {
-			// Load the dummy content specified by the fragment
-			// arguments. In a real-world scenario, use a Loader
-			// to load content from a content provider.
-			mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+			mItem = CustomAdapter.mMap.get(getArguments().getString(ARG_ITEM_ID));
 		}
 	}
 
@@ -51,9 +33,8 @@ public class WebsiteDetailFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
 
-		// Show the dummy content as text in a TextView.
 		if (mItem != null) {
-			((WebView) rootView.findViewById(R.id.website_detail)).loadUrl(mItem.website_url);
+			((TextView) rootView.findViewById(R.id.detail)).setText(mItem);
 		}
 
 		return rootView;

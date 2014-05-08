@@ -36,9 +36,9 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/list_background"
+        android:background="@color/nav_list_background"
         android:choiceMode="singleChoice"
-        android:divider="@color/list_divider"
+        android:divider="@color/nav_list_divider"
         android:dividerHeight="1dp"
         android:listSelector="@drawable/list_selector" />
 

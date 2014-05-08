@@ -23,10 +23,11 @@ public final class R {
     public static final class color {
         public static final int counter_text_bg=0x7f040004;
         public static final int counter_text_color=0x7f040005;
-        public static final int list_background=0x7f040001;
-        public static final int list_background_pressed=0x7f040002;
-        public static final int list_divider=0x7f040003;
-        public static final int list_item_title=0x7f040000;
+        public static final int headlines_list_item_title=0x7f040006;
+        public static final int nav_list_background=0x7f040001;
+        public static final int nav_list_background_pressed=0x7f040002;
+        public static final int nav_list_divider=0x7f040003;
+        public static final int nav_list_item_title=0x7f040000;
     }
     public static final class drawable {
         public static final int action_search=0x7f020000;
@@ -45,14 +46,16 @@ public final class R {
         public static final int list_selector=0x7f02000d;
     }
     public static final class id {
-        public static final int action_settings=0x7f090008;
-        public static final int action_websearch=0x7f090009;
+        public static final int action_settings=0x7f09000a;
+        public static final int action_websearch=0x7f09000b;
         public static final int counter=0x7f090006;
+        public static final int detail=0x7f090007;
         public static final int drawer_layout=0x7f090001;
+        public static final int headline=0x7f090008;
         public static final int icon=0x7f090004;
         public static final int list_slidermenu=0x7f090003;
+        public static final int pubdate=0x7f090009;
         public static final int title=0x7f090005;
-        public static final int website_detail=0x7f090007;
         public static final int website_detail_container=0x7f090000;
         public static final int website_list=0x7f090002;
     }
@@ -77,6 +80,8 @@ public final class R {
         public static final int activity_website_twopane=0x7f030002;
         public static final int drawer_list_item=0x7f030003;
         public static final int fragment_website_detail=0x7f030004;
+        public static final int fragment_website_list=0x7f030005;
+        public static final int headline_list_row=0x7f030006;
     }
     public static final class menu {
         public static final int main=0x7f080000;
