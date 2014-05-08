@@ -1,4 +1,6 @@
-package com.example.try_masterdetailflow;
+package com.example.try_masterdetail;
+
+import com.example.try_masterdetailflow.R;
 
 import android.content.Intent;
 import android.os.Bundle;

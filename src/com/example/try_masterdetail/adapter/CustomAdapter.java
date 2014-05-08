@@ -1,4 +1,4 @@
-package com.example.try_masterdetailflow.adapter;
+package com.example.try_masterdetail.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class CustomAdapter extends ParseQueryAdapter<ParseObject> {
 		// Log.d(TAG, object.getString("title"));
 
 		mMap.put(object.getString("title"), object.getString("link"));
-		Log.d(TAG, "CustomAdapter " + mMap.size());
+		// Log.d(TAG, "CustomAdapter " + mMap.size());
 		/*
 		 * 
 		 * //PubDate

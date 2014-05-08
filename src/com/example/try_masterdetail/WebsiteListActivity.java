@@ -1,5 +1,6 @@
-package com.example.try_masterdetailflow;
+package com.example.try_masterdetail;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,7 +15,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,9 +22,16 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.try_masterdetailflow.adapter.CustomAdapter;
-import com.example.try_masterdetailflow.adapter.NavDrawerListAdapter;
-import com.example.try_masterdetailflow.model.NavDrawerItem;
+import com.example.try_masterdetail.adapter.CustomAdapter;
+import com.example.try_masterdetail.adapter.NavDrawerListAdapter;
+import com.example.try_masterdetail.model.NavDrawerItem;
+import com.example.try_masterdetailflow.R;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.parse.Parse;
 
 public class WebsiteListActivity extends FragmentActivity implements WebsiteListFragment.Callbacks {
@@ -60,7 +67,24 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 					.setActivateOnItemClick(true);
 		}
 
+		// Initialize Parse
 		Parse.initialize(this, "EIBQFrIyVZBHDTwmEZqxaWn6yx10UNPo4gy7kkmR", "Fj96ZYVQziKR132klHkXDSpireivZZRaKZOmB0SK");
+
+		// Initialize ImageLoader
+		File cacheDir = StorageUtils.getCacheDirectory(getApplicationContext(), true);
+		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+        .cacheInMemory(true)
+        .cacheOnDisc(true)
+        .build();
+		
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
+		.memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) 
+		.discCache(new UnlimitedDiscCache(cacheDir))	
+		.defaultDisplayImageOptions(defaultOptions)
+		.build();
+		
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.init(config);
 
 		/*
 		 * Making NavBar - START
@@ -215,26 +239,21 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 		HashMap<String, String> mMap = customAdapter.mMap;
 		Iterator iter = mMap.entrySet().iterator();
-		Log.d(TAG, "onItemSelected " + iter.hasNext());
-		Log.d(TAG, "onItemSelected " + mMap.size());
+		// Log.d(TAG, "onItemSelected " + iter.hasNext());
+		// Log.d(TAG, "onItemSelected " + mMap.size());
 		while (iter.hasNext()) {
 			Map.Entry mEntry = (Map.Entry) iter.next();
-			Log.d(TAG, mEntry.getKey() + " : " + mEntry.getValue());
+			// Log.d(TAG, mEntry.getKey() + " : " + mEntry.getValue());
 		}
 
-		if (mTwoPane) {
-			// In two-pane mode, show the detail view in this activity by
-			// adding or replacing the detail fragment using a
-			// fragment transaction.
-			Bundle arguments = new Bundle();
-			arguments.putString(WebsiteDetailFragment.ARG_ITEM_ID, headlineText);
-			WebsiteDetailFragment fragment = new WebsiteDetailFragment();
-			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction().replace(R.id.website_detail_container, fragment).commit();
+		Bundle arguments = new Bundle();
+		arguments.putString(WebsiteDetailFragment.ARG_ITEM_ID, headlineText);
+		WebsiteDetailFragment fragment = new WebsiteDetailFragment();
+		fragment.setArguments(arguments);
 
+		if (mTwoPane) {
+			getSupportFragmentManager().beginTransaction().replace(R.id.website_detail_container, fragment).commit();
 		} else {
-			// In single-pane mode, simply start the detail activity
-			// for the selected item ID.
 			Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
 			detailIntent.putExtra(WebsiteDetailFragment.ARG_ITEM_ID, headlineText);
 			startActivity(detailIntent);

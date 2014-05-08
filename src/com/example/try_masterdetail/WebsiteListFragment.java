@@ -1,4 +1,4 @@
-package com.example.try_masterdetailflow;
+package com.example.try_masterdetail;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.try_masterdetailflow.adapter.CustomAdapter;
+import com.example.try_masterdetail.adapter.CustomAdapter;
+import com.example.try_masterdetailflow.R;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;

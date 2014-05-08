@@ -1,4 +1,4 @@
-package com.example.try_masterdetailflow.adapter;
+package com.example.try_masterdetail.adapter;
 
 import java.util.ArrayList;
 
@@ -11,8 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.try_masterdetail.model.NavDrawerItem;
 import com.example.try_masterdetailflow.R;
-import com.example.try_masterdetailflow.model.NavDrawerItem;
 
 public class NavDrawerListAdapter extends BaseAdapter {
 

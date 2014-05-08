@@ -1,4 +1,4 @@
-package com.example.try_masterdetailflow.model;
+package com.example.try_masterdetail.model;
 
 public class NavDrawerItem {
 

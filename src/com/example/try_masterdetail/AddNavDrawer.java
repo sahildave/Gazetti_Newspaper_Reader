@@ -1,4 +1,4 @@
-package com.example.try_masterdetailflow;
+package com.example.try_masterdetail;
 
 import java.util.ArrayList;
 
@@ -12,8 +12,9 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 
-import com.example.try_masterdetailflow.adapter.NavDrawerListAdapter;
-import com.example.try_masterdetailflow.model.NavDrawerItem;
+import com.example.try_masterdetail.adapter.NavDrawerListAdapter;
+import com.example.try_masterdetail.model.NavDrawerItem;
+import com.example.try_masterdetailflow.R;
 
 public class AddNavDrawer {
 

@@ -9,16 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:baselineAligned="false"
         android:divider="?android:attr/dividerHorizontal"
         android:orientation="horizontal"
         android:showDividers="middle"
-        tools:context="com.example.try_masterdetailflow.WebsiteListActivity" >
+        tools:context="com.example.try_masterdetail.WebsiteListActivity" >
 
         <fragment
             android:id="@+id/website_list"
-            android:name="com.example.try_masterdetailflow.WebsiteListFragment"
+            android:name="com.example.try_masterdetail.WebsiteListFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -28,7 +27,8 @@
             android:id="@+id/website_detail_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3" />
+            android:layout_weight="3"
+            android:background="@color/background_brown" />
     </LinearLayout>
 
     <ListView
