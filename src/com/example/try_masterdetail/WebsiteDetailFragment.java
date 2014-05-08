@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.*;
+
 import com.example.try_masterdetail.adapter.CustomAdapter;
 import com.example.try_masterdetailflow.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -164,8 +166,16 @@ public class WebsiteDetailFragment extends Fragment {
 
 			} else {
 				Log.d(TAG, "Loading Image...");
-				mImageLoader = ImageLoader.getInstance();
-				mImageLoader.displayImage(mImageURL, mMainImageView);
+				// UIL
+				// mImageLoader = ImageLoader.getInstance();
+				// mImageLoader.displayImage(mImageURL, mMainImageView);
+
+				// Picasso
+
+				Picasso picassoInstance = Picasso.with(getActivity().getApplicationContext());
+				picassoInstance.setDebugging(true);
+				picassoInstance.load(mImageURL).into(mMainImageView);
+
 				mMainImageView.setVisibility(0);
 			}
 		}

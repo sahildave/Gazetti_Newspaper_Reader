@@ -70,21 +70,24 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		// Initialize Parse
 		Parse.initialize(this, "EIBQFrIyVZBHDTwmEZqxaWn6yx10UNPo4gy7kkmR", "Fj96ZYVQziKR132klHkXDSpireivZZRaKZOmB0SK");
 
-		// Initialize ImageLoader
-		File cacheDir = StorageUtils.getCacheDirectory(getApplicationContext(), true);
-		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-        .cacheInMemory(true)
-        .cacheOnDisc(true)
-        .build();
-		
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-		.memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) 
-		.discCache(new UnlimitedDiscCache(cacheDir))	
-		.defaultDisplayImageOptions(defaultOptions)
-		.build();
-		
-		ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.init(config);
+		// // Initialize UIL ImageLoader
+		// File cacheDir =
+		// StorageUtils.getCacheDirectory(getApplicationContext(), true);
+		// DisplayImageOptions defaultOptions = new
+		// DisplayImageOptions.Builder()
+		// .cacheInMemory(true)
+		// .cacheOnDisc(true)
+		// .build();
+		//
+		// ImageLoaderConfiguration config = new
+		// ImageLoaderConfiguration.Builder(getApplicationContext())
+		// .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
+		// .discCache(new UnlimitedDiscCache(cacheDir))
+		// .defaultDisplayImageOptions(defaultOptions)
+		// .build();
+		//
+		// ImageLoader imageLoader = ImageLoader.getInstance();
+		// imageLoader.init(config);
 
 		/*
 		 * Making NavBar - START
