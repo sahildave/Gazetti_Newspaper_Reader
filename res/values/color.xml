@@ -8,5 +8,6 @@
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
     <color name="headlines_list_item_title">#000000</color>
+    <color name="background_brown">#F0F0F0</color>
 
 </resources>
