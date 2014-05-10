@@ -14,9 +14,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.try_masterdetail.adapter.CustomAdapter;
@@ -38,6 +40,7 @@ public class WebsiteDetailFragment extends Fragment {
 	ImageView mMainImageView;
 	TextView mArticleTextView;
 	TextView mArticlePubDateView;
+	RelativeLayout mSubtitleLayout;
 
 	ImageLoader mImageLoader;
 	String mImageURL;
@@ -61,11 +64,9 @@ public class WebsiteDetailFragment extends Fragment {
 			Log.d(TAG, "Got date " + mArticlePubDate);
 		}
 		View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
-		mHeaderLayout = (FrameLayout) rootView.findViewById(R.id.headerFrameLayout);
-		mTitleTextView = (TextView) rootView.findViewById(R.id.title);
 		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
-		mMainImageView = (ImageView) rootView.findViewById(R.id.mainImage);
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
+		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
 
 		return rootView;
 	}
@@ -84,14 +85,6 @@ public class WebsiteDetailFragment extends Fragment {
 		String bodyText = "";
 		String titleText;
 		String datelineText;
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-
-			mTitleTextView.setText("Loading...");
-
-		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -197,7 +190,7 @@ public class WebsiteDetailFragment extends Fragment {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			mTitleTextView.setText(titleText);
+			mSubtitleLayout.setVisibility(View.VISIBLE);
 			mArticlePubDateView.setText(mArticlePubDate);
 
 			if (bodyText.equals("")) {
@@ -207,20 +200,24 @@ public class WebsiteDetailFragment extends Fragment {
 			}
 
 			if (mImageURL == null) {
-				// Log.d(TAG, "Image not, Title : " + titleText);
-				mMainImageView.setVisibility(View.GONE);
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mTitleTextView.getWidth(),
-						mTitleTextView.getHeight());
-				mHeaderLayout.setLayoutParams(params);
+				Log.d(TAG, "Image not, Title : " + titleText);
 
+				View articleTitleStub = ((ViewStub) getActivity().findViewById(R.id.article_title_stub_import))
+						.inflate();
+				mTitleTextView = (TextView) articleTitleStub.findViewById(R.id.article_title);
+				mTitleTextView.setText(titleText);
 			} else {
-				// Log.d(TAG, "Loading Image...");
+				Log.d(TAG, "Loading Image...");
 
+				View articleHeaderStub = ((ViewStub) getActivity().findViewById(R.id.article_header_stub_import))
+						.inflate();
+				mTitleTextView = (TextView) articleHeaderStub.findViewById(R.id.article_header_title);
+				mTitleTextView.setText(titleText);
+
+				mMainImageView = (ImageView) articleHeaderStub.findViewById(R.id.mainImage);
 				Picasso picassoInstance = Picasso.with(getActivity().getApplicationContext());
 				picassoInstance.setDebugging(true);
 				picassoInstance.load(mImageURL).into(mMainImageView);
-
-				mMainImageView.setVisibility(0);
 			}
 		}
 	}

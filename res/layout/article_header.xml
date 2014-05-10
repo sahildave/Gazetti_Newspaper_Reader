@@ -1,6 +1,5 @@
 <FrameLayout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/headerFrameLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
@@ -8,8 +7,7 @@
         android:id="@+id/mainImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:visibility="invisible" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:id="@+id/titleLayout"
@@ -19,7 +17,7 @@
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/article_header_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient"

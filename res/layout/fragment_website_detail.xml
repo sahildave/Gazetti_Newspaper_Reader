@@ -12,44 +12,27 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <FrameLayout
-            android:id="@+id/headerFrameLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+        <ViewStub
+            android:id="@+id/article_header_stub_import"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/article_header_stub"
+            android:layout="@layout/article_header" />
 
-            <ImageView
-                android:id="@+id/mainImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:visibility="invisible" />
-
-            <LinearLayout
-                android:id="@+id/titleLayout"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:gravity="bottom"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/gradient"
-                    android:fontFamily="sans-serif-condensed"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </FrameLayout>
+        <ViewStub
+            android:id="@+id/article_title_stub_import"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/article_title_stub"
+            android:layout="@layout/article_title" />
 
         <RelativeLayout
+            android:id="@+id/subtitleLayout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin" >
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:visibility="invisible" >
 
             <ImageButton
                 android:id="@+id/webView"
