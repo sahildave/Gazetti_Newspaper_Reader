@@ -122,7 +122,10 @@ public class WebsiteListFragment extends ListFragment {
 					Log.d(TAG, " articleObjectList " + articleObjectList.size());
 
 					customAdapter.addAll(articleObjectList);
+
 					layoutHeaderProgress.setVisibility(View.GONE);
+					onListItemClick(listView, getView(), 1, 0);
+
 					long nowInMillis = System.currentTimeMillis();
 					Log.d(TAG, "Pinning " + nowInMillis);
 					final String newLastUpdated = String.valueOf(nowInMillis);
@@ -153,12 +156,14 @@ public class WebsiteListFragment extends ListFragment {
 				public void done(final List<ParseObject> articleObjectList, ParseException arg1) {
 					Log.d(TAG, " articleObjectList " + articleObjectList.size());
 					customAdapter.addAll(articleObjectList);
+
 					layoutHeaderProgress.setVisibility(View.GONE);
+					onListItemClick(listView, getView(), 1, 0);
+
 				}
 
 			});
 		}
-
 	}
 
 	@Override

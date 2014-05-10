@@ -7,17 +7,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,13 +42,17 @@ public class WebsiteDetailFragment extends Fragment {
 	FrameLayout mHeaderLayout;
 	TextView mTitleTextView;
 	ImageView mMainImageView;
-	TextView mArticleTextView;
-	TextView mArticlePubDateView;
+
 	RelativeLayout mSubtitleLayout;
+	TextView mArticlePubDateView;
+
+	TextView mArticleTextView;
+	ImageButton mNewspaperTile;
+	TextView mViewInBrowser;
 
 	ImageLoader mImageLoader;
-	String mImageURL;
 
+	String mImageURL;
 	String mArticleURL;
 	String mArticlePubDate;
 
@@ -68,8 +76,26 @@ public class WebsiteDetailFragment extends Fragment {
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
 
+		mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
+		mViewInBrowser = (TextView) rootView.findViewById(R.id.viewInBrowser);
+
+		mNewspaperTile.setOnTouchListener(webViewCalled);
+		mViewInBrowser.setOnTouchListener(webViewCalled);
+
 		return rootView;
 	}
+
+	private OnTouchListener webViewCalled = new OnTouchListener() {
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			Log.d(TAG, "Touched Item " + v);
+
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mArticleURL)));
+
+			return true;
+		}
+	};
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -78,6 +104,10 @@ public class WebsiteDetailFragment extends Fragment {
 
 		new Myasynctask().execute();
 
+	}
+
+	public void viewInBrowser(View v) {
+		Log.d(TAG, "you clicked!");
 	}
 
 	private class Myasynctask extends AsyncTask<Void, String, Void> {

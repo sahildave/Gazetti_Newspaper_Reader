@@ -35,32 +35,47 @@
             android:visibility="invisible" >
 
             <ImageButton
-                android:id="@+id/webView"
+                android:id="@+id/newspaperTile"
                 style="?android:borderlessButtonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:src="@drawable/ic_webview" />
+                android:onClick="viewInBrowser"
+                android:src="@drawable/ic_newspaper" />
 
             <TextView
                 android:id="@+id/pubDateView"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:layout_toRightOf="@id/webView"
+                android:layout_toRightOf="@id/newspaperTile"
                 android:gravity="left|bottom"
                 android:text="Date"
                 android:textStyle="italic"
                 android:typeface="monospace" />
 
             <TextView
-                android:id="@+id/Category"
+                android:id="@+id/category"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_below="@id/pubDateView"
-                android:layout_toRightOf="@id/webView"
+                android:layout_toRightOf="@id/newspaperTile"
                 android:gravity="left|top"
-                android:text="TOI/National"
+                android:text="National"
+                android:textStyle="italic"
+                android:typeface="monospace" />
+
+            <TextView
+                android:id="@+id/viewInBrowser"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_webview"
+                android:gravity="center_vertical|right"
+                android:lines="2"
+                android:onClick="viewInBrowser"
+                android:text="View in\nBrowser"
                 android:textStyle="italic"
                 android:typeface="monospace" />
         </RelativeLayout>
