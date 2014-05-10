@@ -19,25 +19,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.*;
-
 import com.example.try_masterdetail.adapter.CustomAdapter;
 import com.example.try_masterdetailflow.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 
 public class WebsiteDetailFragment extends Fragment {
 	private static final String TAG = "MasterDetail";
-	public static final String ARG_ITEM_ID = "item_id";
+	public static final String articleLink = "articleLink_key";
+
+	private static final int SECOND_MILLIS = 1000;
+	private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+	private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+	private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
 	FrameLayout mHeaderLayout;
 	TextView mTitleTextView;
 	ImageView mMainImageView;
 	TextView mArticleTextView;
+	TextView mArticlePubDateView;
 
 	ImageLoader mImageLoader;
-	String mArticleURL;
 	String mImageURL;
+
+	String mArticleURL;
+	String mArticlePubDate;
 
 	public WebsiteDetailFragment() {
 	}
@@ -46,15 +52,20 @@ public class WebsiteDetailFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "in Detail onCreateView");
 
-		if (getArguments().containsKey(ARG_ITEM_ID)) {
-			mArticleURL = CustomAdapter.mMap.get(getArguments().getString(ARG_ITEM_ID));
+		if (getArguments().containsKey(articleLink)) {
+			mArticleURL = CustomAdapter.linkMap.get(getArguments().getString(articleLink));
 		}
 
+		if (getArguments().containsKey(articleLink)) {
+			mArticlePubDate = CustomAdapter.pubDateMap.get(getArguments().getString(articleLink));
+			Log.d(TAG, "Got date " + mArticlePubDate);
+		}
 		View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
 		mHeaderLayout = (FrameLayout) rootView.findViewById(R.id.headerFrameLayout);
 		mTitleTextView = (TextView) rootView.findViewById(R.id.title);
 		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
 		mMainImageView = (ImageView) rootView.findViewById(R.id.mainImage);
+		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 
 		return rootView;
 	}
@@ -73,6 +84,14 @@ public class WebsiteDetailFragment extends Fragment {
 		String bodyText = "";
 		String titleText;
 		String datelineText;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+			mTitleTextView.setText("Loading...");
+
+		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -110,23 +129,53 @@ public class WebsiteDetailFragment extends Fragment {
 			return null;
 		}
 
+		public String getTimeAgo(long time) {
+			if (time < 1000000000000L) {
+				// if timestamp given in seconds, convert to millis
+				time *= 1000;
+			}
+
+			long now = System.currentTimeMillis();
+			if (time > now || time <= 0) {
+				return null;
+			}
+
+			// TODO: localize
+			final long diff = now - time;
+			if (diff < MINUTE_MILLIS) {
+				return "just now";
+			} else if (diff < 2 * MINUTE_MILLIS) {
+				return "a minute ago";
+			} else if (diff < 50 * MINUTE_MILLIS) {
+				return diff / MINUTE_MILLIS + " minutes ago";
+			} else if (diff < 90 * MINUTE_MILLIS) {
+				return "an hour ago";
+			} else if (diff < 24 * HOUR_MILLIS) {
+				return diff / HOUR_MILLIS + " hours ago";
+			} else if (diff < 48 * HOUR_MILLIS) {
+				return "yesterday";
+			} else {
+				return diff / DAY_MILLIS + " days ago";
+			}
+		}
+
 		private String getImageURL(Element bodyElement) {
 
 			if (bodyElement.select(".main-image").size() != 0) {
 				// get image elements with class = main-image
-				Log.d(TAG, "in main-image");
+				// Log.d(TAG, "in main-image");
 				Elements mainImageElement = bodyElement.select(".main-image");
 				mImageURL = mainImageElement.attr("src");
-				Log.d(TAG, "ImageUrl - " + mImageURL);
+				// Log.d(TAG, "ImageUrl - " + mImageURL);
 			} else if (bodyElement.select("div#contartcarousel").size() != 0) {
 				// get image elements with carousel
-				Log.d(TAG, "in contartcarousel ");
+				// Log.d(TAG, "in contartcarousel ");
 				Elements carouselElements = bodyElement.select("div#contartcarousel");
 				Elements carouselImage = carouselElements.select("div#pic").first().select("img");
 				mImageURL = carouselImage.attr("src");
-				Log.d(TAG, mImageURL);
+				// Log.d(TAG, mImageURL);
 			} else {
-				Log.d(TAG, "IMAGE NOT FOUND!");
+				// Log.d(TAG, "IMAGE NOT FOUND!");
 
 			}
 
@@ -149,6 +198,7 @@ public class WebsiteDetailFragment extends Fragment {
 			super.onPostExecute(result);
 
 			mTitleTextView.setText(titleText);
+			mArticlePubDateView.setText(mArticlePubDate);
 
 			if (bodyText.equals("")) {
 				mArticleTextView
@@ -157,20 +207,14 @@ public class WebsiteDetailFragment extends Fragment {
 			}
 
 			if (mImageURL == null) {
-				Log.d(TAG, "Image not, Title : " + titleText);
+				// Log.d(TAG, "Image not, Title : " + titleText);
 				mMainImageView.setVisibility(View.GONE);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mTitleTextView.getWidth(),
 						mTitleTextView.getHeight());
-				Log.d(TAG, mTitleTextView.getWidth() + ", " + mTitleTextView.getHeight());
 				mHeaderLayout.setLayoutParams(params);
 
 			} else {
-				Log.d(TAG, "Loading Image...");
-				// UIL
-				// mImageLoader = ImageLoader.getInstance();
-				// mImageLoader.displayImage(mImageURL, mMainImageView);
-
-				// Picasso
+				// Log.d(TAG, "Loading Image...");
 
 				Picasso picassoInstance = Picasso.with(getActivity().getApplicationContext());
 				picassoInstance.setDebugging(true);

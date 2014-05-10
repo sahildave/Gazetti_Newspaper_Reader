@@ -8,11 +8,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
         android:baselineAligned="false"
         android:divider="?android:attr/dividerHorizontal"
         android:orientation="horizontal"
-        android:showDividers="middle"
         tools:context="com.example.try_masterdetail.WebsiteListActivity" >
 
         <fragment
@@ -27,9 +25,10 @@
             android:id="@+id/website_detail_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:background="@color/background_brown" />
+            android:layout_weight="2" />
     </LinearLayout>
+
+    <!-- Listview to display navigation drawer -->
 
     <ListView
         android:id="@+id/list_slidermenu"
@@ -40,6 +39,6 @@
         android:choiceMode="singleChoice"
         android:divider="@color/nav_list_divider"
         android:dividerHeight="1dp"
-        android:listSelector="@drawable/list_selector" />
+        android:listSelector="@drawable/navdrawer_list_selector" />
 
 </android.support.v4.widget.DrawerLayout>

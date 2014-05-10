@@ -1,10 +1,6 @@
 package com.example.try_masterdetail;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -26,12 +22,6 @@ import com.example.try_masterdetail.adapter.CustomAdapter;
 import com.example.try_masterdetail.adapter.NavDrawerListAdapter;
 import com.example.try_masterdetail.model.NavDrawerItem;
 import com.example.try_masterdetailflow.R;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.parse.Parse;
 
 public class WebsiteListActivity extends FragmentActivity implements WebsiteListFragment.Callbacks {
@@ -47,9 +37,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	// private String[] mPlanetTitles; //not used anymore!
 
-	// new slide menu items
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
 
@@ -63,31 +51,11 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 		if (findViewById(R.id.website_detail_container) != null) {
 			mTwoPane = true;
-			((WebsiteListFragment) getSupportFragmentManager().findFragmentById(R.id.website_list))
-					.setActivateOnItemClick(true);
 		}
 
 		// Initialize Parse
+		Parse.enableLocalDatastore(this);
 		Parse.initialize(this, "EIBQFrIyVZBHDTwmEZqxaWn6yx10UNPo4gy7kkmR", "Fj96ZYVQziKR132klHkXDSpireivZZRaKZOmB0SK");
-
-		// // Initialize UIL ImageLoader
-		// File cacheDir =
-		// StorageUtils.getCacheDirectory(getApplicationContext(), true);
-		// DisplayImageOptions defaultOptions = new
-		// DisplayImageOptions.Builder()
-		// .cacheInMemory(true)
-		// .cacheOnDisc(true)
-		// .build();
-		//
-		// ImageLoaderConfiguration config = new
-		// ImageLoaderConfiguration.Builder(getApplicationContext())
-		// .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
-		// .discCache(new UnlimitedDiscCache(cacheDir))
-		// .defaultDisplayImageOptions(defaultOptions)
-		// .build();
-		//
-		// ImageLoader imageLoader = ImageLoader.getInstance();
-		// imageLoader.init(config);
 
 		/*
 		 * Making NavBar - START
@@ -165,11 +133,6 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		 */
 	}
 
-	/**
-	 * Callback method from {@link WebsiteListFragment.Callbacks} indicating
-	 * that the item with the given ID was selected.
-	 */
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -240,17 +203,8 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	@Override
 	public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
 
-		HashMap<String, String> mMap = customAdapter.mMap;
-		Iterator iter = mMap.entrySet().iterator();
-		// Log.d(TAG, "onItemSelected " + iter.hasNext());
-		// Log.d(TAG, "onItemSelected " + mMap.size());
-		while (iter.hasNext()) {
-			Map.Entry mEntry = (Map.Entry) iter.next();
-			// Log.d(TAG, mEntry.getKey() + " : " + mEntry.getValue());
-		}
-
 		Bundle arguments = new Bundle();
-		arguments.putString(WebsiteDetailFragment.ARG_ITEM_ID, headlineText);
+		arguments.putString(WebsiteDetailFragment.articleLink, headlineText);
 		WebsiteDetailFragment fragment = new WebsiteDetailFragment();
 		fragment.setArguments(arguments);
 
@@ -258,7 +212,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 			getSupportFragmentManager().beginTransaction().replace(R.id.website_detail_container, fragment).commit();
 		} else {
 			Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
-			detailIntent.putExtra(WebsiteDetailFragment.ARG_ITEM_ID, headlineText);
+			detailIntent.putExtra(WebsiteDetailFragment.articleLink, headlineText);
 			startActivity(detailIntent);
 		}
 	}

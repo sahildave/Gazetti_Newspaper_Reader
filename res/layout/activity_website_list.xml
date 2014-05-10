@@ -4,19 +4,18 @@
     android:layout_height="match_parent" >
 
     <!-- Framelayout to display Fragments -->
-    
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/website_list"
-    android:name="com.example.try_masterdetail.WebsiteListFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    tools:context="com.example.try_masterdetailflow.WebsiteListActivity"
-    tools:layout="@android:layout/list_content" />
 
-<!-- Listview to display slider menu -->
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/website_list"
+        android:name="com.example.try_masterdetail.WebsiteListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.try_masterdetailflow.WebsiteListActivity"
+        tools:layout="@android:layout/list_content" />
+
+    <!-- Listview to display navigation drawer -->
 
     <ListView
         android:id="@+id/list_slidermenu"
@@ -27,6 +26,6 @@
         android:choiceMode="singleChoice"
         android:divider="@color/nav_list_divider"
         android:dividerHeight="1dp"
-        android:listSelector="@drawable/list_selector" />
+        android:listSelector="@drawable/navdrawer_list_selector" />
 
 </android.support.v4.widget.DrawerLayout>

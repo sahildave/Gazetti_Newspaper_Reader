@@ -1,94 +1,113 @@
 package com.example.try_masterdetail.adapter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.try_masterdetailflow.R;
 import com.parse.ParseObject;
-import com.parse.ParseQueryAdapter;
 
-public class CustomAdapter extends ParseQueryAdapter<ParseObject> {
+public class CustomAdapter extends ArrayAdapter<ParseObject> {
+
 	private static final String TAG = "MasterDetail";
+	private static final int SECOND_MILLIS = 1000;
+	private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+	private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+	private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
-	Context ctx;
+	private Activity ctx;
 	public static ArrayList<String> linkArrayList = new ArrayList<String>();
+	public static HashMap<String, String> linkMap = new HashMap<String, String>();
+	public static HashMap<String, String> pubDateMap = new HashMap<String, String>();
+	private ArrayList<ParseObject> articleObjectList;
 
-	public CustomAdapter(Context context, QueryFactory<ParseObject> factory) {
-		super(context, factory);
-
+	public CustomAdapter(Activity context, ArrayList<ParseObject> articleObjectList) {
+		super(context, R.layout.headline_list_row, articleObjectList);
+		Log.d(TAG, "customAdapter constructor");
 		ctx = context;
+		this.articleObjectList = articleObjectList;
+
 	}
 
-	public static HashMap<String, String> mMap = new HashMap<String, String>();
-
-	@Override
-	public ParseObject getItem(int index) {
-		// TODO Auto-generated method stub
-		return super.getItem(index);
+	static class ViewHolder {
+		TextView textViewItem;
 	}
 
-	int count = 0;
-
 	@Override
-	public View getItemView(ParseObject object, View v, ViewGroup parent) {
-		if (v == null) {
-			v = View.inflate(getContext(), R.layout.headline_list_row, null);
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if (convertView == null) {
+			LayoutInflater inflater = ctx.getLayoutInflater();
+			convertView = inflater.inflate(R.layout.headline_list_row, parent, false);
+
+			holder = new ViewHolder();
+			holder.textViewItem = (TextView) convertView.findViewById(R.id.headline);
+			convertView.setTag(holder);
+
+		} else {
+			holder = (ViewHolder) convertView.getTag();
 		}
 
-		super.getItemView(object, v, parent);
+		ParseObject object = articleObjectList.get(position);
 
 		// Add the title view
-		TextView headlineTextView = (TextView) v.findViewById(R.id.headline);
-		headlineTextView.setText(object.getString("title"));
-		// Log.d(TAG, object.getString("title"));
+		holder.textViewItem.setText(object.getString("title"));
 
-		mMap.put(object.getString("title"), object.getString("link"));
+		Date createdAtDate = object.getCreatedAt();
+		long createdAtDateInMillis = createdAtDate.getTime();
+		// Log.d(TAG, "createdAtDateInMillis " + createdAtDateInMillis);
+
+		String diff = getTimeAgo(createdAtDateInMillis);
+		// Log.d(TAG, "diff " + diff);
+
+		// Add title, link to Map
+		linkMap.put(object.getString("title"), object.getString("link"));
+		pubDateMap.put(object.getString("title"), diff);
 		// Log.d(TAG, "CustomAdapter " + mMap.size());
-		/*
-		 * 
-		 * //PubDate
-		 * 
-		 * TextView pubdateView = (TextView) v.findViewById(R.id.pubdate);
-		 * 
-		 * Date createdAtInput = object.getCreatedAt(); // Log.d(TAG,
-		 * "createdAtInput " + createdAtInput.toString()); DateFormat dfInput =
-		 * android.text.format.DateFormat.getMediumDateFormat(ctx);
-		 * 
-		 * Date now = new Date(); // Log.d(TAG, "now " + now.toString()); long
-		 * timeDiffInMS = Math.abs(createdAtInput.getTime() - now.getTime());
-		 * long timeDiffInMins = TimeUnit.MILLISECONDS.toMinutes(timeDiffInMS);
-		 * 
-		 * int finalDiff; if (timeDiffInMins == 0) { finalDiff = (int)
-		 * timeDiffInMins; pubdateView.setText("0 minutes ago"); } else if
-		 * (timeDiffInMins == 1) { finalDiff = (int) timeDiffInMins;
-		 * pubdateView.setText("1 minute ago"); } else if (timeDiffInMins < 60)
-		 * { finalDiff = (int) timeDiffInMins; pubdateView.setText(finalDiff +
-		 * " minutes ago"); } else if (timeDiffInMins < 120) { finalDiff = (int)
-		 * timeDiffInMins; pubdateView.setText("1 hour ago"); } else { finalDiff
-		 * = (int) (timeDiffInMins / 60); pubdateView.setText(finalDiff +
-		 * " hours ago"); }
-		 * 
-		 * // if (timeDiffInMins < 30) { // finalDiff = (int) (timeDiffInMins /
-		 * 60); // pubdateView.setText("some time ago"); // } else if
-		 * (timeDiffInMins < 60) { // finalDiff = (int) (timeDiffInMins / 60);
-		 * // pubdateView.setText("half an hour ago"); // } else if
-		 * (timeDiffInMins < 120) { // finalDiff = (int) (timeDiffInMins / 60);
-		 * // pubdateView.setText("1 hour ago"); // } else { // finalDiff =
-		 * (int) (timeDiffInMins / 60); // pubdateView.setText(finalDiff +
-		 * " hours ago"); // }
-		 * 
-		 * // Log.d(TAG, "timeDiffInMS " + timeDiffInMS + ", timeDiffInMins " +
-		 * // timeDiffInMins + ", finalDiff " + finalDiff); // String dateOutput
-		 * = dateformat.format(createdAtInput); // Log.d(TAG, dateOutput);
-		 * 
-		 * // // Log.d(TAG, (object.getDate("createdAt")).toString());
-		 */
-		return v;
+
+		// PubDate
+
+		return convertView;
+
 	}
+
+	public static String getTimeAgo(long time) {
+		if (time < 1000000000000L) {
+			// if timestamp given in seconds, convert to millis
+			time *= 1000;
+		}
+
+		long now = System.currentTimeMillis();
+		if (time > now || time <= 0) {
+			return null;
+		}
+
+		// TODO: localize
+		final long diff = now - time;
+		if (diff < MINUTE_MILLIS) {
+			return "just now";
+		} else if (diff < 2 * MINUTE_MILLIS) {
+			return "a minute ago";
+		} else if (diff < 50 * MINUTE_MILLIS) {
+			return diff / MINUTE_MILLIS + " minutes ago";
+		} else if (diff < 120 * MINUTE_MILLIS) {
+			return "an hour ago";
+		} else if (diff < 24 * HOUR_MILLIS) {
+			return diff / HOUR_MILLIS + " hours ago";
+		} else if (diff < 48 * HOUR_MILLIS) {
+			return "yesterday";
+		} else {
+			return diff / DAY_MILLIS + " days ago";
+		}
+	}
+
 }
