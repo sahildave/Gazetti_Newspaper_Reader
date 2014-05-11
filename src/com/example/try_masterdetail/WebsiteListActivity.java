@@ -16,18 +16,28 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewStub;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.adapter.CustomAdapter;
 import com.example.try_masterdetail.adapter.NavDrawerListAdapter;
 import com.example.try_masterdetail.model.NavDrawerItem;
 import com.example.try_masterdetailflow.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.Parse;
+import com.squareup.picasso.Picasso;
 
-public class WebsiteListActivity extends FragmentActivity implements WebsiteListFragment.Callbacks {
+public class WebsiteListActivity extends FragmentActivity implements WebsiteListFragment.Callbacks,
+		WebsiteDetailFragment.TaskCallbacks {
 
 	private static final String TAG = "MasterDetail";
+	private static final String TAG_ASYNC = "ASYNC";
 
 	private boolean mTwoPane;
 	private WebsiteListFragment mListFragment;
@@ -47,6 +57,33 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	private NavDrawerListAdapter adapter;
 
 	WebsiteListFragment mlistFragment;
+
+	// CallBacks
+	TextView mArticleTextView;
+	ImageButton mNewspaperTile;
+	TextView mViewInBrowser;
+
+	FrameLayout mHeaderLayout;
+	TextView mTitleTextView;
+	ImageView mMainImageView;
+
+	RelativeLayout mSubtitleLayout;
+	TextView mArticlePubDateView;
+
+	ImageLoader mImageLoader;
+
+	String mImageURL;
+	String mArticleURL;
+	String mArticlePubDate;
+
+	String bodyText = "";
+	String titleText = "";
+	String datelineText = "";
+
+	View rootView;
+	// View articleHeaderStub;
+	// View articleTitleStub;
+	View headerStub;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,19 +120,90 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 		Bundle arguments = new Bundle();
 		arguments.putString(WebsiteDetailFragment.articleLink, headlineText);
-		WebsiteDetailFragment fragment = new WebsiteDetailFragment();
-		fragment.setArguments(arguments);
+		WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
+		detailFragment.setArguments(arguments);
 
 		if (mTwoPane) {
 			Log.d(TAG, "replacing detailFragment");
-			getSupportFragmentManager().beginTransaction().replace(R.id.website_detail_container, fragment, "detail")
-					.commit();
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.website_detail_container, detailFragment, "detail").commit();
 		} else {
 			Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
 			detailIntent.putExtra(WebsiteDetailFragment.articleLink, headlineText);
 			startActivity(detailIntent);
 		}
 	}
+
+	/****************************/
+	/***** CALLBACK METHODS *****/
+	/****************************/
+
+	@Override
+	public void onPreExecute(View rootView) {
+
+		this.rootView = rootView;
+
+		WebsiteDetailFragment mDetailFragment = (WebsiteDetailFragment) getSupportFragmentManager().findFragmentByTag(
+				"detail");
+
+		// initialize article views
+		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
+		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
+		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
+
+		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
+		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
+		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
+
+	}
+
+	@Override
+	public void onProgressUpdate(String values) {
+		bodyText = values + "\n\n";
+		mArticleTextView.append(bodyText);
+	}
+
+	@Override
+	public void getHeaderStub(View headerStub) {
+		this.headerStub = headerStub;
+	}
+
+	@Override
+	public void onPostExecute(String[] result) {
+		Log.d(TAG_ASYNC, "Activity onPostExecute");
+
+		titleText = result[0];
+		mImageURL = result[1];
+		mArticlePubDate = result[2];
+
+		mSubtitleLayout.setVisibility(View.VISIBLE);
+		mArticlePubDateView.setText(mArticlePubDate);
+
+		if (bodyText.equals("")) {
+			mArticleTextView.setText("Sorry, this story is not supported for mobile view. Try to read in the browser");
+
+		}
+
+		if (mImageURL == null) {
+			Log.d(TAG, "Image not, Title : " + titleText);
+
+			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_title);
+			mTitleTextView.setText(titleText);
+		} else {
+			Log.d(TAG, "Loading Image...");
+
+			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_header_title);
+			mTitleTextView.setText(titleText);
+
+			mMainImageView = (ImageView) headerStub.findViewById(R.id.mainImage);
+			Picasso picassoInstance = Picasso.with(getApplicationContext());
+			picassoInstance.setDebugging(true);
+			picassoInstance.load(mImageURL).into(mMainImageView);
+		}
+
+	}
+
+	/******************************************/
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

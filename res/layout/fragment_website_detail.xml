@@ -50,9 +50,7 @@
                 android:layout_height="24dp"
                 android:layout_toRightOf="@id/newspaperTile"
                 android:gravity="left|bottom"
-                android:text="Date"
-                android:textStyle="italic"
-                android:typeface="monospace" />
+                android:text="Date" />
 
             <TextView
                 android:id="@+id/category"
@@ -61,9 +59,7 @@
                 android:layout_below="@id/pubDateView"
                 android:layout_toRightOf="@id/newspaperTile"
                 android:gravity="left|top"
-                android:text="National"
-                android:textStyle="italic"
-                android:typeface="monospace" />
+                android:text="National" />
 
             <TextView
                 android:id="@+id/viewInBrowser"
@@ -75,9 +71,7 @@
                 android:gravity="center_vertical|right"
                 android:lines="2"
                 android:onClick="viewInBrowser"
-                android:text="View in\nBrowser"
-                android:textStyle="italic"
-                android:typeface="monospace" />
+                android:text="View in \nBrowser" />
         </RelativeLayout>
 
         <TextView

@@ -65,7 +65,7 @@ public class WebsiteListFragment extends ListFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		Log.d(TAG, "ListFragment in onAttach " + mActivatedPosition);
+		Log.d(TAG, "ListFragment in onAttach ");
 
 		// Activities containing this fragment must implement its callbacks.
 		if (!(activity instanceof Callbacks)) {
@@ -79,13 +79,13 @@ public class WebsiteListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "ListFragment in onCreate " + mActivatedPosition);
+		Log.d(TAG, "ListFragment in onCreate ");
 		
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG, "ListFragment in onCreateView " + mActivatedPosition);
+		Log.d(TAG, "ListFragment in onCreateView ");
 		View rootView = inflater.inflate(R.layout.fragment_website_list, container, false);
 
 		return rootView;
@@ -94,7 +94,7 @@ public class WebsiteListFragment extends ListFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		Log.d(TAG, "ListFragment in onViewCreated " + mActivatedPosition);
+		Log.d(TAG, "ListFragment in onViewCreated ");
 		setRetainInstance(true);
 		// Restore the previously serialized activated item position.
 		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
@@ -113,7 +113,7 @@ public class WebsiteListFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG, "ListFragment in onActivityCreated " + mActivatedPosition);
+		Log.d(TAG, "ListFragment in onActivityCreated ");
 
 		final LinearLayout layoutHeaderProgress = (LinearLayout) getActivity().findViewById(R.id.layoutHeaderProgress);
 
@@ -144,9 +144,8 @@ public class WebsiteListFragment extends ListFragment {
 						customAdapter.notifyDataSetChanged();
 					}
 					layoutHeaderProgress.setVisibility(View.GONE);
-					// listView.performItemClick(customAdapter.getView(mActivatedPosition,
-					// null, null),
-					// mActivatedPosition, mActivatedPosition);
+					listView.performItemClick(customAdapter.getView(mActivatedPosition, null, null),
+ mActivatedPosition, mActivatedPosition);
 
 					long nowInMillis = System.currentTimeMillis();
 					final String newLastUpdated = String.valueOf(nowInMillis);
@@ -192,7 +191,7 @@ public class WebsiteListFragment extends ListFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		Log.d(TAG, "ListFragment in onStart " + mActivatedPosition);
+		Log.d(TAG, "ListFragment in onStart ");
 
 		// onListItemClick(listView, listView.getChildAt(mActivatedPosition),
 		// mActivatedPosition,
@@ -214,19 +213,19 @@ public class WebsiteListFragment extends ListFragment {
 	@Override
 	public void onPause() {
 		super.onPause();
-		Log.d(TAG, "ListFragment in onPause " + mActivatedPosition);
+		Log.d(TAG, "ListFragment in onPause ");
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.d(TAG, "ListFragment in onResume " + mActivatedPosition);
+		Log.d(TAG, "ListFragment in onResume ");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		Log.d(TAG, "ListFragment in onStop " + mActivatedPosition);
+		Log.d(TAG, "ListFragment in onStop ");
 	}
 
 	@Override
@@ -241,7 +240,7 @@ public class WebsiteListFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
-		Log.d(TAG, "ListFragment  onListItemClick " + mActivatedPosition);
+		Log.d(TAG, "ListFragment  onListItemClick ");
 
 		TextView headlineTextView = (TextView) view.findViewById(R.id.headline);
 		String headlineText = (String) headlineTextView.getText();
@@ -253,7 +252,7 @@ public class WebsiteListFragment extends ListFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.d(TAG, "ListFragment onSaveInstanceState " + mActivatedPosition);
+		Log.d(TAG, "ListFragment onSaveInstanceState ");
 		if (mActivatedPosition != ListView.INVALID_POSITION) {
 			// Serialize and persist the activated item position.
 			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
