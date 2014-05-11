@@ -103,7 +103,7 @@ public final class R {
         public static final int titleLayout=0x7f0a0005;
         public static final int viewInBrowser=0x7f0a0014;
         public static final int website_detail_container=0x7f0a0000;
-        public static final int website_list=0x7f0a0002;
+        public static final int website_list_container=0x7f0a0002;
     }
     public static final class layout {
         public static final int activity_website_detail=0x7f030000;

@@ -12,6 +12,8 @@ import android.view.MenuItem;
 public class WebsiteDetailActivity extends FragmentActivity {
 	private static final String TAG = "MasterDetail";
 
+	WebsiteDetailFragment mDetailFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "in " + getClass().getSimpleName());
@@ -21,16 +23,21 @@ public class WebsiteDetailActivity extends FragmentActivity {
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		if (savedInstanceState == null) {
-			// Create the detail fragment and add it to the activity
-			// using a fragment transaction.
+		mDetailFragment = (WebsiteDetailFragment) getSupportFragmentManager().findFragmentByTag("articleContent");
+		Log.d(TAG, "in DetailActvity, mDetailFragment is null? " + (mDetailFragment == null));
+		if (savedInstanceState == null || mDetailFragment == null) {
+			Log.d(TAG, "mDetailFragmentt is null");
+			mDetailFragment = new WebsiteDetailFragment();
+
 			Bundle arguments = new Bundle();
 			arguments.putString(WebsiteDetailFragment.articleLink,
 					getIntent().getStringExtra(WebsiteDetailFragment.articleLink));
-			WebsiteDetailFragment fragment = new WebsiteDetailFragment();
-			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction().add(R.id.website_detail_container, fragment).commit();
+			mDetailFragment.setArguments(arguments);
+
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.website_detail_container, mDetailFragment, "articleContent").commit();
 		}
+
 	}
 
 	@Override

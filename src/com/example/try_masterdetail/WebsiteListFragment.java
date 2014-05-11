@@ -8,6 +8,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,9 +38,13 @@ public class WebsiteListFragment extends ListFragment {
 	private CustomAdapter customAdapter;
 	private ListView listView;
 
-	private static final String STATE_ACTIVATED_POSITION = "activated_position";
+	// private Activity activity;
 	private Callbacks mCallbacks = sDummyCallbacks;
-	private int mActivatedPosition = ListView.INVALID_POSITION;
+
+	private static final String STATE_ACTIVATED_POSITION = "activated_position";
+	private int mActivatedPosition = 0;
+	private static final String STATE_HEADLINES_LIST = "headline_list";
+	private List<ParseObject> retainHeadlineList = null;
 
 	int old_position = -1;
 	String oldLastUpdated = null;
@@ -60,49 +65,56 @@ public class WebsiteListFragment extends ListFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		Log.d(TAG, "in onAttach");
+		Log.d(TAG, "ListFragment in onAttach " + mActivatedPosition);
 
 		// Activities containing this fragment must implement its callbacks.
 		if (!(activity instanceof Callbacks)) {
 			throw new IllegalStateException("Activity must implement fragment's callbacks.");
 		}
-
+		// this.activity = activity;
 		mCallbacks = (Callbacks) activity;
+		
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "ListFragment in onCreate");
+		Log.d(TAG, "ListFragment in onCreate " + mActivatedPosition);
+		
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG, "ListFragment in onCreateView");
+		Log.d(TAG, "ListFragment in onCreateView " + mActivatedPosition);
 		View rootView = inflater.inflate(R.layout.fragment_website_list, container, false);
+
 		return rootView;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		Log.d(TAG, "ListFragment in onViewCreated");
-
+		Log.d(TAG, "ListFragment in onViewCreated " + mActivatedPosition);
+		setRetainInstance(true);
 		// Restore the previously serialized activated item position.
 		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
 			setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
 		}
+		listView = getListView();
+		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		if (retainHeadlineList != null) {
+			Log.d(TAG, "retain list");
+			customAdapter = new CustomAdapter(getActivity(), retainHeadlineList);
+			listView.setAdapter(customAdapter);
+		}
+
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG, "ListFragment in onActivityCreated");
+		Log.d(TAG, "ListFragment in onActivityCreated " + mActivatedPosition);
 
-		customAdapter = new CustomAdapter(getActivity(), new ArrayList<ParseObject>());
-		listView = getListView();
-		listView.setAdapter(customAdapter);
-		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		final LinearLayout layoutHeaderProgress = (LinearLayout) getActivity().findViewById(R.id.layoutHeaderProgress);
 
 		ConnectivityManager connMgr = (ConnectivityManager) getActivity()
@@ -119,26 +131,36 @@ public class WebsiteListFragment extends ListFragment {
 			query.findInBackground(new FindCallback<ParseObject>() {
 				@Override
 				public void done(final List<ParseObject> articleObjectList, ParseException arg1) {
-					Log.d(TAG, " articleObjectList " + articleObjectList.size());
+					Log.d(TAG, "articleObjectList " + articleObjectList.size());
 
-					customAdapter.addAll(articleObjectList);
-
+					if (retainHeadlineList == null) {
+						Log.d(TAG, "new list");
+						customAdapter = new CustomAdapter(getActivity(), articleObjectList);
+						listView.setAdapter(customAdapter);
+						customAdapter.addAll(articleObjectList);
+					} else {
+						Log.d(TAG, "adding to old list");
+						retainHeadlineList.addAll(0, articleObjectList);
+						customAdapter.notifyDataSetChanged();
+					}
 					layoutHeaderProgress.setVisibility(View.GONE);
-					onListItemClick(listView, getView(), 1, 0);
+					// listView.performItemClick(customAdapter.getView(mActivatedPosition,
+					// null, null),
+					// mActivatedPosition, mActivatedPosition);
 
 					long nowInMillis = System.currentTimeMillis();
-					Log.d(TAG, "Pinning " + nowInMillis);
 					final String newLastUpdated = String.valueOf(nowInMillis);
 
-					ParseObject.pinAllInBackground(newLastUpdated, articleObjectList, new SaveCallback() {
-
-						@Override
-						public void done(ParseException arg0) {
-							// TODO Auto-generated method stub
-							oldLastUpdated = newLastUpdated;
-							Log.d(TAG, "Pinned " + oldLastUpdated);
-						}
-					});
+					retainHeadlineList = articleObjectList;
+					/*
+					 * ParseObject.pinAllInBackground(newLastUpdated,
+					 * articleObjectList, new SaveCallback() {
+					 * 
+					 * @Override public void done(ParseException arg0) { // TODO
+					 * Auto-generated method stub oldLastUpdated =
+					 * newLastUpdated; // Log.d(TAG, "Pinned " +
+					 * oldLastUpdated); } });
+					 */
 
 				}
 
@@ -154,16 +176,57 @@ public class WebsiteListFragment extends ListFragment {
 			query.findInBackground(new FindCallback<ParseObject>() {
 				@Override
 				public void done(final List<ParseObject> articleObjectList, ParseException arg1) {
-					Log.d(TAG, " articleObjectList " + articleObjectList.size());
+					// Log.d(TAG, " articleObjectList " +
+					// articleObjectList.size());
 					customAdapter.addAll(articleObjectList);
 
 					layoutHeaderProgress.setVisibility(View.GONE);
-					onListItemClick(listView, getView(), 1, 0);
 
 				}
 
 			});
 		}
+
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG, "ListFragment in onStart " + mActivatedPosition);
+
+		// onListItemClick(listView, listView.getChildAt(mActivatedPosition),
+		// mActivatedPosition,
+		// customAdapter.getItemId(mActivatedPosition));
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		Log.d(TAG, "ListFragment in onDestroyView");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG, "ListFragment in onDestroy");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG, "ListFragment in onPause " + mActivatedPosition);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG, "ListFragment in onResume " + mActivatedPosition);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG, "ListFragment in onStop " + mActivatedPosition);
 	}
 
 	@Override
@@ -172,28 +235,32 @@ public class WebsiteListFragment extends ListFragment {
 		Log.d(TAG, "in onDetach");
 
 		// Reset the active callbacks interface to the dummy implementation.
-		mCallbacks = sDummyCallbacks;
+		mCallbacks = sDummyCallbacks; // TODO: Check with mCallbacks = null;
 	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
-		Log.d(TAG, "ListFragment  onListItemClick");
+		Log.d(TAG, "ListFragment  onListItemClick " + mActivatedPosition);
+
 		TextView headlineTextView = (TextView) view.findViewById(R.id.headline);
 		String headlineText = (String) headlineTextView.getText();
-		view.setActivated(true);
-
+		// view.setActivated(true);
+		setActivatedPosition(position);
 		mCallbacks.onItemSelected(headlineText, customAdapter);
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.d(TAG, "ListFragment  onSaveInstanceState");
+		Log.d(TAG, "ListFragment onSaveInstanceState " + mActivatedPosition);
 		if (mActivatedPosition != ListView.INVALID_POSITION) {
 			// Serialize and persist the activated item position.
 			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
 		}
+
+		// outState.putParcelableArrayList(STATE_HEADLINES_LIST, (ArrayList<?
+		// extends Parcelable>) retainHeadlineList);
 	}
 
 	private void setActivatedPosition(int position) {

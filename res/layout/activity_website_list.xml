@@ -5,15 +5,13 @@
 
     <!-- Framelayout to display Fragments -->
 
-    <fragment
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/website_list"
-        android:name="com.example.try_masterdetail.WebsiteListFragment"
+        android:id="@+id/website_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.example.try_masterdetailflow.WebsiteListActivity"
-        tools:layout="@android:layout/list_content" />
+        tools:layout="MergeRootFrame" />
 
     <!-- Listview to display navigation drawer -->
 

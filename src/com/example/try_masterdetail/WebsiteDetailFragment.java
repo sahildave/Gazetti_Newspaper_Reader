@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,13 +32,17 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
 public class WebsiteDetailFragment extends Fragment {
-	private static final String TAG = "MasterDetail";
+	private static final String TAG = "JSOUP";
 	public static final String articleLink = "articleLink_key";
 
 	private static final int SECOND_MILLIS = 1000;
 	private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
 	private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
 	private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+
+	private static final String STATE_BODY_TEXT_ = "body_text";
+	private static final String STATE_TITLE_TEXT_ = "title_text";
+	private static final String STATE_DATE_TEXT_ = "date_text";
 
 	FrameLayout mHeaderLayout;
 	TextView mTitleTextView;
@@ -56,12 +61,27 @@ public class WebsiteDetailFragment extends Fragment {
 	String mArticleURL;
 	String mArticlePubDate;
 
+	String bodyText = "";
+	String titleText;
+	String datelineText;
+
+	private static Activity activity;
+
 	public WebsiteDetailFragment() {
+		Log.d(TAG, "DetailFragment constructor");
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		this.activity = activity;
+		Log.d(TAG, "DetailFragment onAttach");
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG, "in Detail onCreateView");
+		Log.d(TAG, "DetailFragment onCreateView");
+		View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
 
 		if (getArguments().containsKey(articleLink)) {
 			mArticleURL = CustomAdapter.linkMap.get(getArguments().getString(articleLink));
@@ -69,9 +89,8 @@ public class WebsiteDetailFragment extends Fragment {
 
 		if (getArguments().containsKey(articleLink)) {
 			mArticlePubDate = CustomAdapter.pubDateMap.get(getArguments().getString(articleLink));
-			Log.d(TAG, "Got date " + mArticlePubDate);
 		}
-		View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
+
 		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
@@ -81,8 +100,37 @@ public class WebsiteDetailFragment extends Fragment {
 
 		mNewspaperTile.setOnTouchListener(webViewCalled);
 		mViewInBrowser.setOnTouchListener(webViewCalled);
-
+		setRetainInstance(true);
 		return rootView;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		Log.d(TAG, "DetailFragment onViewCreated");
+		
+		// Restore the previously serialized activated item position.
+		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_BODY_TEXT_)) {
+			Log.d(TAG, "body text present...");
+			mArticleTextView.setText(savedInstanceState.getString(STATE_BODY_TEXT_));
+		}
+		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_TITLE_TEXT_)) {
+			Log.d(TAG, "title text present...");
+			mTitleTextView.setText(savedInstanceState.getString(STATE_TITLE_TEXT_));
+		}
+		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_DATE_TEXT_)) {
+			Log.d(TAG, "date text present...");
+			mArticlePubDateView.setText(savedInstanceState.getString(STATE_DATE_TEXT_));
+		}
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG, "DetailFragment onActivityCreated");
+
+		new Myasynctask().execute();
+
 	}
 
 	private OnTouchListener webViewCalled = new OnTouchListener() {
@@ -92,34 +140,32 @@ public class WebsiteDetailFragment extends Fragment {
 			Log.d(TAG, "Touched Item " + v);
 
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mArticleURL)));
-
 			return true;
 		}
 	};
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG, "in Detail onActivityCreated");
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 
-		new Myasynctask().execute();
+		if (!bodyText.equals("")) {
+			outState.putString(STATE_BODY_TEXT_, bodyText);
+		}
+		if (!titleText.equals("")) {
+			outState.putString(STATE_TITLE_TEXT_, titleText);
+		}
+		if (!datelineText.equals("")) {
+			outState.putString(STATE_DATE_TEXT_, datelineText);
+		}
 
-	}
-
-	public void viewInBrowser(View v) {
-		Log.d(TAG, "you clicked!");
 	}
 
 	private class Myasynctask extends AsyncTask<Void, String, Void> {
 
-		String bodyText = "";
-		String titleText;
-		String datelineText;
-
 		@Override
 		protected Void doInBackground(Void... params) {
 			Document doc;
-
+			Log.d(TAG, "in async");
 			try {
 
 				String url = mArticleURL;
@@ -232,20 +278,18 @@ public class WebsiteDetailFragment extends Fragment {
 			if (mImageURL == null) {
 				Log.d(TAG, "Image not, Title : " + titleText);
 
-				View articleTitleStub = ((ViewStub) getActivity().findViewById(R.id.article_title_stub_import))
-						.inflate();
+				View articleTitleStub = ((ViewStub) activity.findViewById(R.id.article_title_stub_import)).inflate();
 				mTitleTextView = (TextView) articleTitleStub.findViewById(R.id.article_title);
 				mTitleTextView.setText(titleText);
 			} else {
 				Log.d(TAG, "Loading Image...");
 
-				View articleHeaderStub = ((ViewStub) getActivity().findViewById(R.id.article_header_stub_import))
-						.inflate();
+				View articleHeaderStub = ((ViewStub) activity.findViewById(R.id.article_header_stub_import)).inflate();
 				mTitleTextView = (TextView) articleHeaderStub.findViewById(R.id.article_header_title);
 				mTitleTextView.setText(titleText);
 
 				mMainImageView = (ImageView) articleHeaderStub.findViewById(R.id.mainImage);
-				Picasso picassoInstance = Picasso.with(getActivity().getApplicationContext());
+				Picasso picassoInstance = Picasso.with(activity.getApplicationContext());
 				picassoInstance.setDebugging(true);
 				picassoInstance.load(mImageURL).into(mMainImageView);
 			}

@@ -11,6 +11,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	private static final String TAG = "MasterDetail";
 
 	private boolean mTwoPane;
+	private WebsiteListFragment mListFragment;
 
 	// For NavDrawer
 	private DrawerLayout mDrawerLayout;
@@ -44,19 +46,119 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	private NavDrawerListAdapter adapter;
 
+	WebsiteListFragment mlistFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "Activity onCreate");
 		setContentView(R.layout.activity_website_list);
 
+		mlistFragment = (WebsiteListFragment) getSupportFragmentManager().findFragmentByTag("listContent");
+
+		if (mlistFragment == null) {
+			Log.d(TAG, "Activity mListFragment is null");
+			mlistFragment = new WebsiteListFragment();
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.website_list_container, mlistFragment, "listContent").commit();
+			Parse.initialize(this, "EIBQFrIyVZBHDTwmEZqxaWn6yx10UNPo4gy7kkmR",
+					"Fj96ZYVQziKR132klHkXDSpireivZZRaKZOmB0SK");
+		}
+
 		if (findViewById(R.id.website_detail_container) != null) {
+			Log.d(TAG, "Activity twoPane true");
 			mTwoPane = true;
 		}
 
 		// Initialize Parse
-		Parse.enableLocalDatastore(this);
-		Parse.initialize(this, "EIBQFrIyVZBHDTwmEZqxaWn6yx10UNPo4gy7kkmR", "Fj96ZYVQziKR132klHkXDSpireivZZRaKZOmB0SK");
+		// Parse.enableLocalDatastore(this);
 
+		// Make Navigation Drawer
+		makeNavDrawer();
+
+	}
+
+	@Override
+	public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
+
+		Bundle arguments = new Bundle();
+		arguments.putString(WebsiteDetailFragment.articleLink, headlineText);
+		WebsiteDetailFragment fragment = new WebsiteDetailFragment();
+		fragment.setArguments(arguments);
+
+		if (mTwoPane) {
+			Log.d(TAG, "replacing detailFragment");
+			getSupportFragmentManager().beginTransaction().replace(R.id.website_detail_container, fragment, "detail")
+					.commit();
+		} else {
+			Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
+			detailIntent.putExtra(WebsiteDetailFragment.articleLink, headlineText);
+			startActivity(detailIntent);
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// The action bar home/up action should open or close the drawer.
+		// ActionBarDrawerToggle will take care of this.
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		// Handle action buttons
+		switch (item.getItemId()) {
+		case R.id.action_websearch:
+			// create intent to perform web search for this planet
+			Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+			intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
+			// catch event that there's no activity to handle intent
+			if (intent.resolveActivity(getPackageManager()) != null) {
+				startActivity(intent);
+			} else {
+				Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
+			}
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	/* Called whenever we call invalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content
+		// view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	/**
+	 * When using the ActionBarDrawerToggle, you must call it during
+	 * onPostCreate() and onConfigurationChanged()...
+	 */
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		// Pass any configuration change to the drawer toggls
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	private void makeNavDrawer() {
 		/*
 		 * Making NavBar - START
 		 */
@@ -131,90 +233,13 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		/*
 		 * Making NavBar - END
 		 */
-	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	/* Called whenever we call invalidateOptionsMenu() */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content
-		// view
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// The action bar home/up action should open or close the drawer.
-		// ActionBarDrawerToggle will take care of this.
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-		// Handle action buttons
-		switch (item.getItemId()) {
-		case R.id.action_websearch:
-			// create intent to perform web search for this planet
-			Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-			intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-			// catch event that there's no activity to handle intent
-			if (intent.resolveActivity(getPackageManager()) != null) {
-				startActivity(intent);
-			} else {
-				Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-			}
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
 	}
 
 	@Override
 	public void setTitle(CharSequence title) {
 		mTitle = title;
 		getActionBar().setTitle(mTitle);
-	}
-
-	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
-	 */
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		// Pass any configuration change to the drawer toggls
-		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
-
-		Bundle arguments = new Bundle();
-		arguments.putString(WebsiteDetailFragment.articleLink, headlineText);
-		WebsiteDetailFragment fragment = new WebsiteDetailFragment();
-		fragment.setArguments(arguments);
-
-		if (mTwoPane) {
-			getSupportFragmentManager().beginTransaction().replace(R.id.website_detail_container, fragment).commit();
-		} else {
-			Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
-			detailIntent.putExtra(WebsiteDetailFragment.articleLink, headlineText);
-			startActivity(detailIntent);
-		}
 	}
 
 }

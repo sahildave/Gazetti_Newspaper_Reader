@@ -3,6 +3,7 @@ package com.example.try_masterdetail.adapter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,11 +29,11 @@ public class CustomAdapter extends ArrayAdapter<ParseObject> {
 	public static ArrayList<String> linkArrayList = new ArrayList<String>();
 	public static HashMap<String, String> linkMap = new HashMap<String, String>();
 	public static HashMap<String, String> pubDateMap = new HashMap<String, String>();
-	private ArrayList<ParseObject> articleObjectList;
+	private List<ParseObject> articleObjectList;
 
-	public CustomAdapter(Activity context, ArrayList<ParseObject> articleObjectList) {
+	public CustomAdapter(Activity context, List<ParseObject> articleObjectList) {
 		super(context, R.layout.headline_list_row, articleObjectList);
-		Log.d(TAG, "customAdapter constructor");
+		Log.d(TAG, "customAdapter big constructor");
 		ctx = context;
 		this.articleObjectList = articleObjectList;
 

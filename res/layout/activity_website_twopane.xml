@@ -13,13 +13,11 @@
         android:orientation="horizontal"
         tools:context="com.example.try_masterdetail.WebsiteListActivity" >
 
-        <fragment
-            android:id="@+id/website_list"
-            android:name="com.example.try_masterdetail.WebsiteListFragment"
+        <FrameLayout
+            android:id="@+id/website_list_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            tools:layout="@android:layout/list_content" />
+            android:layout_weight="1" />
 
         <FrameLayout
             android:id="@+id/website_detail_container"
