@@ -63,6 +63,7 @@ public class CustomAdapter extends ArrayAdapter<ParseObject> {
 		// Add the title view
 		holder.textViewItem.setText(object.getString("title"));
 
+		// get PubDate
 		Date createdAtDate = object.getCreatedAt();
 		long createdAtDateInMillis = createdAtDate.getTime();
 		// Log.d(TAG, "createdAtDateInMillis " + createdAtDateInMillis);

@@ -9,6 +9,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -16,9 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewStub;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -30,7 +28,6 @@ import com.example.try_masterdetail.adapter.NavDrawerListAdapter;
 import com.example.try_masterdetail.model.NavDrawerItem;
 import com.example.try_masterdetailflow.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.parse.Parse;
 import com.squareup.picasso.Picasso;
 
 public class WebsiteListActivity extends FragmentActivity implements WebsiteListFragment.Callbacks,
@@ -39,8 +36,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	private static final String TAG = "MasterDetail";
 	private static final String TAG_ASYNC = "ASYNC";
 
-	private boolean mTwoPane;
-	private WebsiteListFragment mListFragment;
+	public boolean mTwoPane;
 
 	// For NavDrawer
 	private DrawerLayout mDrawerLayout;
@@ -58,32 +54,27 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 	WebsiteListFragment mlistFragment;
 
-	// CallBacks
-	TextView mArticleTextView;
-	ImageButton mNewspaperTile;
-	TextView mViewInBrowser;
+	// CallBacks for handling asynctask for twoPane mode
 
-	FrameLayout mHeaderLayout;
+	View rootView; // ScrollView from DetailFragment
+	View headerStub;
+
+	// Header
 	TextView mTitleTextView;
 	ImageView mMainImageView;
-
-	RelativeLayout mSubtitleLayout;
-	TextView mArticlePubDateView;
-
 	ImageLoader mImageLoader;
-
 	String mImageURL;
 	String mArticleURL;
+	String titleText = "";
+
+	// Subtitle
+	RelativeLayout mSubtitleLayout;
+	TextView mArticlePubDateView;
 	String mArticlePubDate;
 
+	// Body
+	TextView mArticleTextView;
 	String bodyText = "";
-	String titleText = "";
-	String datelineText = "";
-
-	View rootView;
-	// View articleHeaderStub;
-	// View articleTitleStub;
-	View headerStub;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,24 +82,23 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		Log.d(TAG, "Activity onCreate");
 		setContentView(R.layout.activity_website_list);
 
-		mlistFragment = (WebsiteListFragment) getSupportFragmentManager().findFragmentByTag("listContent");
-
-		if (mlistFragment == null) {
-			Log.d(TAG, "Activity mListFragment is null");
-			mlistFragment = new WebsiteListFragment();
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.website_list_container, mlistFragment, "listContent").commit();
-			Parse.initialize(this, "EIBQFrIyVZBHDTwmEZqxaWn6yx10UNPo4gy7kkmR",
-					"Fj96ZYVQziKR132klHkXDSpireivZZRaKZOmB0SK");
-		}
-
 		if (findViewById(R.id.website_detail_container) != null) {
 			Log.d(TAG, "Activity twoPane true");
 			mTwoPane = true;
 		}
 
-		// Initialize Parse
-		// Parse.enableLocalDatastore(this);
+		mlistFragment = (WebsiteListFragment) getSupportFragmentManager().findFragmentByTag("listContent");
+
+		if (mlistFragment == null) {
+			Log.d(TAG, "Activity mListFragment is null");
+			mlistFragment = new WebsiteListFragment();
+			Bundle layoutBundle = new Bundle();
+			layoutBundle.putBoolean("mTwoPane", mTwoPane);
+			mlistFragment.setArguments(layoutBundle);
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.website_list_container, mlistFragment, "listContent").commit();
+
+		}
 
 		// Make Navigation Drawer
 		makeNavDrawer();
@@ -119,6 +109,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
 
 		Bundle arguments = new Bundle();
+		Log.d(TAG, "ListActivity headlineText " + headlineText);
 		arguments.putString(WebsiteDetailFragment.articleLink, headlineText);
 		WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
 		detailFragment.setArguments(arguments);
@@ -131,6 +122,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 			Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
 			detailIntent.putExtra(WebsiteDetailFragment.articleLink, headlineText);
 			startActivity(detailIntent);
+
 		}
 	}
 
@@ -143,14 +135,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 		this.rootView = rootView;
 
-		WebsiteDetailFragment mDetailFragment = (WebsiteDetailFragment) getSupportFragmentManager().findFragmentByTag(
-				"detail");
-
 		// initialize article views
-		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
-		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
-		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
-
 		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);

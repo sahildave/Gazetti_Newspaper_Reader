@@ -17,18 +17,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewStub;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.view.ViewStub;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.try_masterdetail.adapter.CustomAdapter;
 import com.example.try_masterdetailflow.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class WebsiteDetailFragment extends Fragment {
 	private static final String TAG = "DFRAGMENT";
@@ -84,7 +81,6 @@ public class WebsiteDetailFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		Log.d(TAG, "activity name " + activity.getLocalClassName().toString());
 		if (!(activity instanceof TaskCallbacks)) {
 			throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
 		}
@@ -139,22 +135,8 @@ public class WebsiteDetailFragment extends Fragment {
 	}
 
 	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		Log.d(TAG, "DetailFragment onViewCreated");
-
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG, "DetailFragment onActivityCreated");
-
-	}
-
-	@Override
 	public void onDetach() {
-		Log.d(TAG, "setting activity null");
+		Log.d(TAG, "DetailFragment onDetach");
 		super.onDetach();
 		mCallbacks = null;
 	}
@@ -224,37 +206,6 @@ public class WebsiteDetailFragment extends Fragment {
 				e.printStackTrace();
 			}
 			return result;
-		}
-
-		public String getTimeAgo(long time) {
-			Log.d(TAG, "in getTimeAgo");
-			if (time < 1000000000000L) {
-				// if timestamp given in seconds, convert to millis
-				time *= 1000;
-			}
-
-			long now = System.currentTimeMillis();
-			if (time > now || time <= 0) {
-				return null;
-			}
-
-			// TODO: localize
-			final long diff = now - time;
-			if (diff < MINUTE_MILLIS) {
-				return "just now";
-			} else if (diff < 2 * MINUTE_MILLIS) {
-				return "a minute ago";
-			} else if (diff < 50 * MINUTE_MILLIS) {
-				return diff / MINUTE_MILLIS + " minutes ago";
-			} else if (diff < 90 * MINUTE_MILLIS) {
-				return "an hour ago";
-			} else if (diff < 24 * HOUR_MILLIS) {
-				return diff / HOUR_MILLIS + " hours ago";
-			} else if (diff < 48 * HOUR_MILLIS) {
-				return "yesterday";
-			} else {
-				return diff / DAY_MILLIS + " days ago";
-			}
 		}
 
 		private String getImageURL(Element bodyElement) {

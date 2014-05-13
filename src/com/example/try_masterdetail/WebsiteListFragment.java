@@ -1,10 +1,14 @@
 package com.example.try_masterdetail;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -29,25 +33,31 @@ import com.parse.SaveCallback;
 public class WebsiteListFragment extends ListFragment {
 
 	private static final String TAG = "MasterDetail";
+
+	private Callbacks mCallbacks = sDummyCallbacks;
+
+	public static final String PREFS_NAME = "QueryPrefs";
+
 	private static final int SECOND_MILLIS = 1000;
 	private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
 	private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
 	private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+	private static final String STATE_ACTIVATED_POSITION = "activated_position";
+	private static final String STATE_HEADLINES_LIST = "headline_list";
+
+	// Retained objects
+	private int mActivatedPosition = 0;
 
 	// For HeadlinesList
 	private CustomAdapter customAdapter;
 	private ListView listView;
 
-	// private Activity activity;
-	private Callbacks mCallbacks = sDummyCallbacks;
+	long oldLastUpdated;
+	private boolean mTwoPane;
+	private boolean firstRun = false;
+	Date dateLastUpdated;
 
-	private static final String STATE_ACTIVATED_POSITION = "activated_position";
-	private int mActivatedPosition = 0;
-	private static final String STATE_HEADLINES_LIST = "headline_list";
-	private List<ParseObject> retainHeadlineList = null;
-
-	int old_position = -1;
-	String oldLastUpdated = null;
+	List<ParseObject> retainedList = new ArrayList<ParseObject>();
 
 	public interface Callbacks {
 		public void onItemSelected(String headlineText, CustomAdapter customAdapter);
@@ -73,14 +83,31 @@ public class WebsiteListFragment extends ListFragment {
 		}
 		// this.activity = activity;
 		mCallbacks = (Callbacks) activity;
-		
+
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "ListFragment in onCreate ");
-		
+
+		if (getArguments().containsKey("mTwoPane")) {
+			mTwoPane = getArguments().getBoolean("mTwoPane");
+			Log.d(TAG, "ListFragment mTwoPane is " + mTwoPane);
+		}
+
+		SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
+
+		// long oldLastUpdatedDefValue = System.currentTimeMillis();
+		long oldLastUpdatedDefValue = 00000;
+
+		oldLastUpdated = preferences.getLong("oldLastUpdated", oldLastUpdatedDefValue);
+		// SimpleDateFormat format = new
+		// SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss.SSSZ");
+		dateLastUpdated = new Date(oldLastUpdated);
+		Log.d(TAG, "dateLastUpdated " + dateLastUpdated);
+		firstRun = true;
+
 	}
 
 	@Override
@@ -96,16 +123,41 @@ public class WebsiteListFragment extends ListFragment {
 		super.onViewCreated(view, savedInstanceState);
 		Log.d(TAG, "ListFragment in onViewCreated ");
 		setRetainInstance(true);
-		// Restore the previously serialized activated item position.
-		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-			setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
-		}
+
 		listView = getListView();
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		if (retainHeadlineList != null) {
-			Log.d(TAG, "retain list");
-			customAdapter = new CustomAdapter(getActivity(), retainHeadlineList);
-			listView.setAdapter(customAdapter);
+
+		if (firstRun) {
+			// ADding data from Local Store
+			ParseQuery<ParseObject> query = ParseQuery.getQuery("freshNewsArticle");
+			query.whereEqualTo("cat_id", "1");
+			query.orderByDescending("createdAt");
+			query.setLimit(25);
+			query.fromLocalDatastore();
+
+			query.findInBackground(new FindCallback<ParseObject>() {
+				@Override
+				public void done(List<ParseObject> LocalArticleObjectList, ParseException arg1) {
+					Log.d(TAG, "LocalArticleObjectList " + LocalArticleObjectList.size());
+					retainedList.addAll(0, LocalArticleObjectList);
+					customAdapter = new CustomAdapter(getActivity(), retainedList);
+					// customAdapter.addAll(LocalArticleObjectList);
+					listView.setAdapter(customAdapter);
+					Log.d(TAG, "LocalArticleObjectList Retained " + retainedList.size());
+					if (retainedList.size() > 0) {
+						Log.d(TAG, "At top - " + retainedList.get(0).getString("title"));
+					}
+				}
+
+			});
+		}
+
+		if (mTwoPane) {
+			Log.d(TAG, "ListFragment selecting first element");
+			// Restore the previously serialized activated item position.
+			if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
+				setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
+			}
 		}
 
 	}
@@ -120,50 +172,54 @@ public class WebsiteListFragment extends ListFragment {
 		ConnectivityManager connMgr = (ConnectivityManager) getActivity()
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-		if (networkInfo != null && networkInfo.isConnected()) {
+		if (networkInfo != null && networkInfo.isConnected() && firstRun) {
 
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("freshNewsArticle");
 			query.whereEqualTo("cat_id", "1");
 			query.orderByDescending("createdAt");
+			query.whereGreaterThan("createdAt", dateLastUpdated);
 			query.setLimit(25);
-			// query.fromLocalDatastore();
 
 			query.findInBackground(new FindCallback<ParseObject>() {
 				@Override
-				public void done(final List<ParseObject> articleObjectList, ParseException arg1) {
+				public void done(List<ParseObject> articleObjectList, ParseException arg1) {
 					Log.d(TAG, "articleObjectList " + articleObjectList.size());
 
-					if (retainHeadlineList == null) {
-						Log.d(TAG, "new list");
-						customAdapter = new CustomAdapter(getActivity(), articleObjectList);
-						listView.setAdapter(customAdapter);
-						customAdapter.addAll(articleObjectList);
-					} else {
-						Log.d(TAG, "adding to old list");
-						retainHeadlineList.addAll(0, articleObjectList);
-						customAdapter.notifyDataSetChanged();
+					Log.d(TAG, "adding to old list");
+
+					retainedList.addAll(0, articleObjectList);
+					customAdapter.notifyDataSetChanged();
+					Log.d(TAG, "articleObjectList Retained " + retainedList.size());
+					if (retainedList.size() > 0) {
+						Log.d(TAG, "At top - " + retainedList.get(0).getString("title"));
 					}
 					layoutHeaderProgress.setVisibility(View.GONE);
-					listView.performItemClick(customAdapter.getView(mActivatedPosition, null, null),
- mActivatedPosition, mActivatedPosition);
+
+					if (mTwoPane) {
+						listView.performItemClick(customAdapter.getView(mActivatedPosition, null, null),
+								mActivatedPosition, mActivatedPosition);
+					}
 
 					long nowInMillis = System.currentTimeMillis();
 					final String newLastUpdated = String.valueOf(nowInMillis);
 
-					retainHeadlineList = articleObjectList;
-					/*
-					 * ParseObject.pinAllInBackground(newLastUpdated,
-					 * articleObjectList, new SaveCallback() {
-					 * 
-					 * @Override public void done(ParseException arg0) { // TODO
-					 * Auto-generated method stub oldLastUpdated =
-					 * newLastUpdated; // Log.d(TAG, "Pinned " +
-					 * oldLastUpdated); } });
-					 */
+					ParseObject.pinAllInBackground(newLastUpdated, articleObjectList, new SaveCallback() {
+
+						@Override
+						public void done(ParseException arg0) {
+							oldLastUpdated = System.currentTimeMillis();
+							SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
+							SharedPreferences.Editor editor = preferences.edit();
+							Log.d(TAG, "Saving oldLastUpdated " + oldLastUpdated);
+							editor.putLong("oldLastUpdated", oldLastUpdated);
+							editor.commit();
+						}
+					});
 
 				}
 
 			});
+
 		} else {
 			Log.d(TAG, "No network connection available.");
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("freshNewsArticle");
@@ -189,46 +245,6 @@ public class WebsiteListFragment extends ListFragment {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-		Log.d(TAG, "ListFragment in onStart ");
-
-		// onListItemClick(listView, listView.getChildAt(mActivatedPosition),
-		// mActivatedPosition,
-		// customAdapter.getItemId(mActivatedPosition));
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		Log.d(TAG, "ListFragment in onDestroyView");
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Log.d(TAG, "ListFragment in onDestroy");
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		Log.d(TAG, "ListFragment in onPause ");
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		Log.d(TAG, "ListFragment in onResume ");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		Log.d(TAG, "ListFragment in onStop ");
-	}
-
-	@Override
 	public void onDetach() {
 		super.onDetach();
 		Log.d(TAG, "in onDetach");
@@ -246,6 +262,7 @@ public class WebsiteListFragment extends ListFragment {
 		String headlineText = (String) headlineTextView.getText();
 		// view.setActivated(true);
 		setActivatedPosition(position);
+		Log.d(TAG, "ListFragment headlinetext " + headlineText);
 		mCallbacks.onItemSelected(headlineText, customAdapter);
 	}
 
@@ -257,9 +274,6 @@ public class WebsiteListFragment extends ListFragment {
 			// Serialize and persist the activated item position.
 			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
 		}
-
-		// outState.putParcelableArrayList(STATE_HEADLINES_LIST, (ArrayList<?
-		// extends Parcelable>) retainHeadlineList);
 	}
 
 	private void setActivatedPosition(int position) {

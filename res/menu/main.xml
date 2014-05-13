@@ -10,7 +10,7 @@
     <item
         android:id="@+id/action_websearch"
         android:icon="@drawable/action_search"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         android:title="@string/action_websearch"/>
 
 </menu>

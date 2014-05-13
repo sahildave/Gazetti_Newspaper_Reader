@@ -7,9 +7,6 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewStub;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,9 +21,30 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 
 	private static final String STATE_BODY_TEXT_ = "body_text";
 	private static final String STATE_TITLE_TEXT_ = "title_text";
-	private static final String STATE_DATE_TEXT_ = "date_text";
 
 	WebsiteDetailFragment mDetailFragment;
+
+	// CallBacks for handling asynctask for twoPane mode
+
+	View rootView; // ScrollView from DetailFragment
+	View headerStub;
+
+	// Header
+	TextView mTitleTextView;
+	ImageView mMainImageView;
+	ImageLoader mImageLoader;
+	String mImageURL;
+	String mArticleURL;
+	String titleText = "";
+
+	// Subtitle
+	RelativeLayout mSubtitleLayout;
+	TextView mArticlePubDateView;
+	String mArticlePubDate;
+
+	// Body
+	TextView mArticleTextView;
+	String bodyText = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +79,6 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 			Log.d(TAG, "title text present...");
 			mTitleTextView.setText(savedInstanceState.getString(STATE_TITLE_TEXT_));
 		}
-		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_DATE_TEXT_)) {
-			Log.d(TAG, "date text present...");
-			mArticlePubDateView.setText(savedInstanceState.getString(STATE_DATE_TEXT_));
-		}
 
 	}
 
@@ -80,10 +94,6 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 			Log.d(TAG, "saving titleText...");
 			outState.putString(STATE_TITLE_TEXT_, titleText);
 		}
-		if (!datelineText.equals("")) {
-			Log.d(TAG, "saving datelineText...");
-			outState.putString(STATE_DATE_TEXT_, datelineText);
-		}
 
 	}
 
@@ -91,7 +101,16 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
+			Log.d("TABLE", "Clicked home");
+
 			NavUtils.navigateUpTo(this, new Intent(this, WebsiteListActivity.class));
+
+			// TYPE 2
+			// Intent intent = new Intent(WebsiteDetailActivity.this,
+			// WebsiteListActivity.class);
+			// intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			// startActivity(intent);
+
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -101,37 +120,36 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 	/***** CALLBACK METHODS *****/
 	/****************************/
 
-	FrameLayout mHeaderLayout;
-	TextView mTitleTextView;
-	ImageView mMainImageView;
+	@Override
+	public void onPreExecute(View rootView) {
+		this.rootView = rootView;
 
-	RelativeLayout mSubtitleLayout;
-	TextView mArticlePubDateView;
+		// initialize article views
+		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
+		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
+		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
 
-	TextView mArticleTextView;
-	ImageButton mNewspaperTile;
-	TextView mViewInBrowser;
-
-	ImageLoader mImageLoader;
-
-	String mImageURL;
-	String mArticleURL;
-	String mArticlePubDate;
-
-	String bodyText = "";
-	String titleText = "";
-	String datelineText = "";
+	}
 
 	@Override
 	public void onProgressUpdate(String values) {
-		Log.d(TAG_ASYNC, "Activity onProgressUpdate");
 		bodyText = values + "\n\n";
 		mArticleTextView.append(bodyText);
 	}
 
 	@Override
+	public void getHeaderStub(View headerStub) {
+		this.headerStub = headerStub;
+	}
+
+	@Override
 	public void onPostExecute(String[] result) {
 		Log.d(TAG_ASYNC, "Activity onPostExecute");
+
+		titleText = result[0];
+		mImageURL = result[1];
+		mArticlePubDate = result[2];
+
 		mSubtitleLayout.setVisibility(View.VISIBLE);
 		mArticlePubDateView.setText(mArticlePubDate);
 
@@ -143,34 +161,20 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 		if (mImageURL == null) {
 			Log.d(TAG, "Image not, Title : " + titleText);
 
-			View articleTitleStub = ((ViewStub) findViewById(R.id.article_title_stub_import)).inflate();
-			mTitleTextView = (TextView) articleTitleStub.findViewById(R.id.article_title);
+			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_title);
 			mTitleTextView.setText(titleText);
 		} else {
 			Log.d(TAG, "Loading Image...");
 
-			View articleHeaderStub = ((ViewStub) findViewById(R.id.article_header_stub_import)).inflate();
-			mTitleTextView = (TextView) articleHeaderStub.findViewById(R.id.article_header_title);
+			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_header_title);
 			mTitleTextView.setText(titleText);
 
-			mMainImageView = (ImageView) articleHeaderStub.findViewById(R.id.mainImage);
+			mMainImageView = (ImageView) headerStub.findViewById(R.id.mainImage);
 			Picasso picassoInstance = Picasso.with(getApplicationContext());
 			picassoInstance.setDebugging(true);
 			picassoInstance.load(mImageURL).into(mMainImageView);
 		}
 
-	}
-
-	@Override
-	public void onPreExecute(View rootView) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void getHeaderStub(View headerStub) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
