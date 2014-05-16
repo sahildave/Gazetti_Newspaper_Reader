@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	View headerStub;
 
 	// Header
+	ProgressBar detailViewProgress;
 	TextView mTitleTextView;
 	ImageView mMainImageView;
 	ImageLoader mImageLoader;
@@ -110,7 +112,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 		Bundle arguments = new Bundle();
 		Log.d(TAG, "ListActivity headlineText " + headlineText);
-		arguments.putString(WebsiteDetailFragment.articleLink, headlineText);
+		arguments.putString(WebsiteDetailFragment.articleLinkKey, headlineText);
 		WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
 		detailFragment.setArguments(arguments);
 
@@ -120,7 +122,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 					.replace(R.id.website_detail_container, detailFragment, "detail").commit();
 		} else {
 			Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
-			detailIntent.putExtra(WebsiteDetailFragment.articleLink, headlineText);
+			detailIntent.putExtra(WebsiteDetailFragment.articleLinkKey, headlineText);
 			startActivity(detailIntent);
 
 		}
@@ -140,11 +142,17 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
 
+		// Progress Bar
+		detailViewProgress = (ProgressBar) rootView.findViewById(R.id.detailViewProgressBar);
+		detailViewProgress.setVisibility(View.VISIBLE);
+		detailViewProgress.setActivated(true);
 	}
 
 	@Override
 	public void onProgressUpdate(String values) {
 		bodyText = values + "\n\n";
+		Log.d(TAG_ASYNC, "Adding Body Text");
+		Log.d(TAG_ASYNC, "Body Text ______ " + bodyText);
 		mArticleTextView.append(bodyText);
 	}
 
@@ -161,13 +169,13 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		mImageURL = result[1];
 		mArticlePubDate = result[2];
 
-		mSubtitleLayout.setVisibility(View.VISIBLE);
-		mArticlePubDateView.setText(mArticlePubDate);
-
-		if (bodyText.equals("")) {
+		if (bodyText == null || bodyText.isEmpty()) {
 			mArticleTextView.setText("Sorry, this story is not supported for mobile view. Try to read in the browser");
 
 		}
+		mSubtitleLayout.setVisibility(View.VISIBLE);
+		mArticlePubDateView.setText(mArticlePubDate);
+		mArticleTextView.setVisibility(View.VISIBLE);
 
 		if (mImageURL == null) {
 			Log.d(TAG, "Image not, Title : " + titleText);
@@ -181,11 +189,17 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 			mTitleTextView.setText(titleText);
 
 			mMainImageView = (ImageView) headerStub.findViewById(R.id.mainImage);
-			Picasso picassoInstance = Picasso.with(getApplicationContext());
+			Picasso picassoInstance = Picasso.with(this);
 			picassoInstance.setDebugging(true);
 			picassoInstance.load(mImageURL).into(mMainImageView);
 		}
 
+		detailViewProgress.setActivated(false);
+		detailViewProgress.setVisibility(View.GONE);
+
+		bodyText = null;
+		titleText = null;
+		mImageURL = null;
 	}
 
 	/******************************************/
@@ -293,7 +307,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		// set up the drawer's list view with items and click listener
 		// mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 		// R.layout.drawer_list_item, mPlanetTitles));
-		adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
+		adapter = new NavDrawerListAdapter(this, navDrawerItems);
 		mDrawerList.setAdapter(adapter);
 
 		// New NavBar _ OVER

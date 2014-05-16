@@ -1,13 +1,10 @@
 package com.example.try_masterdetail.adapter;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,14 +23,14 @@ public class CustomAdapter extends ArrayAdapter<ParseObject> {
 	private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
 	private Activity ctx;
-	public static ArrayList<String> linkArrayList = new ArrayList<String>();
+
 	public static HashMap<String, String> linkMap = new HashMap<String, String>();
 	public static HashMap<String, String> pubDateMap = new HashMap<String, String>();
+
 	private List<ParseObject> articleObjectList;
 
 	public CustomAdapter(Activity context, List<ParseObject> articleObjectList) {
 		super(context, R.layout.headline_list_row, articleObjectList);
-		Log.d(TAG, "customAdapter big constructor");
 		ctx = context;
 		this.articleObjectList = articleObjectList;
 
@@ -59,7 +56,6 @@ public class CustomAdapter extends ArrayAdapter<ParseObject> {
 		}
 
 		ParseObject object = articleObjectList.get(position);
-
 		// Add the title view
 		holder.textViewItem.setText(object.getString("title"));
 

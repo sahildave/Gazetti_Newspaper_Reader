@@ -3,11 +3,11 @@ package com.example.try_masterdetail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,6 +30,7 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 	View headerStub;
 
 	// Header
+	ProgressBar detailViewProgress;
 	TextView mTitleTextView;
 	ImageView mMainImageView;
 	ImageLoader mImageLoader;
@@ -63,8 +64,8 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 			mDetailFragment = new WebsiteDetailFragment();
 
 			Bundle arguments = new Bundle();
-			arguments.putString(WebsiteDetailFragment.articleLink,
-					getIntent().getStringExtra(WebsiteDetailFragment.articleLink));
+			arguments.putString(WebsiteDetailFragment.articleLinkKey,
+					getIntent().getStringExtra(WebsiteDetailFragment.articleLinkKey));
 			mDetailFragment.setArguments(arguments);
 
 			getSupportFragmentManager().beginTransaction()
@@ -103,13 +104,16 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 		if (id == android.R.id.home) {
 			Log.d("TABLE", "Clicked home");
 
-			NavUtils.navigateUpTo(this, new Intent(this, WebsiteListActivity.class));
+			// NavUtils.navigateUpTo(this, new Intent(this,
+			// WebsiteListActivity.class));
 
 			// TYPE 2
-			// Intent intent = new Intent(WebsiteDetailActivity.this,
-			// WebsiteListActivity.class);
-			// intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			// startActivity(intent);
+			Intent intent = new Intent(WebsiteDetailActivity.this, WebsiteListActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(intent);
+
+			// TYPE 3
+			// NavUtils.navigateUpFromSameTask(this);
 
 			return true;
 		}
@@ -129,11 +133,17 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
 
+		// Progress Bar
+		detailViewProgress = (ProgressBar) rootView.findViewById(R.id.detailViewProgressBar);
+		detailViewProgress.setVisibility(View.VISIBLE);
+		detailViewProgress.setActivated(true);
 	}
 
 	@Override
 	public void onProgressUpdate(String values) {
 		bodyText = values + "\n\n";
+		Log.d(TAG_ASYNC, "Adding Body Text");
+		Log.d(TAG_ASYNC, "Body Text ______ " + bodyText);
 		mArticleTextView.append(bodyText);
 	}
 
@@ -150,13 +160,13 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 		mImageURL = result[1];
 		mArticlePubDate = result[2];
 
-		mSubtitleLayout.setVisibility(View.VISIBLE);
-		mArticlePubDateView.setText(mArticlePubDate);
-
-		if (bodyText.equals("")) {
+		if (bodyText == null || bodyText.isEmpty()) {
 			mArticleTextView.setText("Sorry, this story is not supported for mobile view. Try to read in the browser");
 
 		}
+		mSubtitleLayout.setVisibility(View.VISIBLE);
+		mArticlePubDateView.setText(mArticlePubDate);
+		mArticleTextView.setVisibility(View.VISIBLE);
 
 		if (mImageURL == null) {
 			Log.d(TAG, "Image not, Title : " + titleText);
@@ -170,11 +180,17 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 			mTitleTextView.setText(titleText);
 
 			mMainImageView = (ImageView) headerStub.findViewById(R.id.mainImage);
-			Picasso picassoInstance = Picasso.with(getApplicationContext());
+			Picasso picassoInstance = Picasso.with(this);
 			picassoInstance.setDebugging(true);
 			picassoInstance.load(mImageURL).into(mMainImageView);
 		}
 
+		detailViewProgress.setActivated(false);
+		detailViewProgress.setVisibility(View.GONE);
+
+		bodyText = null;
+		titleText = null;
+		mImageURL = null;
 	}
 
 }

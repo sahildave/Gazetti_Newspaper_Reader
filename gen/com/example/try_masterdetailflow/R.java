@@ -25,22 +25,19 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int background_brown=0x7f05000b;
-        /**  Grey 
-         */
-        public static final int counter_text_bg=0x7f050008;
-        public static final int counter_text_color=0x7f050009;
-        public static final int headlines_list_item_title=0x7f05000a;
-        public static final int main_list_background=0x7f050004;
-        /**  Red 
-         */
-        public static final int main_list_background_default=0x7f050007;
         /**  Yellow 
          */
-        public static final int main_list_background_pressed=0x7f050005;
-        /**  Green 
-         */
-        public static final int main_list_background_selected=0x7f050006;
+        public static final int counter_text_bg=0x7f050005;
+        public static final int counter_text_color=0x7f050006;
+        public static final int holo_blue_bright=0x7f05000d;
+        public static final int holo_blue_light=0x7f050009;
+        public static final int holo_green_light=0x7f05000a;
+        public static final int holo_orange_light=0x7f05000c;
+        public static final int holo_red_light=0x7f05000b;
+        public static final int main_list_background=0x7f050004;
+        public static final int main_list_item_title=0x7f050007;
+        public static final int main_list_item_title_selected=0x7f050008;
+        public static final int main_list_text_selector=0x7f05000e;
         public static final int nav_list_background=0x7f050001;
         public static final int nav_list_background_pressed=0x7f050002;
         public static final int nav_list_divider=0x7f050003;
@@ -57,55 +54,58 @@ public final class R {
     public static final class drawable {
         public static final int action_search=0x7f020000;
         public static final int checked=0x7f020001;
-        public static final int counter_bg=0x7f020002;
-        public static final int divider=0x7f020003;
-        public static final int drawer_shadow=0x7f020004;
-        public static final int gradient=0x7f020005;
-        public static final int ic_communities=0x7f020006;
-        public static final int ic_drawer=0x7f020007;
-        public static final int ic_home=0x7f020008;
-        public static final int ic_launcher=0x7f020009;
-        public static final int ic_newspaper=0x7f02000a;
-        public static final int ic_pages=0x7f02000b;
-        public static final int ic_people=0x7f02000c;
-        public static final int ic_photos=0x7f02000d;
-        public static final int ic_webview=0x7f02000e;
-        public static final int ic_whats_hot=0x7f02000f;
-        public static final int main_list_item_bg_normal=0x7f020010;
-        public static final int main_list_item_bg_pressed=0x7f020011;
-        public static final int main_list_item_bg_selected=0x7f020012;
-        public static final int main_list_selector=0x7f020013;
-        public static final int navdrawer_list_item_bg_normal=0x7f020014;
-        public static final int navdrawer_list_item_bg_pressed=0x7f020015;
-        public static final int navdrawer_list_selector=0x7f020016;
+        public static final int checked_arrow=0x7f020002;
+        public static final int circle_scroll_to_read=0x7f020003;
+        public static final int counter_bg=0x7f020004;
+        public static final int divider=0x7f020005;
+        public static final int drawer_shadow=0x7f020006;
+        public static final int gradient=0x7f020007;
+        public static final int ic_communities=0x7f020008;
+        public static final int ic_drawer=0x7f020009;
+        public static final int ic_home=0x7f02000a;
+        public static final int ic_launcher=0x7f02000b;
+        public static final int ic_newspaper=0x7f02000c;
+        public static final int ic_pages=0x7f02000d;
+        public static final int ic_people=0x7f02000e;
+        public static final int ic_photos=0x7f02000f;
+        public static final int ic_webview=0x7f020010;
+        public static final int ic_whats_hot=0x7f020011;
+        public static final int main_list_selector=0x7f020012;
+        public static final int navdrawer_list_item_bg_normal=0x7f020013;
+        public static final int navdrawer_list_item_bg_pressed=0x7f020014;
+        public static final int navdrawer_list_selector=0x7f020015;
+        public static final int progress_bar=0x7f020016;
         public static final int unchecked=0x7f020017;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b0019;
-        public static final int action_websearch=0x7f0b001a;
-        public static final int article_header_stub=0x7f0b000d;
-        public static final int article_header_stub_import=0x7f0b000c;
+        public static final int action_settings=0x7f0b001c;
+        public static final int action_websearch=0x7f0b001d;
+        public static final int article_header_stub=0x7f0b0010;
+        public static final int article_header_stub_import=0x7f0b000f;
         public static final int article_header_title=0x7f0b0006;
         public static final int article_title=0x7f0b0007;
-        public static final int article_title_stub=0x7f0b000f;
-        public static final int article_title_stub_import=0x7f0b000e;
-        public static final int body=0x7f0b0015;
-        public static final int category=0x7f0b0013;
+        public static final int article_title_stub=0x7f0b0012;
+        public static final int article_title_stub_import=0x7f0b0011;
+        public static final int body=0x7f0b0018;
+        public static final int category=0x7f0b0016;
         public static final int counter=0x7f0b000a;
+        public static final int detailViewProgressBar=0x7f0b000e;
         public static final int drawer_layout=0x7f0b0001;
-        public static final int headline=0x7f0b0018;
+        public static final int footerProgressBar=0x7f0b000c;
+        public static final int footerViewText=0x7f0b000b;
+        public static final int headerView=0x7f0b001a;
+        public static final int headline=0x7f0b001b;
         public static final int icon=0x7f0b0008;
-        public static final int layoutHeaderProgress=0x7f0b0016;
         public static final int list_slidermenu=0x7f0b0003;
         public static final int mainImage=0x7f0b0004;
         public static final int nav_list_item_title=0x7f0b0009;
-        public static final int newspaperTile=0x7f0b0011;
-        public static final int progressHeaderProgress=0x7f0b0017;
-        public static final int pubDateView=0x7f0b0012;
-        public static final int scroller=0x7f0b000b;
-        public static final int subtitleLayout=0x7f0b0010;
+        public static final int newspaperTile=0x7f0b0014;
+        public static final int pubDateView=0x7f0b0015;
+        public static final int scroller=0x7f0b000d;
+        public static final int subtitleLayout=0x7f0b0013;
+        public static final int swipe_container=0x7f0b0019;
         public static final int titleLayout=0x7f0b0005;
-        public static final int viewInBrowser=0x7f0b0014;
+        public static final int viewInBrowser=0x7f0b0017;
         public static final int website_detail_container=0x7f0b0000;
         public static final int website_list_container=0x7f0b0002;
     }
@@ -138,9 +138,12 @@ public final class R {
         public static final int article_header=0x7f030003;
         public static final int article_title=0x7f030004;
         public static final int drawer_list_item=0x7f030005;
-        public static final int fragment_website_detail=0x7f030006;
-        public static final int fragment_website_list=0x7f030007;
-        public static final int headline_list_row=0x7f030008;
+        public static final int footer_view=0x7f030006;
+        public static final int fragment_website_detail=0x7f030007;
+        public static final int fragment_website_list=0x7f030008;
+        public static final int header_view=0x7f030009;
+        public static final int headline_list_row=0x7f03000a;
+        public static final int headline_list_row_twopane=0x7f03000b;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;
@@ -155,7 +158,7 @@ public final class R {
         public static final int desc_list_item_icon=0x7f070007;
         public static final int drawer_close=0x7f070004;
         public static final int drawer_open=0x7f070003;
-        public static final int title_website_detail=0x7f070002;
+        public static final int title_app=0x7f070002;
     }
     public static final class style {
         /** 

@@ -12,16 +12,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+        <ProgressBar
+            android:id="@+id/detailViewProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/progress_bar"
+            android:visibility="invisible" />
+
         <ViewStub
             android:id="@+id/article_header_stub_import"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inflatedId="@+id/article_header_stub"
             android:layout="@layout/article_header" />
 
         <ViewStub
             android:id="@+id/article_title_stub_import"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inflatedId="@+id/article_title_stub"
             android:layout="@layout/article_title" />
@@ -36,7 +44,7 @@
 
             <ImageButton
                 android:id="@+id/newspaperTile"
-                style="?android:borderlessButtonStyle"
+                style="?android:buttonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
@@ -81,7 +89,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible" />
     </LinearLayout>
 
 </ScrollView>

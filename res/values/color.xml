@@ -5,13 +5,15 @@
     <color name="nav_list_background">#303030</color>
     <color name="nav_list_background_pressed">#992416</color>
     <color name="nav_list_divider">#272727</color>
-    <color name="main_list_background">#FFF200</color> <!-- Yellow -->
-    <color name="main_list_background_pressed">#008000</color> <!-- Green -->
-    <color name="main_list_background_selected">#ff0000 </color> <!-- Red -->
-    <color name="main_list_background_default">#EBEBEB </color> <!-- Grey -->
+    <color name="main_list_background">#DCDCDC</color> <!-- Yellow -->
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
-    <color name="headlines_list_item_title">#000000</color>
-    <color name="background_brown">#F0F0F0</color>
+    <color name="main_list_item_title">#000000</color>
+    <color name="main_list_item_title_selected">#006B99</color>
+    <color name="holo_blue_light">#ff33b5e5</color>
+    <color name="holo_green_light">#ff99cc00</color>
+    <color name="holo_red_light">#ffff4444</color>
+    <color name="holo_orange_light">#ffffbb33</color>
+    <color name="holo_blue_bright">#ff00ddff</color>
 
 </resources>

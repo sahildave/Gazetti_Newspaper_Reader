@@ -30,34 +30,14 @@ import com.example.try_masterdetailflow.R;
 public class WebsiteDetailFragment extends Fragment {
 	private static final String TAG = "DFRAGMENT";
 	private static final String TAG_ASYNC = "ASYNC";
-	public static final String articleLink = "articleLink_key";
+	public static final String articleLinkKey = "articleLink_key";
 
-	private static final int SECOND_MILLIS = 1000;
-	private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-	private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
-	private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
-
-	// FrameLayout mHeaderLayout;
-	// TextView mTitleTextView;
-	// ImageView mMainImageView;
-	//
-	RelativeLayout mSubtitleLayout;
-	TextView mArticlePubDateView;
-	//
-	TextView mArticleTextView;
-
-	ImageButton mNewspaperTile;
-	TextView mViewInBrowser;
-	//
-	// ImageLoader mImageLoader;
-	//
-	String mImageURL;
-	String mArticleURL;
-	String mArticlePubDate;
-	//
-	// String bodyText = "";
-	String titleText = "";
-	String datelineText = "";
+	private ImageButton mNewspaperTile;
+	private TextView mViewInBrowser;
+	private String mImageURL;
+	private String mArticleURL;
+	private String mArticlePubDate;
+	private String titleText = "";
 
 	private TaskCallbacks mCallbacks;
 	private MyAsyncTask mTask;
@@ -94,12 +74,12 @@ public class WebsiteDetailFragment extends Fragment {
 
 		setRetainInstance(true);
 
-		if (getArguments().containsKey(articleLink)) {
-			mArticleURL = CustomAdapter.linkMap.get(getArguments().getString(articleLink));
+		if (getArguments().containsKey(articleLinkKey)) {
+			mArticleURL = CustomAdapter.linkMap.get(getArguments().getString(articleLinkKey));
 		}
 
-		if (getArguments().containsKey(articleLink)) {
-			mArticlePubDate = CustomAdapter.pubDateMap.get(getArguments().getString(articleLink));
+		if (getArguments().containsKey(articleLinkKey)) {
+			mArticlePubDate = CustomAdapter.pubDateMap.get(getArguments().getString(articleLinkKey));
 		}
 
 		firstRun = true;
@@ -121,16 +101,12 @@ public class WebsiteDetailFragment extends Fragment {
 			callAsync(rootView);
 		}
 
-		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
-		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
-		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
-
 		mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
 		mViewInBrowser = (TextView) rootView.findViewById(R.id.viewInBrowser);
 
-		mNewspaperTile.setOnTouchListener(webViewCalled); // TODO: add onClick
-															// in xml
+		mNewspaperTile.setOnTouchListener(webViewCalled);
 		mViewInBrowser.setOnTouchListener(webViewCalled);
+
 		return rootView;
 	}
 
@@ -145,8 +121,6 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			Log.d(TAG, "Touched Item " + v);
-
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mArticleURL)));
 			return true;
 		}
@@ -157,46 +131,52 @@ public class WebsiteDetailFragment extends Fragment {
 		View rootView;
 
 		public MyAsyncTask(View rootView) {
+			Log.d(TAG, "Async Constructor");
 			this.rootView = rootView;
 		}
 
 		@Override
 		protected void onPreExecute() {
+			Log.d(TAG, "Async onPreExecute");
 
 			if (mCallbacks != null) {
 				mCallbacks.onPreExecute(rootView);
 			}
+
 		}
 
 		@Override
 		protected String[] doInBackground(Void... params) {
+			Log.d(TAG, "Async doInBackground");
 			Document doc;
 			String[] result = new String[3];
 			try {
 
 				String url = mArticleURL;
 
-				doc = Jsoup.connect(url).get();
-
+				doc = Jsoup.connect(url).timeout(10 * 1000).get();
+				long connected = System.currentTimeMillis();
+				Log.d("JSOUP", "Jsoup connected - " + System.currentTimeMillis());
 				// get Body
 				Element bodyElement = doc.body();
-
+				Log.d("JSOUP", "Jsoup bodyElement - " + System.currentTimeMillis());
 				// get page title
 				Elements titleElements = bodyElement.select(".detail-title");
 				titleText = titleElements.text();
+				Log.d("JSOUP", "Jsoup titleElements - " + System.currentTimeMillis());
 
 				// get HeaderImageUrl
 				mImageURL = getImageURL(bodyElement);
+				Log.d("JSOUP", "Jsoup getImageURL - " + System.currentTimeMillis());
 
 				// get p elements with class = body
 				Elements bodyArticleElements = bodyElement.select("p[class=body]");
 				for (Element textArticleElement : bodyArticleElements) {
 					publishProgress(textArticleElement.text());
 				}
-
-				// // get dateline
-				// Elements datelineElements = bodyElement.select(".dateline");
-				// datelineText = datelineElements.text();
+				Log.d("JSOUP", "Jsoup bodyArticleElements - " + System.currentTimeMillis());
+				long done = System.currentTimeMillis();
+				Log.d("JSOUP", "DONE IN  - " + (done - connected));
 
 				result[0] = titleText;
 				result[1] = mImageURL;
@@ -234,6 +214,7 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		protected void onProgressUpdate(String... values) {
+			Log.d(TAG, "Async onProgressUpdate");
 			if (mCallbacks != null && values[0].length() > 0) {
 				mCallbacks.onProgressUpdate(values[0]);
 			}
@@ -242,6 +223,7 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(String[] result) {
+			Log.d(TAG, "Async onPostExecute");
 
 			if (mCallbacks != null) {
 				View headerStub;
