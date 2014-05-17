@@ -115,6 +115,7 @@ public class WebsiteDetailFragment extends Fragment {
 		Log.d(TAG, "DetailFragment onDetach");
 		super.onDetach();
 		mCallbacks = null;
+		
 	}
 
 	private OnTouchListener webViewCalled = new OnTouchListener() {

@@ -2,21 +2,26 @@ package com.example.try_masterdetail;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Rect;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,12 +68,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 	// ScrollView from DetailFragment
 	View rootView;
-	FrameLayout mDetailFrameLayout;
-	LinearLayout mScrollingLinearLayout;
-	LinearLayout mScrollToReadLayout;
 	View headerStub;
-	FrameLayout mDetailFragmentContainer;
-	TextView mTestTextView;
 
 	// Header
 	ProgressBar detailViewProgress;
@@ -88,6 +88,8 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	TextView mArticleTextView;
 	String bodyText = "";
 	ScrollView mScrollView;
+
+	private boolean displayScrollToRead = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -153,11 +155,6 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
 		mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
-		mDetailFrameLayout = (FrameLayout) rootView.findViewById(R.id.detailFrameLayout);
-		mScrollingLinearLayout = (LinearLayout) rootView.findViewById(R.id.scrollingLinearLayout);
-		mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
-		mDetailFragmentContainer = (FrameLayout) findViewById(R.id.website_detail_container);
-		mTestTextView = (TextView) rootView.findViewById(R.id.wastedText);
 
 		// Progress Bar
 		// detailViewProgress = (ProgressBar)
@@ -213,18 +210,60 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 				@Override
 				public void onSuccess() {
 					Log.d(TAG_ASYNC, "Image Loaded");
-					mTestTextView.setVisibility(View.VISIBLE);
 
-					Rect scrollBounds = new Rect();
-					mScrollView.getHitRect(scrollBounds);
-					if (mTestTextView.getLocalVisibleRect(scrollBounds)) {
-						// Any portion of the imageView, even a single pixel, is
-						// within the visible window
-						Log.d(TAG_ASYNC, "is visible");
-					} else {
-						// NONE of the imageView is within the visible window
-						Log.d(TAG_ASYNC, "not visible");
-					}
+					mMainImageView.getViewTreeObserver().addOnGlobalLayoutListener(
+							new ViewTreeObserver.OnGlobalLayoutListener() {
+
+								@SuppressWarnings("deprecation")
+								@SuppressLint("NewApi")
+								@Override
+								public void onGlobalLayout() {
+									// Ensure you call it only once :
+
+									// `activity` is an instance of Activity
+									// class.
+									Display display = getWindowManager().getDefaultDisplay();
+									Point screen = new Point();
+									if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+										display.getSize(screen);
+									} else {
+										screen.x = display.getWidth();
+										screen.y = display.getHeight();
+									}
+
+									int statusBarHeight = 0;
+									int resId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+									if (resId > 0) {
+										statusBarHeight = getResources().getDimensionPixelSize(resId);
+									}
+
+									TypedValue tv = new TypedValue();
+									int actionBarHeight = 0;
+									if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+										actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
+												getResources().getDisplayMetrics());
+									}
+
+									Log.d(TAG_ASYNC, "mSubtitleLayout " + mSubtitleLayout.getHeight());
+									Log.d(TAG_ASYNC, "mMainImageView " + mMainImageView.getHeight());
+									Log.d(TAG_ASYNC, "mArticleTextView " + mArticleTextView.getTop());
+									Log.d(TAG_ASYNC, "total height " + screen.y);
+									Log.d(TAG_ASYNC, "status bar " + statusBarHeight);
+									Log.d(TAG_ASYNC, "action bar " + actionBarHeight);
+
+									displayScrollToRead = (screen.y - statusBarHeight - actionBarHeight) < (mArticleTextView
+											.getTop()) * 1.08;
+									Log.d(TAG_ASYNC, "displayScrollToRead " + displayScrollToRead);
+
+									if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+										mMainImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+									} else {
+										mMainImageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+									}
+
+								}
+
+							});
 
 				}
 

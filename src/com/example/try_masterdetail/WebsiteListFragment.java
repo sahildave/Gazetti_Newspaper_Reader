@@ -309,7 +309,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mActivatedPosition = 0;
+		mActivatedPosition = 1;
 		dateLastUpdatedString = null;
 
 	}
