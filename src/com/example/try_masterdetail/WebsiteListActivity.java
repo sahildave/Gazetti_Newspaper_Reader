@@ -6,10 +6,10 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -17,10 +17,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ import com.example.try_masterdetail.adapter.NavDrawerListAdapter;
 import com.example.try_masterdetail.model.NavDrawerItem;
 import com.example.try_masterdetailflow.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 public class WebsiteListActivity extends FragmentActivity implements WebsiteListFragment.Callbacks,
@@ -57,8 +61,14 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 	// CallBacks for handling asynctask for twoPane mode
 
-	View rootView; // ScrollView from DetailFragment
+	// ScrollView from DetailFragment
+	View rootView;
+	FrameLayout mDetailFrameLayout;
+	LinearLayout mScrollingLinearLayout;
+	LinearLayout mScrollToReadLayout;
 	View headerStub;
+	FrameLayout mDetailFragmentContainer;
+	TextView mTestTextView;
 
 	// Header
 	ProgressBar detailViewProgress;
@@ -77,22 +87,23 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	// Body
 	TextView mArticleTextView;
 	String bodyText = "";
+	ScrollView mScrollView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "Activity onCreate");
+		// Log.d(TAG, "Activity onCreate");
 		setContentView(R.layout.activity_website_list);
 
 		if (findViewById(R.id.website_detail_container) != null) {
-			Log.d(TAG, "Activity twoPane true");
+			// Log.d(TAG, "Activity twoPane true");
 			mTwoPane = true;
 		}
 
 		mlistFragment = (WebsiteListFragment) getSupportFragmentManager().findFragmentByTag("listContent");
 
 		if (mlistFragment == null) {
-			Log.d(TAG, "Activity mListFragment is null");
+			// Log.d(TAG, "Activity mListFragment is null");
 			mlistFragment = new WebsiteListFragment();
 			Bundle layoutBundle = new Bundle();
 			layoutBundle.putBoolean("mTwoPane", mTwoPane);
@@ -111,13 +122,13 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
 
 		Bundle arguments = new Bundle();
-		Log.d(TAG, "ListActivity headlineText " + headlineText);
+		// Log.d(TAG, "ListActivity headlineText " + headlineText);
 		arguments.putString(WebsiteDetailFragment.articleLinkKey, headlineText);
 		WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
 		detailFragment.setArguments(arguments);
 
 		if (mTwoPane) {
-			Log.d(TAG, "replacing detailFragment");
+			// Log.d(TAG, "replacing detailFragment");
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.website_detail_container, detailFragment, "detail").commit();
 		} else {
@@ -141,18 +152,24 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
+		mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
+		mDetailFrameLayout = (FrameLayout) rootView.findViewById(R.id.detailFrameLayout);
+		mScrollingLinearLayout = (LinearLayout) rootView.findViewById(R.id.scrollingLinearLayout);
+		mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
+		mDetailFragmentContainer = (FrameLayout) findViewById(R.id.website_detail_container);
+		mTestTextView = (TextView) rootView.findViewById(R.id.wastedText);
 
 		// Progress Bar
-		detailViewProgress = (ProgressBar) rootView.findViewById(R.id.detailViewProgressBar);
-		detailViewProgress.setVisibility(View.VISIBLE);
-		detailViewProgress.setActivated(true);
+		// detailViewProgress = (ProgressBar)
+		// rootView.findViewById(R.id.detailViewProgressBar);
+		// detailViewProgress.setVisibility(View.VISIBLE);
+		// detailViewProgress.setActivated(true);
 	}
 
 	@Override
 	public void onProgressUpdate(String values) {
 		bodyText = values + "\n\n";
-		Log.d(TAG_ASYNC, "Adding Body Text");
-		Log.d(TAG_ASYNC, "Body Text ______ " + bodyText);
+		// Log.d(TAG_ASYNC, "Adding Body Text");
 		mArticleTextView.append(bodyText);
 	}
 
@@ -178,12 +195,12 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		mArticleTextView.setVisibility(View.VISIBLE);
 
 		if (mImageURL == null) {
-			Log.d(TAG, "Image not, Title : " + titleText);
+			// Log.d(TAG, "Image not, Title : " + titleText);
 
 			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_title);
 			mTitleTextView.setText(titleText);
 		} else {
-			Log.d(TAG, "Loading Image...");
+			// Log.d(TAG, "Loading Image...");
 
 			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_header_title);
 			mTitleTextView.setText(titleText);
@@ -191,11 +208,33 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 			mMainImageView = (ImageView) headerStub.findViewById(R.id.mainImage);
 			Picasso picassoInstance = Picasso.with(this);
 			picassoInstance.setDebugging(true);
-			picassoInstance.load(mImageURL).into(mMainImageView);
-		}
+			picassoInstance.load(mImageURL).into(mMainImageView, new Callback() {
 
-		detailViewProgress.setActivated(false);
-		detailViewProgress.setVisibility(View.GONE);
+				@Override
+				public void onSuccess() {
+					Log.d(TAG_ASYNC, "Image Loaded");
+					mTestTextView.setVisibility(View.VISIBLE);
+
+					Rect scrollBounds = new Rect();
+					mScrollView.getHitRect(scrollBounds);
+					if (mTestTextView.getLocalVisibleRect(scrollBounds)) {
+						// Any portion of the imageView, even a single pixel, is
+						// within the visible window
+						Log.d(TAG_ASYNC, "is visible");
+					} else {
+						// NONE of the imageView is within the visible window
+						Log.d(TAG_ASYNC, "not visible");
+					}
+
+				}
+
+				@Override
+				public void onError() {
+					// TODO Auto-generated method stub
+
+				}
+			});
+		}
 
 		bodyText = null;
 		titleText = null;

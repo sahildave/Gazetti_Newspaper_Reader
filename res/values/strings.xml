@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">LS2014 - The Hindu</string>
+    <string name="app_name">TRY_News</string>
     <string name="action_settings">Settings</string>
-    <string name="title_app">LS2014 for /r/India</string>
+    <string name="title_app">TRY_News</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>

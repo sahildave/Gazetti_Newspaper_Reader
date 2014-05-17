@@ -16,9 +16,9 @@
 
             <ListView
                 android:id="@android:id/list"
-                android:background="@color/main_list_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?android:attr/activatedBackgroundIndicator"
                 android:divider="@android:color/black"
                 android:dividerHeight="0.5dp" />
         </LinearLayout>

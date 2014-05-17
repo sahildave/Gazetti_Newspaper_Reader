@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:scaleType="fitStart" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:id="@+id/titleLayout"
@@ -21,7 +21,7 @@
             android:id="@+id/article_header_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/gradient"
+            android:background="@drawable/rectangle_gradient"
             android:fontFamily="sans-serif-condensed"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
