@@ -153,7 +153,6 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 		// Progress Bar
 		detailViewProgress = (ProgressBar) rootView.findViewById(R.id.detailViewProgressBar);
 		detailViewProgress.setVisibility(View.VISIBLE);
-		detailViewProgress.setActivated(true);
 	}
 
 	@Override
@@ -190,6 +189,7 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 
 			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_title);
 			mTitleTextView.setText(titleText);
+			detailViewProgress.setVisibility(View.GONE);
 		} else {
 			Log.d(TAG, "Loading Image...");
 
@@ -249,7 +249,8 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 									// screen.y);
 									// Log.d(TAG_ASYNC, "status bar " +
 									// statusBarHeight);
-									// Log.d(TAG_ASYNC, "action bar " + actionBarHeight);
+									// Log.d(TAG_ASYNC, "action bar " +
+									// actionBarHeight);
 
 									// Boolean to check if image+subtitle is
 									// large enough.
@@ -275,6 +276,8 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 								}
 
 							});
+
+					detailViewProgress.setVisibility(View.GONE);
 
 				}
 
