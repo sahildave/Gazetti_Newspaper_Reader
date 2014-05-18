@@ -22,7 +22,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -89,7 +90,9 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	String bodyText = "";
 	ScrollView mScrollView;
 
+	LinearLayout mScrollToReadLayout;
 	private boolean displayScrollToRead = false;
+	private Animation slide_up;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +117,8 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 					.add(R.id.website_list_container, mlistFragment, "listContent").commit();
 
 		}
+
+		slide_up = AnimationUtils.loadAnimation(this, R.animator.slide_up);
 
 		// Make Navigation Drawer
 		makeNavDrawer();
@@ -155,6 +160,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
 		mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
+		mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
 
 		// Progress Bar
 		// detailViewProgress = (ProgressBar)
@@ -218,10 +224,8 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 								@SuppressLint("NewApi")
 								@Override
 								public void onGlobalLayout() {
-									// Ensure you call it only once :
 
-									// `activity` is an instance of Activity
-									// class.
+									// Get Display metrics according to the SDK
 									Display display = getWindowManager().getDefaultDisplay();
 									Point screen = new Point();
 									if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
@@ -231,12 +235,14 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 										screen.y = display.getHeight();
 									}
 
+									// StatusBar Height
 									int statusBarHeight = 0;
 									int resId = getResources().getIdentifier("status_bar_height", "dimen", "android");
 									if (resId > 0) {
 										statusBarHeight = getResources().getDimensionPixelSize(resId);
 									}
 
+									// ActionBar Height
 									TypedValue tv = new TypedValue();
 									int actionBarHeight = 0;
 									if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
@@ -244,17 +250,34 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 												getResources().getDisplayMetrics());
 									}
 
-									Log.d(TAG_ASYNC, "mSubtitleLayout " + mSubtitleLayout.getHeight());
-									Log.d(TAG_ASYNC, "mMainImageView " + mMainImageView.getHeight());
-									Log.d(TAG_ASYNC, "mArticleTextView " + mArticleTextView.getTop());
-									Log.d(TAG_ASYNC, "total height " + screen.y);
-									Log.d(TAG_ASYNC, "status bar " + statusBarHeight);
-									Log.d(TAG_ASYNC, "action bar " + actionBarHeight);
+									// Check
+									// Log.d(TAG_ASYNC, "mSubtitleLayout " +
+									// mSubtitleLayout.getHeight());
+									// Log.d(TAG_ASYNC, "mMainImageView " +
+									// mMainImageView.getHeight());
+									// Log.d(TAG_ASYNC, "mArticleTextView " +
+									// mArticleTextView.getTop());
+									// Log.d(TAG_ASYNC, "total height " +
+									// screen.y);
+									// Log.d(TAG_ASYNC, "status bar " +
+									// statusBarHeight);
+									// Log.d(TAG_ASYNC, "action bar " + actionBarHeight);
 
+									// Boolean to check if image+subtitle is
+									// large enough.
+									// If yes, then display "Scroll To Read"
 									displayScrollToRead = (screen.y - statusBarHeight - actionBarHeight) < (mArticleTextView
 											.getTop()) * 1.08;
 									Log.d(TAG_ASYNC, "displayScrollToRead " + displayScrollToRead);
 
+									if (displayScrollToRead) {
+										mScrollToReadLayout.startAnimation(slide_up);
+										mScrollToReadLayout.setVisibility(View.VISIBLE);
+										Log.d(TAG_ASYNC, "Visiblity - " + mScrollToReadLayout.getVisibility());
+									}
+
+									// remove GlobalLayoutListener according to
+									// SDK
 									if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
 										mMainImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 									} else {
@@ -269,7 +292,8 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 
 				@Override
 				public void onError() {
-					// TODO Auto-generated method stub
+
+					Log.d(TAG_ASYNC, "IMAGE WAS NOT LOADED!!!");
 
 				}
 			});

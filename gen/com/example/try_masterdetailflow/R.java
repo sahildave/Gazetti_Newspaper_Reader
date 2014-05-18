@@ -9,8 +9,8 @@ package com.example.try_masterdetailflow;
 
 public final class R {
     public static final class animator {
-        public static final int slide_in_left=0x7f040000;
-        public static final int slide_out_right=0x7f040001;
+        public static final int slide_down=0x7f040000;
+        public static final int slide_up=0x7f040001;
     }
     public static final class array {
         /**  Nav Drawer List Item Icons 
@@ -76,40 +76,43 @@ public final class R {
         public static final int navdrawer_list_selector=0x7f020015;
         public static final int progress_bar=0x7f020016;
         public static final int rectangle_gradient=0x7f020017;
-        public static final int unchecked=0x7f020018;
+        public static final int scroll_to_read=0x7f020018;
+        public static final int unchecked=0x7f020019;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b001f;
-        public static final int action_websearch=0x7f0b0020;
+        public static final int action_settings=0x7f0b0021;
+        public static final int action_websearch=0x7f0b0022;
         public static final int articleHeaderFrameLayout=0x7f0b0004;
-        public static final int article_header_stub=0x7f0b0012;
-        public static final int article_header_stub_import=0x7f0b0011;
+        public static final int article_header_stub=0x7f0b0013;
+        public static final int article_header_stub_import=0x7f0b0012;
         public static final int article_header_title=0x7f0b0007;
         public static final int article_title=0x7f0b0008;
-        public static final int article_title_stub=0x7f0b0014;
-        public static final int article_title_stub_import=0x7f0b0013;
-        public static final int body=0x7f0b001a;
-        public static final int category=0x7f0b0018;
+        public static final int article_title_stub=0x7f0b0015;
+        public static final int article_title_stub_import=0x7f0b0014;
+        public static final int body=0x7f0b001b;
+        public static final int category=0x7f0b0019;
         public static final int counter=0x7f0b000b;
-        public static final int detailViewProgressBar=0x7f0b0010;
+        public static final int detailFrameLayout=0x7f0b000e;
+        public static final int detailViewProgressBar=0x7f0b0011;
         public static final int drawer_layout=0x7f0b0001;
         public static final int footerProgressBar=0x7f0b000d;
         public static final int footerViewText=0x7f0b000c;
-        public static final int headerView=0x7f0b001d;
-        public static final int headline=0x7f0b001e;
+        public static final int headerView=0x7f0b001f;
+        public static final int headline=0x7f0b0020;
         public static final int icon=0x7f0b0009;
         public static final int list_slidermenu=0x7f0b0003;
         public static final int mainImage=0x7f0b0005;
         public static final int nav_list_item_title=0x7f0b000a;
-        public static final int newspaperTile=0x7f0b0016;
-        public static final int pubDateView=0x7f0b0017;
-        public static final int scroller=0x7f0b000e;
-        public static final int scrollingLinearLayout=0x7f0b000f;
-        public static final int subtitleLayout=0x7f0b0015;
-        public static final int swipe_container=0x7f0b001c;
+        public static final int newspaperTile=0x7f0b0017;
+        public static final int pubDateView=0x7f0b0018;
+        public static final int scrollToReadLayout=0x7f0b001c;
+        public static final int scrollToReadText=0x7f0b001d;
+        public static final int scroller=0x7f0b000f;
+        public static final int scrollingLinearLayout=0x7f0b0010;
+        public static final int subtitleLayout=0x7f0b0016;
+        public static final int swipe_container=0x7f0b001e;
         public static final int titleLayout=0x7f0b0006;
-        public static final int viewInBrowser=0x7f0b0019;
-        public static final int wastedText=0x7f0b001b;
+        public static final int viewInBrowser=0x7f0b001a;
         public static final int website_detail_container=0x7f0b0000;
         public static final int website_list_container=0x7f0b0002;
     }

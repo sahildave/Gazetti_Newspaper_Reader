@@ -13,15 +13,20 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.try_masterdetail.adapter.CustomAdapter;
@@ -43,6 +48,11 @@ public class WebsiteDetailFragment extends Fragment {
 	private MyAsyncTask mTask;
 
 	private boolean firstRun = false;
+	private LinearLayout mScrollToReadLayout;
+
+	private GestureDetectorCompat mDetector;
+	private ScrollView mScrollView;
+	private Animation slide_down;
 
 	static interface TaskCallbacks {
 		void onPreExecute(View rootView);
@@ -81,7 +91,8 @@ public class WebsiteDetailFragment extends Fragment {
 		if (getArguments().containsKey(articleLinkKey)) {
 			mArticlePubDate = CustomAdapter.pubDateMap.get(getArguments().getString(articleLinkKey));
 		}
-
+		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
+		slide_down = AnimationUtils.loadAnimation(getActivity(), R.animator.slide_down);
 		firstRun = true;
 
 	}
@@ -107,6 +118,20 @@ public class WebsiteDetailFragment extends Fragment {
 		mNewspaperTile.setOnTouchListener(webViewCalled);
 		mViewInBrowser.setOnTouchListener(webViewCalled);
 
+		mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
+		mScrollToReadLayout.setVisibility(View.INVISIBLE);
+		Log.d(TAG_ASYNC, "Fragment Visiblity - " + mScrollToReadLayout.getVisibility());
+
+		mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
+
+		mScrollView.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return mDetector.onTouchEvent(event);
+			}
+		});
+
 		return rootView;
 	}
 
@@ -115,7 +140,6 @@ public class WebsiteDetailFragment extends Fragment {
 		Log.d(TAG, "DetailFragment onDetach");
 		super.onDetach();
 		mCallbacks = null;
-		
 	}
 
 	private OnTouchListener webViewCalled = new OnTouchListener() {
@@ -239,4 +263,23 @@ public class WebsiteDetailFragment extends Fragment {
 		}
 	}
 
+	class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+		@Override
+		public boolean onDown(MotionEvent event) {
+			if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
+				mScrollToReadLayout.startAnimation(slide_down);
+				mScrollToReadLayout.setVisibility(View.INVISIBLE);
+			}
+			return true;
+		}
+
+		@Override
+		public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+			if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
+				mScrollToReadLayout.setVisibility(View.INVISIBLE);
+			}
+			return true;
+		}
+	}
 }
