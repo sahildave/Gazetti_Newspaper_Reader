@@ -15,6 +15,7 @@
         android:id="@+id/titleLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="bottom"
         android:gravity="bottom"
         android:orientation="horizontal" >
 
@@ -27,7 +28,7 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
     </LinearLayout>
 

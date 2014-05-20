@@ -1,13 +1,11 @@
 package com.example.try_masterdetail;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -119,14 +117,14 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		mListView.setOnScrollListener(this);
 
 		headerOnList = (View) getActivity().getLayoutInflater().inflate(R.layout.header_view, null);
-		mListView.addHeaderView(headerOnList);
 		footerOnList = (View) getActivity().getLayoutInflater().inflate(R.layout.footer_view, null);
-		mListView.addFooterView(footerOnList);
-		mListView.removeFooterView(footerOnList);
+		mListView.addHeaderView(headerOnList);
 
 		customAdapter = new CustomAdapter(getActivity(), retainedList);
 		mListView.setAdapter(customAdapter);
 
+		mListView.addFooterView(footerOnList);
+		mListView.removeFooterView(footerOnList);
 	}
 
 	@Override
@@ -157,7 +155,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 			Toast.makeText(getActivity(), "No network connection available.", Toast.LENGTH_LONG).show();
 
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("freshNewsArticle");
-			query.whereEqualTo("cat_id", "1");
+			query.whereEqualTo("cat_id", "3");
 			query.orderByDescending("createdAt");
 			query.fromLocalDatastore();
 
@@ -183,7 +181,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		mListViewContainer.setRefreshing(true);
 
 		ParseQuery<ParseObject> queryGetNewItems = ParseQuery.getQuery("freshNewsArticle");
-		queryGetNewItems.whereEqualTo("cat_id", "1");
+		queryGetNewItems.whereEqualTo("cat_id", "3");
 		queryGetNewItems.orderByDescending("createdAt");
 
 		if (retainedList.size() > 0) {
@@ -232,7 +230,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	private void getOldListItems(Date lastObjectCreatedAtDate) {
 
 		ParseQuery<ParseObject> queryGetOldItems = ParseQuery.getQuery("freshNewsArticle");
-		queryGetOldItems.whereEqualTo("cat_id", "1");
+		queryGetOldItems.whereEqualTo("cat_id", "3");
 		queryGetOldItems.whereLessThan("createdAt", lastObjectCreatedAtDate);
 		queryGetOldItems.setLimit(25);
 		queryGetOldItems.orderByDescending("createdAt");

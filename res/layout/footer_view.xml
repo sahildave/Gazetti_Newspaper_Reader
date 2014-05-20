@@ -11,7 +11,7 @@
         android:layout_height="48dp"
         android:fontFamily="sans-serif-light"
         android:gravity="center_vertical|center_horizontal"
-        android:text="Loading..." />
+        android:text="Loading... " />
 
     <ProgressBar
         android:id="@+id/footerProgressBar"

@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="10"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,7 +19,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppBaseTheme" >
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
         <activity
             android:name="com.example.try_masterdetail.WebsiteListActivity"
             android:label="@string/title_app" >
@@ -37,6 +37,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.try_masterdetailflow.WebsiteListActivity" />
         </activity>
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="87c84a40032ae05d94252fa67f6bc87bb5e08308"/>
     </application>
 
 </manifest>

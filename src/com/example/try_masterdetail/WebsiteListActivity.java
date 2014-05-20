@@ -1,5 +1,6 @@
 package com.example.try_masterdetail;
 
+import com.crashlytics.android.Crashlytics;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
@@ -11,9 +12,9 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -41,7 +42,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-public class WebsiteListActivity extends FragmentActivity implements WebsiteListFragment.Callbacks,
+public class WebsiteListActivity extends ActionBarActivity implements WebsiteListFragment.Callbacks,
 		WebsiteDetailFragment.TaskCallbacks {
 
 	private static final String TAG = "MasterDetail";
@@ -97,6 +98,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Crashlytics.start(this);
 		// Log.d(TAG, "Activity onCreate");
 		setContentView(R.layout.activity_website_list);
 
@@ -313,22 +315,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		// Handle action buttons
-		switch (item.getItemId()) {
-		case R.id.action_websearch:
-			// create intent to perform web search for this planet
-			Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-			intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-			// catch event that there's no activity to handle intent
-			if (intent.resolveActivity(getPackageManager()) != null) {
-				startActivity(intent);
-			} else {
-				Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-			}
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -344,7 +331,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		// If the nav drawer is open, hide action items related to the content
 		// view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -415,8 +402,8 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		// New NavBar _ OVER
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
@@ -427,13 +414,13 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 		R.string.drawer_close /* "close drawer" description for accessibility */
 		) {
 			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(mTitle);
+				getSupportActionBar().setTitle(mTitle);
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
 			}
 
 			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(mDrawerTitle);
+				getSupportActionBar().setTitle(mDrawerTitle);
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
 			}
@@ -448,7 +435,7 @@ public class WebsiteListActivity extends FragmentActivity implements WebsiteList
 	@Override
 	public void setTitle(CharSequence title) {
 		mTitle = title;
-		getActionBar().setTitle(mTitle);
+		getSupportActionBar().setTitle(mTitle);
 	}
 
 }

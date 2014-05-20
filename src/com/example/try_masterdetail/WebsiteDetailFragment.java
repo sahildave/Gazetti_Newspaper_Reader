@@ -19,7 +19,7 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.animation.Animation;
@@ -50,7 +50,7 @@ public class WebsiteDetailFragment extends Fragment {
 	private boolean firstRun = false;
 	private LinearLayout mScrollToReadLayout;
 
-	private GestureDetectorCompat mDetector;
+//	private GestureDetectorCompat mDetector;
 	private ScrollView mScrollView;
 	private Animation slide_down;
 
@@ -91,7 +91,7 @@ public class WebsiteDetailFragment extends Fragment {
 		if (getArguments().containsKey(articleLinkKey)) {
 			mArticlePubDate = CustomAdapter.pubDateMap.get(getArguments().getString(articleLinkKey));
 		}
-		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
+//		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
 		slide_down = AnimationUtils.loadAnimation(getActivity(), R.animator.slide_down);
 		firstRun = true;
 
@@ -115,8 +115,8 @@ public class WebsiteDetailFragment extends Fragment {
 		mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
 		mViewInBrowser = (TextView) rootView.findViewById(R.id.viewInBrowser);
 
-		mNewspaperTile.setOnTouchListener(webViewCalled);
-		mViewInBrowser.setOnTouchListener(webViewCalled);
+		mNewspaperTile.setOnClickListener(webViewCalled);
+		mViewInBrowser.setOnClickListener(webViewCalled);
 
 		mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
 		mScrollToReadLayout.setVisibility(View.INVISIBLE);
@@ -128,7 +128,15 @@ public class WebsiteDetailFragment extends Fragment {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				return mDetector.onTouchEvent(event);
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					Log.d(TAG_ASYNC, "ScrollView ACTION_UP");
+					if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
+						mScrollToReadLayout.startAnimation(slide_down);
+						mScrollToReadLayout.setVisibility(View.INVISIBLE);
+					}
+					return true;
+				}
+				return false;
 			}
 		});
 
@@ -142,12 +150,12 @@ public class WebsiteDetailFragment extends Fragment {
 		mCallbacks = null;
 	}
 
-	private OnTouchListener webViewCalled = new OnTouchListener() {
+	private OnClickListener webViewCalled = new OnClickListener() {
 
 		@Override
-		public boolean onTouch(View v, MotionEvent event) {
+		public void onClick(View v) {
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mArticleURL)));
-			return true;
+
 		}
 	};
 
@@ -263,23 +271,28 @@ public class WebsiteDetailFragment extends Fragment {
 		}
 	}
 
-	class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-		@Override
-		public boolean onDown(MotionEvent event) {
-			if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
-				mScrollToReadLayout.startAnimation(slide_down);
-				mScrollToReadLayout.setVisibility(View.INVISIBLE);
-			}
-			return true;
-		}
-
-		@Override
-		public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-			if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
-				mScrollToReadLayout.setVisibility(View.INVISIBLE);
-			}
-			return true;
-		}
-	}
+	// private class MyGestureListener extends
+	// GestureDetector.SimpleOnGestureListener {
+	//
+	// @Override
+	// public boolean onDown(MotionEvent event) {
+	// Log.d(TAG_ASYNC, "ONDOWN");
+	// if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
+	// mScrollToReadLayout.startAnimation(slide_down);
+	// mScrollToReadLayout.setVisibility(View.INVISIBLE);
+	// }
+	// return true;
+	// }
+	//
+	// @Override
+	// public boolean onFling(MotionEvent event1, MotionEvent event2, float
+	// velocityX, float velocityY) {
+	// Log.d(TAG_ASYNC, "ONFLING");
+	// if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
+	// mScrollToReadLayout.startAnimation(slide_down);
+	// mScrollToReadLayout.setVisibility(View.INVISIBLE);
+	// }
+	// return super.onFling(event1, event2, velocityX, velocityY);
+	// }
+	// }
 }

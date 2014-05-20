@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -25,7 +25,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDetailFragment.TaskCallbacks {
+public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteDetailFragment.TaskCallbacks {
 	private static final String TAG = "DFRAGMENT";
 	private static final String TAG_ASYNC = "ASYNC";
 
@@ -68,7 +68,7 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 		setContentView(R.layout.activity_website_detail);
 
 		// Show the Up button in the action bar.
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		mDetailFragment = (WebsiteDetailFragment) getSupportFragmentManager().findFragmentByTag("articleContent");
 
@@ -86,31 +86,7 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 					.add(R.id.website_detail_container, mDetailFragment, "articleContent").commit();
 		}
 
-		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_BODY_TEXT_)) {
-			Log.d(TAG, "body text present...");
-			mArticleTextView.setText(savedInstanceState.getString(STATE_BODY_TEXT_));
-		}
-		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_TITLE_TEXT_)) {
-			Log.d(TAG, "title text present...");
-			mTitleTextView.setText(savedInstanceState.getString(STATE_TITLE_TEXT_));
-		}
-
 		slide_up = AnimationUtils.loadAnimation(this, R.animator.slide_up);
-
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		if (!bodyText.equals("")) {
-			Log.d(TAG, "saving bodyText...");
-			outState.putString(STATE_BODY_TEXT_, bodyText);
-		}
-		if (!titleText.equals("")) {
-			Log.d(TAG, "saving titleText...");
-			outState.putString(STATE_TITLE_TEXT_, titleText);
-		}
 
 	}
 
@@ -126,6 +102,7 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 			// TYPE 2
 			Intent intent = new Intent(WebsiteDetailActivity.this, WebsiteListActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			finish();
 			startActivity(intent);
 
 			// TYPE 3
@@ -158,8 +135,6 @@ public class WebsiteDetailActivity extends FragmentActivity implements WebsiteDe
 	@Override
 	public void onProgressUpdate(String values) {
 		bodyText = values + "\n\n";
-		Log.d(TAG_ASYNC, "Adding Body Text");
-		Log.d(TAG_ASYNC, "Body Text ______ " + bodyText);
 		mArticleTextView.append(bodyText);
 	}
 
