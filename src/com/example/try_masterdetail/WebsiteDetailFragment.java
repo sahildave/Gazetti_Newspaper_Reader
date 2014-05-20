@@ -50,7 +50,7 @@ public class WebsiteDetailFragment extends Fragment {
 	private boolean firstRun = false;
 	private LinearLayout mScrollToReadLayout;
 
-//	private GestureDetectorCompat mDetector;
+	private GestureDetectorCompat mDetector;
 	private ScrollView mScrollView;
 	private Animation slide_down;
 
@@ -91,7 +91,7 @@ public class WebsiteDetailFragment extends Fragment {
 		if (getArguments().containsKey(articleLinkKey)) {
 			mArticlePubDate = CustomAdapter.pubDateMap.get(getArguments().getString(articleLinkKey));
 		}
-//		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
+		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
 		slide_down = AnimationUtils.loadAnimation(getActivity(), R.animator.slide_down);
 		firstRun = true;
 
@@ -134,8 +134,9 @@ public class WebsiteDetailFragment extends Fragment {
 						mScrollToReadLayout.startAnimation(slide_down);
 						mScrollToReadLayout.setVisibility(View.INVISIBLE);
 					}
-					return true;
+					return mDetector.onTouchEvent(event);
 				}
+
 				return false;
 			}
 		});
@@ -271,28 +272,18 @@ public class WebsiteDetailFragment extends Fragment {
 		}
 	}
 
-	// private class MyGestureListener extends
-	// GestureDetector.SimpleOnGestureListener {
-	//
-	// @Override
-	// public boolean onDown(MotionEvent event) {
-	// Log.d(TAG_ASYNC, "ONDOWN");
-	// if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
-	// mScrollToReadLayout.startAnimation(slide_down);
-	// mScrollToReadLayout.setVisibility(View.INVISIBLE);
-	// }
-	// return true;
-	// }
-	//
-	// @Override
-	// public boolean onFling(MotionEvent event1, MotionEvent event2, float
-	// velocityX, float velocityY) {
-	// Log.d(TAG_ASYNC, "ONFLING");
-	// if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
-	// mScrollToReadLayout.startAnimation(slide_down);
-	// mScrollToReadLayout.setVisibility(View.INVISIBLE);
-	// }
-	// return super.onFling(event1, event2, velocityX, velocityY);
-	// }
-	// }
+	private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+		@Override
+		public boolean onDown(MotionEvent event) {
+			Log.d(TAG_ASYNC, "ONDOWN");
+			return true;
+		}
+
+		@Override
+		public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+			Log.d(TAG_ASYNC, "ONFLING");
+			return super.onFling(event1, event2, velocityX, velocityY);
+		}
+	}
 }
