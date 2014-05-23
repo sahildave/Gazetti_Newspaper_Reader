@@ -11,25 +11,15 @@
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item>Home</item>
-        <item>Find People</item>
-        <item>Photos</item>
-        <item>Communities</item>
-        <item>Pages</item>
-        <item>What\'s Hot</item>
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->

@@ -70,11 +70,9 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mDetailFragment = (WebsiteDetailFragment) getSupportFragmentManager().findFragmentByTag("articleContent");
+		mDetailFragment = (WebsiteDetailFragment) getSupportFragmentManager().findFragmentByTag("detail");
 
-		Log.d(TAG, "in DetailActvity, mDetailFragment is null? " + (mDetailFragment == null));
-		if (savedInstanceState == null || mDetailFragment == null) {
-			Log.d(TAG, "mDetailFragmentt is null");
+		if (mDetailFragment == null) {
 			mDetailFragment = new WebsiteDetailFragment();
 
 			Bundle arguments = new Bundle();
@@ -83,7 +81,7 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 			mDetailFragment.setArguments(arguments);
 
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.website_detail_container, mDetailFragment, "articleContent").commit();
+					.add(R.id.website_detail_container, mDetailFragment, "detail").commit();
 		}
 
 		slide_up = AnimationUtils.loadAnimation(this, R.animator.slide_up);

@@ -1,10 +1,8 @@
 package com.example.try_masterdetail;
 
-import com.crashlytics.android.Crashlytics;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -25,6 +23,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -32,8 +31,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.try_masterdetail.adapter.CustomAdapter;
 import com.example.try_masterdetail.adapter.NavDrawerListAdapter;
 import com.example.try_masterdetail.model.NavDrawerItem;
@@ -42,6 +41,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+@SuppressLint("NewApi")
+// TODO: Check this
 public class WebsiteListActivity extends ActionBarActivity implements WebsiteListFragment.Callbacks,
 		WebsiteDetailFragment.TaskCallbacks {
 
@@ -91,9 +92,15 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	String bodyText = "";
 	ScrollView mScrollView;
 
+	// Scroll To Read Bubble
 	LinearLayout mScrollToReadLayout;
 	private boolean displayScrollToRead = false;
 	private Animation slide_up;
+
+	// Intent variables from Home Screen
+	String npId = "0";
+	String catId = "1";
+	String npName = "The Hindu";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +108,14 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		Crashlytics.start(this);
 		// Log.d(TAG, "Activity onCreate");
 		setContentView(R.layout.activity_website_list);
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			npId = extras.getString("npId");
+			catId = extras.getString("catId");
+			// npName = extras.getString("npName"); //TODO: Always "The Hindu" right now
+		}
+		getSupportActionBar().setTitle(npName);
 
 		if (findViewById(R.id.website_detail_container) != null) {
 			// Log.d(TAG, "Activity twoPane true");
@@ -110,11 +125,16 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		mlistFragment = (WebsiteListFragment) getSupportFragmentManager().findFragmentByTag("listContent");
 
 		if (mlistFragment == null) {
-			// Log.d(TAG, "Activity mListFragment is null");
+
 			mlistFragment = new WebsiteListFragment();
 			Bundle layoutBundle = new Bundle();
+
 			layoutBundle.putBoolean("mTwoPane", mTwoPane);
+			layoutBundle.putString("npId", npId);
+			layoutBundle.putString("catId", catId);
+
 			mlistFragment.setArguments(layoutBundle);
+
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.website_list_container, mlistFragment, "listContent").commit();
 
@@ -330,8 +350,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// If the nav drawer is open, hide action items related to the content
 		// view
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -429,6 +447,34 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		/*
 		 * Making NavBar - END
 		 */
+
+		mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+				mlistFragment = new WebsiteListFragment();
+				Bundle layoutBundle = new Bundle();
+
+				catId = String.valueOf(position);
+
+				layoutBundle.putBoolean("mTwoPane", mTwoPane);
+				layoutBundle.putString("npId", npId);
+				layoutBundle.putString("catId", catId);
+
+				mlistFragment.setArguments(layoutBundle);
+
+				getSupportFragmentManager().beginTransaction()
+						.replace(R.id.website_list_container, mlistFragment, "listContent").commit();
+
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				mDrawerList.setSelection(position);
+				setTitle(npName + " - " + navMenuTitles[position]);
+				mDrawerLayout.closeDrawer(mDrawerList);
+
+			}
+		});
 
 	}
 

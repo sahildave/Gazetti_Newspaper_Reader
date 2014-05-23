@@ -3,6 +3,7 @@ package com.example.try_masterdetail;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,8 +32,8 @@ import com.parse.ParseQuery;
 public class WebsiteListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener,
 		ListView.OnScrollListener {
 
+	// Tags
 	private static final String TAG = "SRL";
-
 	private Callbacks mCallbacks = sDummyCallbacks;
 	private static final String PREFS_NAME = "QueryPrefs";
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
@@ -48,11 +49,19 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	private View footerOnList;
 	private List<ParseObject> retainedList = new ArrayList<ParseObject>();
 
+	// Header on Listview
 	private static String dateLastUpdatedString;
 
+	// From Bundle
 	private boolean mTwoPane;
+	private String npIdString;
+	private String catIdString;
+
+	// Booleans
 	private boolean firstRun = false;
 	private boolean flag_loading_old_data = false;
+
+	// Network Info
 	private NetworkInfo networkInfo;
 
 	public interface Callbacks {
@@ -77,11 +86,20 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		if (!(activity instanceof Callbacks)) {
 			throw new IllegalStateException("Activity must implement fragment's callbacks.");
 		}
-		if (getArguments().containsKey("mTwoPane")) {
-			mTwoPane = getArguments().getBoolean("mTwoPane");
-			// Log.d(TAG, "ListFragment mTwoPane is " + mTwoPane);
-		}
-		// this.activity = activity;
+
+		mTwoPane = getArguments().getBoolean("mTwoPane");
+		npIdString = getArguments().getString("npId");
+		catIdString = getArguments().getString("catId");
+
+		// TODO: Delete Later - Start
+		// Random rand = new Random();
+		// int n = rand.nextInt(5) + 1;
+		//
+		// catIdString = String.valueOf(n);
+
+		Log.d("CSV", "Fragment on Attach catId = " + catIdString);
+		// TODO: Delete Later - End
+
 		mCallbacks = (Callbacks) activity;
 
 	}
@@ -155,7 +173,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 			Toast.makeText(getActivity(), "No network connection available.", Toast.LENGTH_LONG).show();
 
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("freshNewsArticle");
-			query.whereEqualTo("cat_id", "3");
+			query.whereEqualTo("cat_id", catIdString);
 			query.orderByDescending("createdAt");
 			query.fromLocalDatastore();
 
@@ -179,9 +197,9 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	private void getNewListItems() {
 
 		mListViewContainer.setRefreshing(true);
-
+		Log.d("CSV", "getNewListItems catId = " + catIdString);
 		ParseQuery<ParseObject> queryGetNewItems = ParseQuery.getQuery("freshNewsArticle");
-		queryGetNewItems.whereEqualTo("cat_id", "3");
+		queryGetNewItems.whereEqualTo("cat_id", catIdString);
 		queryGetNewItems.orderByDescending("createdAt");
 
 		if (retainedList.size() > 0) {
@@ -230,7 +248,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	private void getOldListItems(Date lastObjectCreatedAtDate) {
 
 		ParseQuery<ParseObject> queryGetOldItems = ParseQuery.getQuery("freshNewsArticle");
-		queryGetOldItems.whereEqualTo("cat_id", "3");
+		queryGetOldItems.whereEqualTo("cat_id", catIdString);
 		queryGetOldItems.whereLessThan("createdAt", lastObjectCreatedAtDate);
 		queryGetOldItems.setLimit(25);
 		queryGetOldItems.orderByDescending("createdAt");

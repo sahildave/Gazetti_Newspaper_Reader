@@ -24,11 +24,10 @@ public final class R {
         /**  Nav Drawer List Item Icons 
  Keep them in order as the titles are in 
          */
-        public static final int nav_drawer_icons=0x7f0d0002;
+        public static final int nav_drawer_icons=0x7f0d0001;
         /**  Nav Drawer Menu Items 
          */
-        public static final int nav_drawer_items=0x7f0d0001;
-        public static final int planets_array=0x7f0d0000;
+        public static final int nav_drawer_items=0x7f0d0000;
     }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
@@ -1180,9 +1179,6 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f06001a;
         public static final int action_menu_presenter=0x7f06001b;
         public static final int action_mode_close_button=0x7f060028;
-        public static final int action_refresh=0x7f060060;
-        public static final int action_search=0x7f060061;
-        public static final int action_settings=0x7f060062;
         public static final int activity_chooser_view_content=0x7f060029;
         public static final int always=0x7f06000f;
         public static final int articleHeaderFrameLayout=0x7f060044;

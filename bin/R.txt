@@ -6,9 +6,8 @@ int anim abc_slide_out_bottom 0x7f040004
 int anim abc_slide_out_top 0x7f040005
 int animator slide_down 0x7f050000
 int animator slide_up 0x7f050001
-int array nav_drawer_icons 0x7f0d0002
-int array nav_drawer_items 0x7f0d0001
-int array planets_array 0x7f0d0000
+int array nav_drawer_icons 0x7f0d0001
+int array nav_drawer_items 0x7f0d0000
 int attr actionBarDivider 0x7f01001b
 int attr actionBarItemBackground 0x7f01001c
 int attr actionBarSize 0x7f01001a
@@ -307,9 +306,6 @@ int id action_context_bar 0x7f060021
 int id action_menu_divider 0x7f06001a
 int id action_menu_presenter 0x7f06001b
 int id action_mode_close_button 0x7f060028
-int id action_refresh 0x7f060060
-int id action_search 0x7f060061
-int id action_settings 0x7f060062
 int id activity_chooser_view_content 0x7f060029
 int id always 0x7f06000f
 int id articleHeaderFrameLayout 0x7f060044

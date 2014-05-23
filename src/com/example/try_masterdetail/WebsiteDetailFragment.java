@@ -26,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -35,6 +36,8 @@ import com.example.try_masterdetailflow.R;
 public class WebsiteDetailFragment extends Fragment {
 	private static final String TAG = "DFRAGMENT";
 	private static final String TAG_ASYNC = "ASYNC";
+	private String RESULT_FROM_JSOUP = "JSOUP_RESULT";
+	
 	public static final String articleLinkKey = "articleLink_key";
 
 	private ImageButton mNewspaperTile;
@@ -53,6 +56,8 @@ public class WebsiteDetailFragment extends Fragment {
 	private GestureDetectorCompat mDetector;
 	private ScrollView mScrollView;
 	private Animation slide_down;
+
+	String[] result;
 
 	static interface TaskCallbacks {
 		void onPreExecute(View rootView);
@@ -159,6 +164,18 @@ public class WebsiteDetailFragment extends Fragment {
 
 		}
 	};
+	
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+
+		if (result.length > 0) {
+			
+			outState.putStringArray(RESULT_FROM_JSOUP, result);
+		}
+		outState.putLong("time", System.currentTimeMillis());
+		super.onSaveInstanceState(outState);
+	}
 
 	public class MyAsyncTask extends AsyncTask<Void, String, String[]> {
 
@@ -183,7 +200,7 @@ public class WebsiteDetailFragment extends Fragment {
 		protected String[] doInBackground(Void... params) {
 			Log.d(TAG, "Async doInBackground");
 			Document doc;
-			String[] result = new String[3];
+			result = new String[3];
 			try {
 
 				String url = mArticleURL;
