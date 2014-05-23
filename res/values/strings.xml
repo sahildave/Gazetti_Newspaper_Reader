@@ -12,6 +12,7 @@
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="add_cell_dialog_add">Add</string>
     <string name="add_cell_dialog_cancel">Cancel</string>
+    <string name="first_message">Hello Bwoy/Garl,\n\nRight now you can only read the news from \"The Hindu\", categories - National, International, Sports, Science, Entertainment. You can add other newspapers and edit the bookmarks but the news would still be from The Hindu.\n\nOk?</string>
 
     <string-array name="newspaper_array">
         <item>The Times of India</item>

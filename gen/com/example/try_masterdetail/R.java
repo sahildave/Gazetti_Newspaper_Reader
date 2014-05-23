@@ -1362,13 +1362,6 @@ containing a value of this type.
     For more on layout aliases, see:
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     
-
-    Layout alias to replace the single-pane version of the layout with a
-    two-pane version on Large screens.
-
-    For more on layout aliases, see:
-    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
-    
          */
         public static final int activity_website_list=0x7f030018;
         public static final int activity_website_twopane=0x7f030019;
@@ -1450,9 +1443,10 @@ containing a value of this type.
         public static final int com_crashlytics_android_build_id=0x7f0a000e;
         /**  Content Description 
          */
-        public static final int desc_list_item_icon=0x7f0a001a;
+        public static final int desc_list_item_icon=0x7f0a001b;
         public static final int drawer_close=0x7f0a0015;
         public static final int drawer_open=0x7f0a0014;
+        public static final int first_message=0x7f0a001a;
         public static final int spb_default_speed=0x7f0a0000;
         public static final int title_app=0x7f0a0013;
     }

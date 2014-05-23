@@ -108,7 +108,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
-		// Log.d(TAG, "Activity onCreate");
+		Log.d(TAG, "Activity onCreate");
 		setContentView(R.layout.activity_website_list);
 
 		Bundle extras = getIntent().getExtras();
@@ -126,8 +126,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		}
 
 		mlistFragment = (WebsiteListFragment) getSupportFragmentManager().findFragmentByTag("listContent");
-
-		Log.d(TAG, "mlistFragment==null - " + (mlistFragment == null));
 
 		if (mlistFragment == null) {
 
@@ -350,7 +348,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	/* Called whenever we call invalidateOptionsMenu() */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// If the nav drawer is open, hide action items related to the content
@@ -458,6 +455,8 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+				Log.d(TAG, "Drawer onItemClick");
+
 				if (position == 0) {
 					Log.d(TAG, "Home Called");
 					onBackPressed();
@@ -471,8 +470,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 					layoutBundle.putBoolean("mTwoPane", mTwoPane);
 					layoutBundle.putString("npId", npId);
 					layoutBundle.putString("catId", catId);
-
-					Log.d(TAG, "mlistFragment==null - " + (mlistFragment == null));
 
 					mlistFragment.setArguments(layoutBundle);
 

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
@@ -33,7 +34,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		ListView.OnScrollListener {
 
 	// Tags
-	private static final String TAG = "SRL";
+	private static final String TAG = "MasterDetail";
 	private Callbacks mCallbacks = sDummyCallbacks;
 	private static final String PREFS_NAME = "QueryPrefs";
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
@@ -63,6 +64,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
 	// Network Info
 	private NetworkInfo networkInfo;
+	private Context context;
 
 	public interface Callbacks {
 		public void onItemSelected(String headlineText, CustomAdapter customAdapter);
@@ -80,7 +82,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		Log.d(TAG, "ListFragment in onAttach ");
+		// Log.d(TAG, "ListFragment in onAttach ");
 
 		// Activities containing this fragment must implement its callbacks.
 		if (!(activity instanceof Callbacks)) {
@@ -98,7 +100,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "ListFragment in onCreate ");
+		// Log.d(TAG, "ListFragment in onCreate ");
 		firstRun = true;
 
 		setRetainInstance(true);
@@ -106,7 +108,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG, "ListFragment in onCreateView ");
+		// Log.d(TAG, "ListFragment in onCreateView ");
 		View rootView = inflater.inflate(R.layout.fragment_website_list, container, false);
 		return rootView;
 	}
@@ -114,7 +116,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		Log.d(TAG, "ListFragment in onViewCreated ");
+		// Log.d(TAG, "ListFragment in onViewCreated ");
 
 		mListViewContainer = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipe_container);
 
@@ -141,19 +143,20 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.d(TAG, "ListFragment in onActivityCreated ");
-		Log.d(TAG, "mActivatedPosition " + mActivatedPosition);
+
+		context = getActivity();
+		Log.d(TAG, "NULL ? " + (context == null));
 
 		if (mTwoPane && !firstRun) {
-			Log.d(TAG, "Reseting activatedPostion");
+			// Log.d(TAG, "Reseting activatedPostion");
 			setActivatedPosition(mActivatedPosition);
 		}
 		if (!firstRun) {
-			Log.d(TAG, "Reseting date");
+			// Log.d(TAG, "Reseting date");
 			((TextView) headerOnList).setText(dateLastUpdatedString);
 		}
 
-		ConnectivityManager connMgr = (ConnectivityManager) getActivity()
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		networkInfo = connMgr.getActiveNetworkInfo();
 
 		if (networkInfo != null && networkInfo.isConnected()) {
@@ -162,7 +165,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
 			}
 		} else {
-			Toast.makeText(getActivity(), "No network connection available.", Toast.LENGTH_LONG).show();
+			Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
 
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("freshNewsArticle");
 			query.whereEqualTo("cat_id", catIdString);
@@ -189,7 +192,6 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	private void getNewListItems() {
 
 		mListViewContainer.setRefreshing(true);
-		Log.d("CSV", "getNewListItems catId = " + catIdString);
 		ParseQuery<ParseObject> queryGetNewItems = ParseQuery.getQuery("freshNewsArticle");
 		queryGetNewItems.whereEqualTo("cat_id", catIdString);
 		queryGetNewItems.orderByDescending("createdAt");
@@ -201,32 +203,33 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		}
 
 		if (firstRun) {
-			queryGetNewItems.setLimit(25);
+			queryGetNewItems.setLimit(15);
 		}
 		queryGetNewItems.findInBackground(new FindCallback<ParseObject>() {
 			@Override
 			public void done(List<ParseObject> articleObjectList, ParseException arg1) {
-				Log.d(TAG, "articleObjectList " + articleObjectList.size());
-				Log.d(TAG, "adding to old list");
 
 				retainedList.addAll(0, articleObjectList);
 
 				customAdapter.notifyDataSetChanged();
 
-				Log.d(TAG, "articleObjectList Retained " + retainedList.size());
+				// Log.d(TAG, "articleObjectList Retained " +
+				// retainedList.size());
 
-				dateLastUpdatedString = "Last Updated At: "
-						+ (DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
-								DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE
-										| DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_NO_NOON
-										| DateUtils.FORMAT_NO_MIDNIGHT));
+				dateLastUpdatedString = "Last Updated: "
+						+ (DateUtils.formatDateTime(context, System.currentTimeMillis(), //
+								DateUtils.FORMAT_SHOW_TIME //
+										| DateUtils.FORMAT_SHOW_WEEKDAY //
+										| DateUtils.FORMAT_SHOW_DATE //
+										| DateUtils.FORMAT_ABBREV_WEEKDAY //
+										| DateUtils.FORMAT_NO_NOON //
+										| DateUtils.FORMAT_NO_MIDNIGHT)); //
 				((TextView) headerOnList).setText(dateLastUpdatedString);
 				mListViewContainer.setRefreshing(false);
 
 				ParseObject.pinAllInBackground(articleObjectList);
 
 				if (mTwoPane) {
-					Log.d(TAG, "clicking for first time at " + mActivatedPosition);
 					mListView.performItemClick(customAdapter.getView(mActivatedPosition - 1, null, null),
 							mActivatedPosition, mActivatedPosition);
 
@@ -242,18 +245,20 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		ParseQuery<ParseObject> queryGetOldItems = ParseQuery.getQuery("freshNewsArticle");
 		queryGetOldItems.whereEqualTo("cat_id", catIdString);
 		queryGetOldItems.whereLessThan("createdAt", lastObjectCreatedAtDate);
-		queryGetOldItems.setLimit(25);
+		queryGetOldItems.setLimit(20);
 		queryGetOldItems.orderByDescending("createdAt");
 
 		queryGetOldItems.findInBackground(new FindCallback<ParseObject>() {
 			@Override
 			public void done(List<ParseObject> articleObjectList, ParseException arg1) {
-				Log.d(TAG, "Old Items articleObjectList " + articleObjectList.size());
+				// Log.d(TAG, "Old Items articleObjectList " +
+				// articleObjectList.size());
 
 				retainedList.addAll(articleObjectList);
 				customAdapter.notifyDataSetChanged();
 
-				Log.d(TAG, "articleObjectList Retained " + retainedList.size());
+				// Log.d(TAG, "articleObjectList Retained " +
+				// retainedList.size());
 
 				mListView.removeFooterView(footerOnList);
 				mListViewContainer.setRefreshing(false);
@@ -267,10 +272,10 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	@Override
 	public void onRefresh() {
 		if (networkInfo != null && networkInfo.isConnected()) {
-			Toast.makeText(getActivity(), "Getting New Headlines", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Getting New Headlines", Toast.LENGTH_SHORT).show();
 			getNewListItems();
 		} else {
-			Toast.makeText(getActivity(), "Cannot Refresh. No Connection", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Cannot Refresh. No Connection", Toast.LENGTH_SHORT).show();
 			mListViewContainer.setRefreshing(false);
 		}
 
@@ -278,7 +283,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		Log.d(TAG, "onScrollStateChanged");
+		// Log.d(TAG, "onScrollStateChanged");
 	}
 
 	@Override
@@ -297,7 +302,8 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 				mListView.addFooterView(footerOnList);
 				mListViewContainer.setRefreshing(true);
 				flag_loading_old_data = true;
-				Log.d(TAG, "Last Position - " + retainedList.get(totalItemCount - 2).getString("title"));
+				// Log.d(TAG, "Last Position - " +
+				// retainedList.get(totalItemCount - 2).getString("title"));
 
 				Date lastObjectCreatedAtDate = retainedList.get(totalItemCount - 2).getCreatedAt();
 				getOldListItems(lastObjectCreatedAtDate);
@@ -308,7 +314,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		Log.d(TAG, "in onDetach");
+		Log.d(TAG, "Fragment in onDetach");
 
 		// Reset the active callbacks interface to the dummy implementation.
 		mCallbacks = sDummyCallbacks; // TODO: Check with mCallbacks = null;
@@ -317,6 +323,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Log.d(TAG, "Fragment in onDestroy");
 		mActivatedPosition = 1;
 		dateLastUpdatedString = null;
 
@@ -326,18 +333,18 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		Log.d(TAG, "onListItemClick position, id +" + position + ", " + id);
+		// Log.d(TAG, "onListItemClick position, id +" + position + ", " + id);
 
 		TextView headlineTextView = (TextView) view.findViewById(R.id.headline);
 		String headlineText = (String) headlineTextView.getText();
-		Log.d(TAG, "onListItemClick view - " + headlineText);
+		// Log.d(TAG, "onListItemClick view - " + headlineText);
 		// view.setActivated(true);
 		setActivatedPosition(position);
 		mCallbacks.onItemSelected(headlineText, customAdapter);
 	}
 
 	private void setActivatedPosition(int position) {
-		Log.d(TAG, "ListFragment  SETACTIVATED");
+		// Log.d(TAG, "ListFragment  SETACTIVATED");
 		if (position == ListView.INVALID_POSITION) {
 			mListView.setItemChecked(mActivatedPosition, false);
 		} else {
@@ -349,9 +356,9 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 
-		Log.d(TAG, "ListFragment onSaveInstanceState ");
+		// Log.d(TAG, "ListFragment onSaveInstanceState ");
 		if (mActivatedPosition != ListView.INVALID_POSITION) {
-			Log.d(TAG, "LISTFRAGMENT SAVING position " + mActivatedPosition);
+			// Log.d(TAG, "LISTFRAGMENT SAVING position " + mActivatedPosition);
 			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
 		}
 		outState.putLong("time", System.currentTimeMillis());

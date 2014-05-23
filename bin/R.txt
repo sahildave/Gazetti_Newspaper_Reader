@@ -489,9 +489,10 @@ int string add_cell_dialog_cancel 0x7f0a0019
 int string app_name 0x7f0a000f
 int string app_not_available 0x7f0a0017
 int string com_crashlytics_android_build_id 0x7f0a000e
-int string desc_list_item_icon 0x7f0a001a
+int string desc_list_item_icon 0x7f0a001b
 int string drawer_close 0x7f0a0015
 int string drawer_open 0x7f0a0014
+int string first_message 0x7f0a001a
 int string spb_default_speed 0x7f0a0000
 int string title_app 0x7f0a0013
 int style AppBaseTheme 0x7f0c0085

@@ -3,11 +3,13 @@ package com.example.try_masterdetail;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -19,11 +21,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.AddCellDialogFragment.AddCellDialogListener;
 import com.example.try_masterdetail.EditCellDialogFragment.EditCellDialogListener;
-import com.example.try_masterdetail.news_activities.WebsiteDetailActivity;
-import com.example.try_masterdetail.news_activities.WebsiteDetailFragment;
 import com.example.try_masterdetail.news_activities.WebsiteListActivity;
 
 public class MainActivity extends FragmentActivity implements AddCellDialogListener, EditCellDialogListener {
@@ -52,6 +51,18 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 
 		registerForContextMenu(gridview);
 
+		if (isFirstTime()) {
+
+			new AlertDialog.Builder(MainActivity.this).setTitle("Instructions For You!")
+					.setMessage(R.string.first_message)
+					.setPositiveButton("Yeah Ok, fine!", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					}).show();
+
+		}
+
 		gridview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
@@ -71,6 +82,14 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 
 					npId = String.valueOf(Integer.parseInt(npId) + 1);
 					catId = String.valueOf(Integer.parseInt(catId) + 1);
+
+					if (!npId.equals("2")) {
+						Toast.makeText(MainActivity.this, "GOD DAMN YOU! I told you only The Hindu works!",
+								Toast.LENGTH_LONG).show();
+						Toast.makeText(MainActivity.this,
+								"Doesn't matter. Here, read the " + catName + " section from The Hindu",
+								Toast.LENGTH_LONG).show();
+					}
 
 					Intent detailIntent = new Intent(MainActivity.this, WebsiteListActivity.class);
 					detailIntent.putExtra("npId", npId);
@@ -163,6 +182,24 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 
 		readCsv.close();
 
+	}
+
+	/***
+	 * Checks that application runs first time and write flag at
+	 * SharedPreferences
+	 * 
+	 * @return true if 1st time
+	 */
+	private boolean isFirstTime() {
+		SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+		boolean ranBefore = preferences.getBoolean("RanBefore", false);
+		if (!ranBefore) {
+			// first time
+			SharedPreferences.Editor editor = preferences.edit();
+			editor.putBoolean("RanBefore", true);
+			editor.commit();
+		}
+		return !ranBefore;
 	}
 
 }
