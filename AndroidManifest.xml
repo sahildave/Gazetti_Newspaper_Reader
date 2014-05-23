@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.try_masterdetailflow"
+    package="com.example.try_masterdetail"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -21,8 +21,9 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
         <activity
-            android:name="com.example.try_masterdetail.WebsiteListActivity"
-            android:label="@string/title_app" >
+            android:name="com.example.try_masterdetail.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppBaseTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,14 +31,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.try_masterdetail.WebsiteDetailActivity"
+            android:name="com.example.try_masterdetail.news_activities.WebsiteListActivity"
             android:label="@string/title_app"
-            android:parentActivityName="com.example.try_masterdetail.WebsiteListActivity" >
+            android:parentActivityName="com.example.try_masterdetail.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.try_masterdetailflow.WebsiteListActivity" />
+                android:value="com.example.try_masterdetail.MainActivity" />
         </activity>
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="87c84a40032ae05d94252fa67f6bc87bb5e08308"/>
+        <activity
+            android:name="com.example.try_masterdetail.news_activities.WebsiteDetailActivity"
+            android:label="@string/title_app"
+            android:parentActivityName="com.example.try_masterdetail.news_activities.WebsiteListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.try_masterdetail.news_activities.WebsiteDetailActivity" />
+        </activity>
+
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="87c84a40032ae05d94252fa67f6bc87bb5e08308" />
     </application>
 
 </manifest>

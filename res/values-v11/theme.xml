@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.Default" parent="@android:style/Theme.Holo"></style>
+
+    <style name="Theme.NoTitle" parent="@android:style/Theme.Holo.NoActionBar"></style>
+
+    <style name="Theme.FullScreen" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen"></style>
+
+</resources>

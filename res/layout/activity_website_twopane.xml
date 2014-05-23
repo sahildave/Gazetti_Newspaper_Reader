@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:baselineAligned="false"
         android:orientation="horizontal"
-        tools:context="com.example.try_masterdetail.WebsiteListActivity" >
+        tools:context="com.example.try_masterdetail.news_activities.WebsiteListActivity" >
 
         <FrameLayout
             android:id="@+id/website_list_container"

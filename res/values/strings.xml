@@ -10,7 +10,51 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="add_cell_dialog_add">Add</string>
+    <string name="add_cell_dialog_cancel">Cancel</string>
 
+    <string-array name="newspaper_array">
+        <item>The Times of India</item>
+        <item>The Hindu</item>
+        <item>First Post</item>
+        <item>Hindustan Times</item>
+        <item>The Indian Express</item>
+    </string-array>
+    <string-array name="toi_cat">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+    </string-array>
+    <string-array name="hindu_cat">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+    </string-array>
+    <string-array name="fp_cat">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+    </string-array>
+    <string-array name="ht_cat">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+    </string-array>
+    <string-array name="tie_cat">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+    </string-array>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
