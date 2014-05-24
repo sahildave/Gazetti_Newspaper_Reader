@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.example.try_masterdetail.AddCellDialogFragment.AddCellDialogListener;
 import com.example.try_masterdetail.EditCellDialogFragment.EditCellDialogListener;
 import com.example.try_masterdetail.news_activities.WebsiteListActivity;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class MainActivity extends FragmentActivity implements AddCellDialogListener, EditCellDialogListener {
 
@@ -47,7 +49,14 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		cellList.add(new GridCellModel("add_new", "Add New"));
 
 		adapter = new ImageAdapter(this, cellList);
-		gridview.setAdapter(adapter);
+
+		SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(adapter);
+		AlphaInAnimationAdapter animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
+		animAdapterMultiple.setAbsListView(gridview);
+
+		gridview.setAdapter(animAdapterMultiple);
+
+		// gridview.setAdapter(adapter);
 
 		registerForContextMenu(gridview);
 
