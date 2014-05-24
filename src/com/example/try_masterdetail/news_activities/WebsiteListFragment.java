@@ -3,14 +3,12 @@ package com.example.try_masterdetail.news_activities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
@@ -25,6 +23,8 @@ import android.widget.Toast;
 
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -133,7 +133,11 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		mListView.addHeaderView(headerOnList);
 
 		customAdapter = new CustomAdapter(getActivity(), retainedList);
-		mListView.setAdapter(customAdapter);
+		SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(customAdapter);
+		ScaleInAnimationAdapter animAdapterMultiple = new ScaleInAnimationAdapter(animAdapter);
+		animAdapterMultiple.setAbsListView(mListView);
+
+		mListView.setAdapter(animAdapterMultiple);
 
 		mListView.addFooterView(footerOnList);
 		mListView.removeFooterView(footerOnList);

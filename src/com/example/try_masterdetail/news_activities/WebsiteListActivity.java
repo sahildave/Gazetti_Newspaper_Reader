@@ -67,7 +67,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
 	WebsiteListFragment mlistFragment;
 
-	// CallBacks for handling asynctask for twoPane mode
+	// CallBack views for handling asynctask for twoPane mode
 
 	// ScrollView from DetailFragment
 	View rootView;
