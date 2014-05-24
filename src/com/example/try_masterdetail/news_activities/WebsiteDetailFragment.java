@@ -26,7 +26,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -36,8 +35,7 @@ import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
 public class WebsiteDetailFragment extends Fragment {
 	private static final String TAG = "DFRAGMENT";
 	private static final String TAG_ASYNC = "ASYNC";
-	private String RESULT_FROM_JSOUP = "JSOUP_RESULT";
-	
+
 	public static final String articleLinkKey = "articleLink_key";
 
 	private ImageButton mNewspaperTile;
@@ -50,7 +48,6 @@ public class WebsiteDetailFragment extends Fragment {
 	private TaskCallbacks mCallbacks;
 	private MyAsyncTask mTask;
 
-	private boolean firstRun = false;
 	private LinearLayout mScrollToReadLayout;
 
 	private GestureDetectorCompat mDetector;
@@ -98,24 +95,13 @@ public class WebsiteDetailFragment extends Fragment {
 		}
 		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
 		slide_down = AnimationUtils.loadAnimation(getActivity(), R.animator.slide_down);
-		firstRun = true;
 
-	}
-
-	private void callAsync(View rootView) {
-		Log.d(TAG_ASYNC, "Async called");
-		mTask = new MyAsyncTask(rootView);
-		mTask.execute();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "DetailFragment onCreateView");
 		View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
-
-		if (firstRun) {
-			callAsync(rootView);
-		}
 
 		mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
 		mViewInBrowser = (TextView) rootView.findViewById(R.id.viewInBrowser);
@@ -126,6 +112,10 @@ public class WebsiteDetailFragment extends Fragment {
 		mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
 		mScrollToReadLayout.setVisibility(View.INVISIBLE);
 		Log.d(TAG_ASYNC, "Fragment Visiblity - " + mScrollToReadLayout.getVisibility());
+
+		Log.d(TAG_ASYNC, "Async called");
+		mTask = new MyAsyncTask(rootView);
+		mTask.execute();
 
 		mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
 
@@ -164,18 +154,6 @@ public class WebsiteDetailFragment extends Fragment {
 
 		}
 	};
-	
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-
-		if (result.length > 0) {
-			
-			outState.putStringArray(RESULT_FROM_JSOUP, result);
-		}
-		outState.putLong("time", System.currentTimeMillis());
-		super.onSaveInstanceState(outState);
-	}
 
 	public class MyAsyncTask extends AsyncTask<Void, String, String[]> {
 

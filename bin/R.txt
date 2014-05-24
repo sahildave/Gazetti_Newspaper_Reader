@@ -335,6 +335,7 @@ int id add_cell_newpaper_spinner 0x7f060046
 int id add_cell_newspaper_text 0x7f060045
 int id always 0x7f06000f
 int id articleHeaderFrameLayout 0x7f060049
+int id article_body 0x7f060060
 int id article_header_stub 0x7f060058
 int id article_header_stub_import 0x7f060057
 int id article_header_title 0x7f06004c
@@ -342,7 +343,6 @@ int id article_title 0x7f06004d
 int id article_title_stub 0x7f06005a
 int id article_title_stub_import 0x7f060059
 int id beginning 0x7f060015
-int id body 0x7f060060
 int id category 0x7f06005e
 int id cellItemImageView 0x7f06004e
 int id cellItemTitle 0x7f06004f

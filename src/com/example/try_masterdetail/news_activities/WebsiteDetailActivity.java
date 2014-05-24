@@ -123,7 +123,7 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 		this.rootView = rootView;
 
 		// initialize article views
-		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
+		mArticleTextView = (TextView) rootView.findViewById(R.id.article_body);
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
 		mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);

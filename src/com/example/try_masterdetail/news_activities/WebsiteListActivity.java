@@ -33,7 +33,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.example.try_masterdetail.MainActivity;
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
 import com.example.try_masterdetail.news_activities.adapter.NavDrawerListAdapter;
@@ -181,7 +180,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		this.rootView = rootView;
 
 		// initialize article views
-		mArticleTextView = (TextView) rootView.findViewById(R.id.body);
+		mArticleTextView = (TextView) rootView.findViewById(R.id.article_body);
 		mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
 		mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
 		mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);

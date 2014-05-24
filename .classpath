@@ -7,7 +7,11 @@
 	<classpathentry exported="true" kind="lib" path="libs/universal-image-loader-1.9.1-with-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/Parse_library_1.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/picasso-2.2.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/KenBurnsView-1.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/KenBurnsView-1.0.1.jar" sourcepath="E:/Dev/Android Resources/KenBurnsView-1.0.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/E:/Dev/Android Resources/KenBurnsView-1.0.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>

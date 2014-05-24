@@ -1208,6 +1208,7 @@ containing a value of this type.
         public static final int add_cell_newspaper_text=0x7f060045;
         public static final int always=0x7f06000f;
         public static final int articleHeaderFrameLayout=0x7f060049;
+        public static final int article_body=0x7f060060;
         public static final int article_header_stub=0x7f060058;
         public static final int article_header_stub_import=0x7f060057;
         public static final int article_header_title=0x7f06004c;
@@ -1215,7 +1216,6 @@ containing a value of this type.
         public static final int article_title_stub=0x7f06005a;
         public static final int article_title_stub_import=0x7f060059;
         public static final int beginning=0x7f060015;
-        public static final int body=0x7f060060;
         public static final int category=0x7f06005e;
         public static final int cellItemImageView=0x7f06004e;
         public static final int cellItemTitle=0x7f06004f;
