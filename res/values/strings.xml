@@ -72,9 +72,9 @@
     <array name="nav_drawer_icons">
         <item>@drawable/ic_home</item>
         <item>@drawable/ic_people</item>
-        <item>@drawable/ic_photos</item>
+        <item>@drawable/ic_international</item>
         <item>@drawable/ic_communities</item>
-        <item>@drawable/ic_pages</item>
+        <item>@drawable/ic_science</item>
         <item>@drawable/ic_whats_hot</item>
     </array>
 

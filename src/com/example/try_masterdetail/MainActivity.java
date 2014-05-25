@@ -8,10 +8,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -35,6 +37,7 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 	List<GridCellModel> cellList;
 	ImageAdapter adapter;
 	FragmentManager fm = getSupportFragmentManager();
+	private final static String TAG = "HomeScreen";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,46 +46,7 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		GridView gridview = (GridView) findViewById(R.id.gridview);
 
 		if (findViewById(R.id.homescreen_background_kenburns) == null) {
-
-			// get a random image, if null then get image_0
-			Random rand = new Random();
-			int n = rand.nextInt(4) + 1;
-			String backgroundImageUri = "image_" + n;
-			int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getPackageName());
-			System.out.println(n + ", " + resID);
-			if (resID == 0) {
-				resID = getResources().getIdentifier("image_0", "drawable", getPackageName());
-			}
-
-			BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inJustDecodeBounds = true;
-			BitmapFactory.decodeResource(getResources(), resID, options);
-
-			// Raw height and width of image
-			int imageHeight = options.outHeight;
-			int imageWidth = options.outWidth;
-			int inSampleSize = 1;
-
-			int reqHeight = getResources().getDisplayMetrics().heightPixels;
-			int reqWidth = getResources().getDisplayMetrics().widthPixels;
-
-			if (imageHeight > reqHeight || imageWidth > reqWidth) {
-
-				final int halfHeight = imageHeight / 2;
-				final int halfWidth = imageWidth / 2;
-
-				// Calculate the largest inSampleSize value that is a power of 2
-				// and keeps both
-				// height and width larger than the requested height and width.
-				while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
-					inSampleSize *= 2;
-				}
-			}
-
-			options.inJustDecodeBounds = false;
-			ImageView homeScreenBackground = (ImageView) findViewById(R.id.homescreen_background);
-			homeScreenBackground.setImageResource(resID);
-
+			loadImageForBackground();
 		}
 
 		cellList = new ArrayList<GridCellModel>();
@@ -157,6 +121,70 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 
 			}
 		});
+
+	}
+
+	private void loadImageForBackground() {
+		// get a random image, if null then get image_0
+		Random rand = new Random();
+		int n = rand.nextInt(4) + 1;
+		String backgroundImageUri = "image_" + n;
+		int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getPackageName());
+		System.out.println(n + ", " + resID);
+		if (resID == 0) {
+			resID = getResources().getIdentifier("image_0", "drawable", getPackageName());
+		}
+
+		// Bitmap Options
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeResource(getResources(), resID, options);
+
+		// Raw height and width of image
+		int imageHeight = options.outHeight;
+		int imageWidth = options.outWidth;
+		int inSampleSize = 1;
+
+		// height and width of screen
+		int reqHeight = getResources().getDisplayMetrics().heightPixels;
+		int reqWidth = getResources().getDisplayMetrics().widthPixels;
+
+		Log.d(TAG, "image - " + imageHeight + " x " + imageWidth + " , screen - " + reqHeight + " x " + reqWidth);
+
+		// SampleSize Calculations
+		if (imageHeight > reqHeight || imageWidth > reqWidth) {
+
+			final int halfHeight = imageHeight / 2;
+			final int halfWidth = imageWidth / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2
+			// and keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+
+			// This offers some additional logic in case the image has a strange
+			// aspect ratio. Anything more than 2x the requested pixels we'll
+			// sample down
+			// further
+			long totalPixels = imageWidth * imageHeight / inSampleSize;
+			final long totalReqPixelsCap = reqWidth * reqHeight * 2;
+
+			while (totalPixels > totalReqPixelsCap) {
+				inSampleSize *= 2;
+				totalPixels /= 2;
+			}
+		}
+
+		Log.d(TAG, "inSampleSize - " + inSampleSize);
+
+		// TODO: Check what is inBitmap
+
+		options.inJustDecodeBounds = false;
+		Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);
+		ImageView homeScreenBackground = (ImageView) findViewById(R.id.homescreen_background);
+		homeScreenBackground.setImageBitmap(mBitmap);
 
 	}
 

@@ -1,11 +1,7 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="NoActionBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="dialogBoxText" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">@android:color/black</item>
     </style>
 
 </resources>

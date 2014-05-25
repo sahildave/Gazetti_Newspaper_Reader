@@ -23,7 +23,7 @@
         <activity
             android:name="com.example.try_masterdetail.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppBaseTheme" >
+            android:theme="@style/NoActionBarTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

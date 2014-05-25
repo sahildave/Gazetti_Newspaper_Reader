@@ -10,6 +10,7 @@
         android:id="@+id/website_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/main_list_background"
         tools:context="com.example.try_masterdetailflow.WebsiteListActivity"
         tools:layout="MergeRootFrame" />
 
