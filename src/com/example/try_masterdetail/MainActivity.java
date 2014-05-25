@@ -2,11 +2,13 @@ package com.example.try_masterdetail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.AddCellDialogFragment.AddCellDialogListener;
@@ -38,6 +41,49 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homescreen_activity);
 		GridView gridview = (GridView) findViewById(R.id.gridview);
+
+		if (findViewById(R.id.homescreen_background_kenburns) == null) {
+
+			// get a random image, if null then get image_0
+			Random rand = new Random();
+			int n = rand.nextInt(4) + 1;
+			String backgroundImageUri = "image_" + n;
+			int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getPackageName());
+			System.out.println(n + ", " + resID);
+			if (resID == 0) {
+				resID = getResources().getIdentifier("image_0", "drawable", getPackageName());
+			}
+
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeResource(getResources(), resID, options);
+
+			// Raw height and width of image
+			int imageHeight = options.outHeight;
+			int imageWidth = options.outWidth;
+			int inSampleSize = 1;
+
+			int reqHeight = getResources().getDisplayMetrics().heightPixels;
+			int reqWidth = getResources().getDisplayMetrics().widthPixels;
+
+			if (imageHeight > reqHeight || imageWidth > reqWidth) {
+
+				final int halfHeight = imageHeight / 2;
+				final int halfWidth = imageWidth / 2;
+
+				// Calculate the largest inSampleSize value that is a power of 2
+				// and keeps both
+				// height and width larger than the requested height and width.
+				while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+					inSampleSize *= 2;
+				}
+			}
+
+			options.inJustDecodeBounds = false;
+			ImageView homeScreenBackground = (ImageView) findViewById(R.id.homescreen_background);
+			homeScreenBackground.setImageResource(resID);
+
+		}
 
 		cellList = new ArrayList<GridCellModel>();
 

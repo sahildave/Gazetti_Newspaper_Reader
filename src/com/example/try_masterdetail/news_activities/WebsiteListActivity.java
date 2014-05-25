@@ -194,7 +194,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	@Override
 	public void onProgressUpdate(String values) {
 		bodyText = values + "\n\n";
-		// Log.d(TAG_ASYNC, "Adding Body Text");
+		Log.d(TAG_ASYNC, "Activity Adding Body Text");
 		mArticleTextView.append(bodyText);
 	}
 

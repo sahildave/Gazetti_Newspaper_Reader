@@ -4,21 +4,18 @@
     android:layout_height="match_parent"
     tools:context="com.example.try_fullscreen.MainActivity$PlaceholderFragment" >
 
-    <com.flaviofaria.kenburnsview.KenBurnsView
-        android:id="@+id/image"
+    <ImageView
+        android:id="@+id/homescreen_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/image_oasis_1" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#77000000" />
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
 
     <GridView
         android:id="@+id/gridview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:background="#77000000"
         android:columnWidth="@dimen/cell_dimen"
         android:fadingEdge="horizontal"
         android:gravity="center"

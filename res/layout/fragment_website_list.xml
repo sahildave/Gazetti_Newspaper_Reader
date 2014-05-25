@@ -18,7 +18,8 @@
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@android:color/black"
+                android:scrollbars="none"
+                android:divider="@android:color/transparent"
                 android:dividerHeight="0.5dp" />
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>

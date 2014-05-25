@@ -111,9 +111,9 @@ public class WebsiteDetailFragment extends Fragment {
 
 		mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
 		mScrollToReadLayout.setVisibility(View.INVISIBLE);
-		Log.d(TAG_ASYNC, "Fragment Visiblity - " + mScrollToReadLayout.getVisibility());
+		Log.d(TAG, "Fragment Visiblity - " + mScrollToReadLayout.getVisibility());
 
-		Log.d(TAG_ASYNC, "Async called");
+		Log.d(TAG, "Async called");
 		mTask = new MyAsyncTask(rootView);
 		mTask.execute();
 
@@ -124,7 +124,7 @@ public class WebsiteDetailFragment extends Fragment {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
-					Log.d(TAG_ASYNC, "ScrollView ACTION_UP");
+					Log.d(TAG, "ScrollView ACTION_UP");
 					if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
 						mScrollToReadLayout.startAnimation(slide_down);
 						mScrollToReadLayout.setVisibility(View.INVISIBLE);
@@ -160,13 +160,13 @@ public class WebsiteDetailFragment extends Fragment {
 		View rootView;
 
 		public MyAsyncTask(View rootView) {
-			Log.d(TAG, "Async Constructor");
+			Log.d(TAG_ASYNC, "Async Constructor");
 			this.rootView = rootView;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			Log.d(TAG, "Async onPreExecute");
+			Log.d(TAG_ASYNC, "Async onPreExecute");
 
 			if (mCallbacks != null) {
 				mCallbacks.onPreExecute(rootView);
@@ -176,7 +176,7 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		protected String[] doInBackground(Void... params) {
-			Log.d(TAG, "Async doInBackground");
+			Log.d(TAG_ASYNC, "Async doInBackground");
 			Document doc;
 			result = new String[3];
 			try {
@@ -243,7 +243,7 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		protected void onProgressUpdate(String... values) {
-			Log.d(TAG, "Async onProgressUpdate");
+			Log.d(TAG_ASYNC, "Async onProgressUpdate");
 			if (mCallbacks != null && values[0].length() > 0) {
 				mCallbacks.onProgressUpdate(values[0]);
 			}
@@ -252,7 +252,7 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(String[] result) {
-			Log.d(TAG, "Async onPostExecute");
+			Log.d(TAG_ASYNC, "Async onPostExecute");
 
 			if (mCallbacks != null) {
 				View headerStub;
@@ -271,13 +271,13 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		public boolean onDown(MotionEvent event) {
-			Log.d(TAG_ASYNC, "ONDOWN");
+			// Log.d(TAG, "ONDOWN");
 			return true;
 		}
 
 		@Override
 		public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-			Log.d(TAG_ASYNC, "ONFLING");
+			// Log.d(TAG, "ONFLING");
 			return super.onFling(event1, event2, velocityX, velocityY);
 		}
 	}

@@ -7,6 +7,7 @@
         android:id="@+id/headline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/list_singlepane_shadow"
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"

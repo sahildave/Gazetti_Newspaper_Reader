@@ -16,9 +16,8 @@
             android:id="@+id/website_list_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
-        
-        
+            android:layout_weight="1"
+            android:background="@color/main_list_background" />
 
         <FrameLayout
             android:id="@+id/website_detail_container"
