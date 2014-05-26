@@ -1,13 +1,14 @@
 <resources>
 
-    <style name="NoActionBarTheme" parent="Theme.AppCompat.Light">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <!--  style for both the dialog boxes -->
+    <!-- style for both the dialog boxes -->
     <style name="dialogBoxText" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <!-- actionbar style -->
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/actionbar_background</item>
+        <item name="background">@drawable/actionbar_background</item>
+    </style>
 
 </resources>

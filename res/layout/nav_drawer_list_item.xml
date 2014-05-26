@@ -4,23 +4,15 @@
     android:layout_height="match_parent"
     android:background="@drawable/navdrawer_list_selector" >
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:contentDescription="@string/desc_list_item_icon"
-        android:src="@drawable/ic_home" />
-
     <TextView
         android:id="@+id/nav_list_item_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/icon"
         android:layout_centerVertical="true"
+        android:paddingBottom="4dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:textAppearance="@android:style/TextAppearance.Medium"
         android:textColor="@color/nav_list_item_title" />
 
 </RelativeLayout>

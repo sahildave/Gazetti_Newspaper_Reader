@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">TRY_News</string>
+    <string name="app_name">TRY_Overhaul</string>
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
-    <string name="title_app">TRY_News</string>
+    <string name="title_app">TRY_Overhaul</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
@@ -59,7 +59,6 @@
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
-        <item>Home</item>
         <item>National</item>
         <item>International</item>
         <item>Sports</item>
@@ -67,18 +66,12 @@
         <item>Entertainment</item>
     </string-array>
 
-    <!-- Nav Drawer List Item Icons -->
-    <!-- Keep them in order as the titles are in -->
-    <array name="nav_drawer_icons">
-        <item>@drawable/ic_home</item>
-        <item>@drawable/ic_people</item>
-        <item>@drawable/ic_international</item>
-        <item>@drawable/ic_communities</item>
-        <item>@drawable/ic_science</item>
-        <item>@drawable/ic_whats_hot</item>
+    <array name="action_bar_colors">
+        <item>@color/blue_nation</item>
+        <item>@color/orange_world</item>
+        <item>@color/green_sports</item>
+        <item>@color/purple_science</item>
+        <item>@color/red_entertainment</item>
     </array>
-
-    <!-- Content Description -->
-    <string name="desc_list_item_icon">Item Icon</string>
 
 </resources>

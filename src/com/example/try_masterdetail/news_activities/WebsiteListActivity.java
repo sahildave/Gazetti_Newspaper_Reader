@@ -1,12 +1,10 @@
 package com.example.try_masterdetail.news_activities;
 
-import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -17,7 +15,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -31,12 +28,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
 import com.example.try_masterdetail.news_activities.adapter.NavDrawerListAdapter;
-import com.example.try_masterdetail.news_activities.model.NavDrawerItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -59,11 +56,16 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 
-	private String[] navMenuTitles;
-	private TypedArray navMenuIcons;
+	private NavDrawerListAdapter navAdapter;
+	private LinearLayout mLeftDrawer;
+	private String[] mDrawerItems;
+	private int[] mActionBarColors;
+	private int currentColor;
 
-	private ArrayList<NavDrawerItem> navDrawerItems;
-	private NavDrawerListAdapter adapter;
+	private LinearLayout navBarSettingsView;
+	private LinearLayout navBarHelpView;
+	private LinearLayout navBarSendFeedbackView;
+	private TextView navBarHeaderView;
 
 	WebsiteListFragment mlistFragment;
 
@@ -117,7 +119,10 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 			npName = extras.getString("npName");
 			catName = extras.getString("catName");
 		}
-		getSupportActionBar().setTitle(npName + " - " + catName);
+
+		mActionBarColors = getResources().getIntArray(R.array.action_bar_colors);
+		setTitle(npName + " - " + catName);
+		setColor(mActionBarColors[Integer.parseInt(catId) - 1]);
 
 		if (findViewById(R.id.website_detail_container) != null) {
 			// Log.d(TAG, "Activity twoPane true");
@@ -134,6 +139,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 			layoutBundle.putBoolean("mTwoPane", mTwoPane);
 			layoutBundle.putString("npId", npId);
 			layoutBundle.putString("catId", catId);
+			layoutBundle.putInt("color", currentColor);
 
 			mlistFragment.setArguments(layoutBundle);
 
@@ -165,6 +171,8 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		} else {
 			Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
 			detailIntent.putExtra(WebsiteDetailFragment.articleLinkKey, headlineText);
+			detailIntent.putExtra("ActionBarColor", currentColor);
+			detailIntent.putExtra("ActionBarTitle", npName + " - " + catName);
 			startActivity(detailIntent);
 
 		}
@@ -341,13 +349,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// If the nav drawer is open, hide action items related to the content
 		// view
@@ -376,47 +377,23 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	private void makeNavDrawer() {
 		/*
 		 * Making NavBar - START
+		 * http://www.androidhive.info/2013/11/android-sliding
+		 * -menu-using-navigation-drawer/
 		 */
 
 		mTitle = mDrawerTitle = getTitle();
-		// mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-
-		// New NavBar _ START
-		// http://www.androidhive.info/2013/11/android-sliding-menu-using-navigation-drawer/
-
-		// load slide menu items
-		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-		// nav drawer icons from resources
-		navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
-		navDrawerItems = new ArrayList<NavDrawerItem>();
-
-		// adding nav drawer items to array
-		// Home
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-		// Find People
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-		// Photos
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-		// Communities, Will add a counter here
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-		// Pages
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-		// What's hot, We will add a counter here
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
-
-		// Recycle the typed array
-		navMenuIcons.recycle();
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer_layout);
+		mLeftDrawer = (LinearLayout) findViewById(R.id.left_drawer);
+		mDrawerList = (ListView) findViewById(R.id.nav_list_slidermenu);
+		mDrawerItems = getResources().getStringArray(R.array.nav_drawer_items);
+		
+		
 
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		// set up the drawer's list view with items and click listener
-		// mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-		// R.layout.drawer_list_item, mPlanetTitles));
-		adapter = new NavDrawerListAdapter(this, navDrawerItems);
-		mDrawerList.setAdapter(adapter);
+		navAdapter = new NavDrawerListAdapter(this, mDrawerItems);
+		mDrawerList.setAdapter(navAdapter);
 
 		// New NavBar _ OVER
 
@@ -428,7 +405,10 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		// between the sliding drawer and the action bar app icon
 		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 		mDrawerLayout, /* DrawerLayout object */
-		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+		R.drawable.ic_navigation_drawer, /*
+										 * nav drawer image to replace 'Up'
+										 * caret
+										 */
 		R.string.drawer_open, /* "open drawer" description for accessibility */
 		R.string.drawer_close /* "close drawer" description for accessibility */
 		) {
@@ -449,38 +429,77 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		 * Making NavBar - END
 		 */
 
+		// Nav Drawer Home Button listener
+		navBarHeaderView = (TextView) findViewById(R.id.nav_bar_header);
+		navBarHeaderView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				onBackPressed();
+			}
+		});
+
+		// Nav List listener
 		mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-				Log.d(TAG, "Drawer onItemClick");
+				Log.d(TAG, "Drawer onItemClick - " + position + " - " + mDrawerItems[position]);
 
-				if (position == 0) {
-					Log.d(TAG, "Home Called");
-					onBackPressed();
-				} else {
+				mlistFragment = new WebsiteListFragment();
+				Bundle layoutBundle = new Bundle();
 
-					mlistFragment = new WebsiteListFragment();
-					Bundle layoutBundle = new Bundle();
+				catId = String.valueOf(position + 1);
+				catName = mDrawerItems[position];
+				layoutBundle.putBoolean("mTwoPane", mTwoPane);
+				layoutBundle.putString("npId", npId);
+				layoutBundle.putString("catId", catId);
+				layoutBundle.putInt("color", mActionBarColors[position]);
 
-					catId = String.valueOf(position);
+				mlistFragment.setArguments(layoutBundle);
 
-					layoutBundle.putBoolean("mTwoPane", mTwoPane);
-					layoutBundle.putString("npId", npId);
-					layoutBundle.putString("catId", catId);
+				getSupportFragmentManager().beginTransaction()
+						.replace(R.id.website_list_container, mlistFragment, "listContent").commit();
 
-					mlistFragment.setArguments(layoutBundle);
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				mDrawerList.setSelection(position);
+				setTitle(npName + " - " + mDrawerItems[position]);
+				setColor(mActionBarColors[position]);
 
-					getSupportFragmentManager().beginTransaction()
-							.replace(R.id.website_list_container, mlistFragment, "listContent").commit();
+				Log.d(TAG, position + " - " + mActionBarColors[position]);
 
-					// update selected item and title, then close the drawer
-					mDrawerList.setItemChecked(position, true);
-					mDrawerList.setSelection(position);
-					setTitle(npName + " - " + navMenuTitles[position]);
-					mDrawerLayout.closeDrawer(mDrawerList);
-				}
+				mDrawerLayout.closeDrawer(mLeftDrawer);
+			}
+
+		});
+
+		// Nav List Footer options listeners
+		navBarSettingsView = (LinearLayout) findViewById(R.id.settings);
+		navBarHelpView = (LinearLayout) findViewById(R.id.help);
+		navBarSendFeedbackView = (LinearLayout) findViewById(R.id.send_feedback);
+
+		navBarSettingsView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getApplicationContext(), "You selected Settings", Toast.LENGTH_SHORT).show();
+				mDrawerLayout.closeDrawer(mLeftDrawer);
+			}
+		});
+
+		navBarHelpView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getApplicationContext(), "You selected Help", Toast.LENGTH_SHORT).show();
+				mDrawerLayout.closeDrawer(mLeftDrawer);
+			}
+		});
+
+		navBarSendFeedbackView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getApplicationContext(), "You selected Send Feedback", Toast.LENGTH_SHORT).show();
+				mDrawerLayout.closeDrawer(mLeftDrawer);
 			}
 		});
 
@@ -492,4 +511,10 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		getSupportActionBar().setTitle(mTitle);
 	}
 
+	public void setColor(int colorId) {
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorId));
+		getSupportActionBar().setDisplayShowTitleEnabled(true);
+		currentColor = colorId;
+	}
 }

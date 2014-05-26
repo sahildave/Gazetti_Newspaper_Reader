@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -57,6 +58,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	private boolean mTwoPane;
 	private String npIdString;
 	private String catIdString;
+	private int listViewHeaderColor;
 
 	// Booleans
 	private boolean firstRun = false;
@@ -92,6 +94,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		mTwoPane = getArguments().getBoolean("mTwoPane");
 		npIdString = getArguments().getString("npId");
 		catIdString = getArguments().getString("catId");
+		listViewHeaderColor = getArguments().getInt("color");
 
 		mCallbacks = (Callbacks) activity;
 
@@ -129,6 +132,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		mListView.setOnScrollListener(this);
 
 		headerOnList = (View) getActivity().getLayoutInflater().inflate(R.layout.header_view, null);
+		headerOnList.setBackgroundColor(listViewHeaderColor);
 		footerOnList = (View) getActivity().getLayoutInflater().inflate(R.layout.footer_view, null);
 		mListView.addHeaderView(headerOnList);
 
@@ -313,6 +317,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 				getOldListItems(lastObjectCreatedAtDate);
 			}
 		}
+
 	}
 
 	@Override

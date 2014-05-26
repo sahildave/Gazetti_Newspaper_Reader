@@ -3,6 +3,7 @@ package com.example.try_masterdetail.news_activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -68,7 +69,13 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 		setContentView(R.layout.activity_website_detail);
 
 		// Show the Up button in the action bar.
+		int ActionBarColorId = getIntent().getIntExtra("ActionBarColor", -1);
+		String ActionBarTitleString = getIntent().getStringExtra("ActionBarTitle");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setTitle(ActionBarTitleString);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ActionBarColorId));
+		getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 		mDetailFragment = (WebsiteDetailFragment) getSupportFragmentManager().findFragmentByTag("detail");
 
