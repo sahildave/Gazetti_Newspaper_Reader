@@ -1,13 +1,13 @@
-0,The Times of India,0,National,toi,national
-0,The Times of India,1,International,toi,international
-0,The Times of India,2,Sports,toi,sports
-0,The Times of India,3,Science,toi,science
-0,The Times of India,4,Entertainment,toi,entertainment
-1,The Hindu,0,National,th,national
-1,The Hindu,1,International,th,international
-1,The Hindu,2,Sports,th,sports
-1,The Hindu,3,Science,th,science
-1,The Hindu,4,Entertainment,th,entertainment
+1,The Times of India,0,National,toi,national
+1,The Times of India,1,International,toi,international
+1,The Times of India,2,Sports,toi,sports
+1,The Times of India,3,Science,toi,science
+1,The Times of India,4,Entertainment,toi,entertainment
+0,The Hindu,0,National,th,national
+0,The Hindu,1,International,th,international
+0,The Hindu,2,Sports,th,sports
+0,The Hindu,3,Science,th,science
+0,The Hindu,4,Entertainment,th,entertainment
 2,First Post,0,National,fp,national
 2,First Post,1,International,fp,international
 2,First Post,2,Sports,fp,sports
@@ -23,16 +23,16 @@
 4,The Indian Express,2,Sports,tie,sports
 4,The Indian Express,3,Science,tie,science
 4,The Indian Express,4,Entertainment,tie,entertainment
-0,The Times of India,0,National,toi_custom,national
-0,The Times of India,1,International,toi_custom,international
-0,The Times of India,2,Sports,toi_custom,sports
-0,The Times of India,3,Science,toi_custom,science
-0,The Times of India,4,Entertainment,toi_custom,entertainment
-1,The Hindu,0,National,th_custom,national
-1,The Hindu,1,International,th_custom,international
-1,The Hindu,2,Sports,th_custom,sports
-1,The Hindu,3,Science,th_custom,science
-1,The Hindu,4,Entertainment,th_custom,entertainment
+1,The Times of India,0,National,toi_custom,national
+1,The Times of India,1,International,toi_custom,international
+1,The Times of India,2,Sports,toi_custom,sports
+1,The Times of India,3,Science,toi_custom,science
+1,The Times of India,4,Entertainment,toi_custom,entertainment
+0,The Hindu,0,National,th_custom,national
+0,The Hindu,1,International,th_custom,international
+0,The Hindu,2,Sports,th_custom,sports
+0,The Hindu,3,Science,th_custom,science
+0,The Hindu,4,Entertainment,th_custom,entertainment
 2,First Post,0,National,fp_custom,national
 2,First Post,1,International,fp_custom,international
 2,First Post,2,Sports,fp_custom,sports

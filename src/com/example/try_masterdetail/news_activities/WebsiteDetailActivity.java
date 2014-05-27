@@ -1,13 +1,12 @@
 package com.example.try_masterdetail.news_activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -68,9 +67,9 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_website_detail);
 
-		// Show the Up button in the action bar.
 		int ActionBarColorId = getIntent().getIntExtra("ActionBarColor", -1);
 		String ActionBarTitleString = getIntent().getStringExtra("ActionBarTitle");
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setTitle(ActionBarTitleString);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -83,6 +82,7 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 			mDetailFragment = new WebsiteDetailFragment();
 
 			Bundle arguments = new Bundle();
+			arguments.putString("npName", getIntent().getStringExtra("npName"));
 			arguments.putString(WebsiteDetailFragment.articleLinkKey,
 					getIntent().getStringExtra(WebsiteDetailFragment.articleLinkKey));
 			mDetailFragment.setArguments(arguments);
@@ -141,12 +141,6 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 	}
 
 	@Override
-	public void onProgressUpdate(String values) {
-		bodyText = values + "\n\n";
-		mArticleTextView.append(bodyText);
-	}
-
-	@Override
 	public void getHeaderStub(View headerStub) {
 		this.headerStub = headerStub;
 	}
@@ -157,15 +151,13 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 
 		titleText = result[0];
 		mImageURL = result[1];
-		mArticlePubDate = result[2];
+		bodyText = result[2];
+		mArticlePubDate = result[3];
 
-		if (bodyText == null || bodyText.isEmpty()) {
-			mArticleTextView.setText("Sorry, this story is not supported for mobile view. Try to read in the browser");
-
-		}
 		mSubtitleLayout.setVisibility(View.VISIBLE);
 		mArticlePubDateView.setText(mArticlePubDate);
 		mArticleTextView.setVisibility(View.VISIBLE);
+		mArticleTextView.setText(bodyText);
 
 		if (mImageURL == null) {
 			Log.d(TAG, "Image not, Title : " + titleText);
@@ -177,9 +169,12 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 			Log.d(TAG, "Loading Image...");
 
 			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_header_title);
+			Log.d(TAG_ASYNC, "headerStub is NULL? " + (headerStub == null));
+			Log.d(TAG_ASYNC, "mTitleTextView is NULL? " + (mTitleTextView == null));
 			mTitleTextView.setText(titleText);
 
 			mMainImageView = (ImageView) headerStub.findViewById(R.id.mainImage);
+			Log.d(TAG_ASYNC, "mMainImageView is NULL? " + (mMainImageView == null));
 			Picasso picassoInstance = Picasso.with(this);
 			picassoInstance.setDebugging(true);
 			picassoInstance.load(mImageURL).into(mMainImageView, new Callback() {

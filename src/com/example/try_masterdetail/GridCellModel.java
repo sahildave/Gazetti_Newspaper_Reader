@@ -28,9 +28,9 @@ public class GridCellModel {
 
 	public int getDefaultNewspaperId(String newspaperImage) {
 		switch (newspaperImage) {
-		case "toi":
-			return 0;
 		case "th":
+			return 0;
+		case "toi":
 			return 1;
 		case "fp":
 			return 2;
@@ -38,9 +38,9 @@ public class GridCellModel {
 			return 3;
 		case "tie":
 			return 4;
-		case "toi_custom":
-			return 0;
 		case "th_custom":
+			return 0;
+		case "toi_custom":
 			return 1;
 		case "fp_custom":
 			return 2;

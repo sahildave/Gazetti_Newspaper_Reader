@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/main_list_background"
-        tools:context="com.example.try_masterdetailflow.WebsiteListActivity"
+        tools:context="com.example.try_masterdetail.WebsiteListActivity"
         tools:layout="MergeRootFrame" />
 
     <!-- Listview to display navigation drawer -->

@@ -57,6 +57,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	// From Bundle
 	private boolean mTwoPane;
 	private String npIdString;
+	private String npNameString;
 	private String catIdString;
 	private int listViewHeaderColor;
 
@@ -93,6 +94,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
 		mTwoPane = getArguments().getBoolean("mTwoPane");
 		npIdString = getArguments().getString("npId");
+		npNameString = getArguments().getString("npName");
 		catIdString = getArguments().getString("catId");
 		listViewHeaderColor = getArguments().getInt("color");
 
@@ -176,6 +178,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 			Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
 
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("freshNewsArticle");
+			query.whereEqualTo("newspaper_id", npIdString);
 			query.whereEqualTo("cat_id", catIdString);
 			query.orderByDescending("createdAt");
 			query.fromLocalDatastore();
@@ -201,6 +204,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
 		mListViewContainer.setRefreshing(true);
 		ParseQuery<ParseObject> queryGetNewItems = ParseQuery.getQuery("freshNewsArticle");
+		queryGetNewItems.whereEqualTo("newspaper_id", npIdString);
 		queryGetNewItems.whereEqualTo("cat_id", catIdString);
 		queryGetNewItems.orderByDescending("createdAt");
 
@@ -251,6 +255,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	private void getOldListItems(Date lastObjectCreatedAtDate) {
 
 		ParseQuery<ParseObject> queryGetOldItems = ParseQuery.getQuery("freshNewsArticle");
+		queryGetOldItems.whereEqualTo("newspaper_id", npIdString);
 		queryGetOldItems.whereEqualTo("cat_id", catIdString);
 		queryGetOldItems.whereLessThan("createdAt", lastObjectCreatedAtDate);
 		queryGetOldItems.setLimit(20);

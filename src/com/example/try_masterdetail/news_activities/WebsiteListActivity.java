@@ -100,7 +100,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	private Animation slide_up;
 
 	// Intent variables from Home Screen
-	String npId = "0";
+	String npId = "1";
 	String catId = "1";
 	String npName = "";
 	String catName = "";
@@ -138,6 +138,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
 			layoutBundle.putBoolean("mTwoPane", mTwoPane);
 			layoutBundle.putString("npId", npId);
+			layoutBundle.putString("npName", npName);
 			layoutBundle.putString("catId", catId);
 			layoutBundle.putInt("color", currentColor);
 
@@ -159,7 +160,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
 
 		Bundle arguments = new Bundle();
-		// Log.d(TAG, "ListActivity headlineText " + headlineText);
+		arguments.putString("npName", npName);
 		arguments.putString(WebsiteDetailFragment.articleLinkKey, headlineText);
 		WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
 		detailFragment.setArguments(arguments);
@@ -170,6 +171,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 					.replace(R.id.website_detail_container, detailFragment, "detail").commit();
 		} else {
 			Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
+			detailIntent.putExtra("npName", npName);
 			detailIntent.putExtra(WebsiteDetailFragment.articleLinkKey, headlineText);
 			detailIntent.putExtra("ActionBarColor", currentColor);
 			detailIntent.putExtra("ActionBarTitle", npName + " - " + catName);
@@ -200,13 +202,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	}
 
 	@Override
-	public void onProgressUpdate(String values) {
-		bodyText = values + "\n\n";
-		Log.d(TAG_ASYNC, "Activity Adding Body Text");
-		mArticleTextView.append(bodyText);
-	}
-
-	@Override
 	public void getHeaderStub(View headerStub) {
 		this.headerStub = headerStub;
 	}
@@ -217,7 +212,8 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
 		titleText = result[0];
 		mImageURL = result[1];
-		mArticlePubDate = result[2];
+		bodyText = result[2];
+		mArticlePubDate = result[3];
 
 		if (bodyText == null || bodyText.isEmpty()) {
 			mArticleTextView.setText("Sorry, this story is not supported for mobile view. Try to read in the browser");
@@ -226,6 +222,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		mSubtitleLayout.setVisibility(View.VISIBLE);
 		mArticlePubDateView.setText(mArticlePubDate);
 		mArticleTextView.setVisibility(View.VISIBLE);
+		mArticleTextView.setText(bodyText);
 
 		if (mImageURL == null) {
 			// Log.d(TAG, "Image not, Title : " + titleText);
@@ -386,8 +383,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		mLeftDrawer = (LinearLayout) findViewById(R.id.left_drawer);
 		mDrawerList = (ListView) findViewById(R.id.nav_list_slidermenu);
 		mDrawerItems = getResources().getStringArray(R.array.nav_drawer_items);
-		
-		
 
 		// set a custom shadow that overlays the main content when the drawer
 		// opens

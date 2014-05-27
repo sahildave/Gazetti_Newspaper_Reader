@@ -31,6 +31,8 @@ import android.widget.TextView;
 
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
+import com.example.try_masterdetail.news_activities.fetch.hindu;
+import com.example.try_masterdetail.news_activities.fetch.toi;
 
 public class WebsiteDetailFragment extends Fragment {
 	private static final String TAG = "DFRAGMENT";
@@ -43,7 +45,8 @@ public class WebsiteDetailFragment extends Fragment {
 	private String mImageURL;
 	private String mArticleURL;
 	private String mArticlePubDate;
-	private String titleText = "";
+	private String titleTextBackup = "";
+	String[] result;
 
 	private TaskCallbacks mCallbacks;
 	private MyAsyncTask mTask;
@@ -54,12 +57,10 @@ public class WebsiteDetailFragment extends Fragment {
 	private ScrollView mScrollView;
 	private Animation slide_down;
 
-	String[] result;
+	private String npNameString;
 
 	static interface TaskCallbacks {
 		void onPreExecute(View rootView);
-
-		void onProgressUpdate(String values);
 
 		void getHeaderStub(View headerStub);
 
@@ -77,6 +78,7 @@ public class WebsiteDetailFragment extends Fragment {
 			throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
 		}
 		Log.d(TAG, "DetailFragment onAttach");
+
 		mCallbacks = (TaskCallbacks) activity;
 	}
 
@@ -86,8 +88,12 @@ public class WebsiteDetailFragment extends Fragment {
 
 		setRetainInstance(true);
 
+		npNameString = getArguments().getString("npName");
+
 		if (getArguments().containsKey(articleLinkKey)) {
 			mArticleURL = CustomAdapter.linkMap.get(getArguments().getString(articleLinkKey));
+			titleTextBackup = getArguments().getString(articleLinkKey);
+			Log.d("ASYNC", "BACKUP TITLE " + titleTextBackup);
 		}
 
 		if (getArguments().containsKey(articleLinkKey)) {
@@ -105,6 +111,12 @@ public class WebsiteDetailFragment extends Fragment {
 
 		mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
 		mViewInBrowser = (TextView) rootView.findViewById(R.id.viewInBrowser);
+
+		if (npNameString.equals("The Hindu")) {
+			mNewspaperTile.setImageResource(R.drawable.ic_hindu);
+		} else {
+			mNewspaperTile.setImageResource(R.drawable.ic_launcher);
+		}
 
 		mNewspaperTile.setOnClickListener(webViewCalled);
 		mViewInBrowser.setOnClickListener(webViewCalled);
@@ -176,78 +188,25 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		protected String[] doInBackground(Void... params) {
-			Log.d(TAG_ASYNC, "Async doInBackground");
-			Document doc;
-			result = new String[3];
-			try {
-
-				String url = mArticleURL;
-
-				doc = Jsoup.connect(url).timeout(10 * 1000).get();
-				long connected = System.currentTimeMillis();
-				Log.d("JSOUP", "Jsoup connected - " + System.currentTimeMillis());
-				// get Body
-				Element bodyElement = doc.body();
-				Log.d("JSOUP", "Jsoup bodyElement - " + System.currentTimeMillis());
-				// get page title
-				Elements titleElements = bodyElement.select(".detail-title");
-				titleText = titleElements.text();
-				Log.d("JSOUP", "Jsoup titleElements - " + System.currentTimeMillis());
-
-				// get HeaderImageUrl
-				mImageURL = getImageURL(bodyElement);
-				Log.d("JSOUP", "Jsoup getImageURL - " + System.currentTimeMillis());
-
-				// get p elements with class = body
-				Elements bodyArticleElements = bodyElement.select("p[class=body]");
-				for (Element textArticleElement : bodyArticleElements) {
-					publishProgress(textArticleElement.text());
-				}
-				Log.d("JSOUP", "Jsoup bodyArticleElements - " + System.currentTimeMillis());
-				long done = System.currentTimeMillis();
-				Log.d("JSOUP", "DONE IN  - " + (done - connected));
-
-				result[0] = titleText;
-				result[1] = mImageURL;
-				result[2] = mArticlePubDate;
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return result;
-		}
-
-		private String getImageURL(Element bodyElement) {
-			Log.d(TAG, "in getImageURL");
-			if (bodyElement.select(".main-image").size() != 0) {
-				// get image elements with class = main-image
-				// Log.d(TAG, "in main-image");
-				Elements mainImageElement = bodyElement.select(".main-image");
-				mImageURL = mainImageElement.attr("src");
-				// Log.d(TAG, "ImageUrl - " + mImageURL);
-			} else if (bodyElement.select("div#contartcarousel").size() != 0) {
-				// get image elements with carousel
-				// Log.d(TAG, "in contartcarousel ");
-				Elements carouselElements = bodyElement.select("div#contartcarousel");
-				Elements carouselImage = carouselElements.select("div#pic").first().select("img");
-				mImageURL = carouselImage.attr("src");
-				// Log.d(TAG, mImageURL);
+			if (npNameString.equals("The Hindu")) {
+				hindu hinduObject = new hindu(mArticleURL, mArticlePubDate);
+				result = hinduObject.getHinduArticle();
+				mImageURL = result[1];
 			} else {
-				// Log.d(TAG, "IMAGE NOT FOUND!");
-
+				toi toiObject = new toi(mArticleURL, mArticlePubDate);
+				result = toiObject.getToiArticle();
+				mImageURL = result[1];
 			}
 
-			return mImageURL;
-
-		}
-
-		@Override
-		protected void onProgressUpdate(String... values) {
-			Log.d(TAG_ASYNC, "Async onProgressUpdate");
-			if (mCallbacks != null && values[0].length() > 0) {
-				mCallbacks.onProgressUpdate(values[0]);
+			if (result[0].length() == 0) {
+				result[0] = titleTextBackup;
 			}
 
+			if (result[2] == null || result[2].length() == 0) {
+				result[2] = "Sorry, this story is not supported for mobile view. Try to read in the browser";
+			}
+
+			return result;
 		}
 
 		@Override

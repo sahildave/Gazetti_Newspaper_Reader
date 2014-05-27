@@ -54,8 +54,9 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		cellList.add(new GridCellModel("th", "Sports"));
 		cellList.add(new GridCellModel("th", "National"));
 		cellList.add(new GridCellModel("th", "International"));
-		cellList.add(new GridCellModel("th", "Science"));
-		cellList.add(new GridCellModel("th", "Entertainment"));
+		cellList.add(new GridCellModel("toi", "National"));
+		cellList.add(new GridCellModel("toi", "Science"));
+		cellList.add(new GridCellModel("toi", "Entertainment"));
 		cellList.add(new GridCellModel("add_new", "Add New"));
 
 		adapter = new ImageAdapter(this, cellList);
@@ -72,9 +73,9 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 
 		if (isFirstTime()) {
 
-			new AlertDialog.Builder(MainActivity.this).setTitle("Instructions For You!")
+			new AlertDialog.Builder(MainActivity.this).setTitle("Updated")
 					.setMessage(R.string.first_message)
-					.setPositiveButton("Yeah Ok, fine!", new DialogInterface.OnClickListener() {
+					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							dialog.cancel();
 						}
@@ -101,14 +102,6 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 
 					npId = String.valueOf(Integer.parseInt(npId) + 1);
 					catId = String.valueOf(Integer.parseInt(catId) + 1);
-
-					if (!npId.equals("2")) {
-						Toast.makeText(MainActivity.this, "GOD DAMN YOU! I told you only The Hindu works!",
-								Toast.LENGTH_LONG).show();
-						Toast.makeText(MainActivity.this,
-								"Doesn't matter. Here, read the " + catName + " section from The Hindu",
-								Toast.LENGTH_LONG).show();
-					}
 
 					Intent detailIntent = new Intent(MainActivity.this, WebsiteListActivity.class);
 					detailIntent.putExtra("npId", npId);
