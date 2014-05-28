@@ -1,4 +1,4 @@
-package com.example.try_masterdetail;
+package com.example.try_masterdetail.homescreen.adapter;
 
 public class GridCellModel {
 

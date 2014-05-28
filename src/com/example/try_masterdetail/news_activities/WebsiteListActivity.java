@@ -112,17 +112,31 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		Log.d(TAG, "Activity onCreate");
 		setContentView(R.layout.activity_website_list);
 
+		mActionBarColors = getResources().getIntArray(R.array.action_bar_colors);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
+			Log.d(TAG, "Activity retaining extras");
 			npId = extras.getString("npId");
 			catId = extras.getString("catId");
 			npName = extras.getString("npName");
 			catName = extras.getString("catName");
+
+			currentColor = mActionBarColors[Integer.parseInt(catId) - 1];
 		}
 
-		mActionBarColors = getResources().getIntArray(R.array.action_bar_colors);
+		if (savedInstanceState != null) {
+			Log.d(TAG, "Activity retaining savedInstanceState");
+			npName = savedInstanceState.getString("npName");
+			catId = savedInstanceState.getString("catId");
+			currentColor = savedInstanceState.getInt("color");
+			catName = savedInstanceState.getString("catName");
+
+		}
+
+		// mActionBarColors =
+		// getResources().getIntArray(R.array.action_bar_colors);
 		setTitle(npName + " - " + catName);
-		setColor(mActionBarColors[Integer.parseInt(catId) - 1]);
+		setColor(currentColor);
 
 		if (findViewById(R.id.website_detail_container) != null) {
 			// Log.d(TAG, "Activity twoPane true");
@@ -153,6 +167,17 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
 		// Make Navigation Drawer
 		makeNavDrawer();
+
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Log.d(TAG, "Activity saving savedInstanceState");
+		outState.putString("npName", npName);
+		outState.putString("catId", catId);
+		outState.putInt("color", currentColor);
+		outState.putString("catName", catName);
 
 	}
 
@@ -215,10 +240,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		bodyText = result[2];
 		mArticlePubDate = result[3];
 
-		if (bodyText == null || bodyText.isEmpty()) {
-			mArticleTextView.setText("Sorry, this story is not supported for mobile view. Try to read in the browser");
-
-		}
 		mSubtitleLayout.setVisibility(View.VISIBLE);
 		mArticlePubDateView.setText(mArticlePubDate);
 		mArticleTextView.setVisibility(View.VISIBLE);
@@ -236,7 +257,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_header_title);
 			mTitleTextView.setText(titleText);
 
-			mMainImageView = (ImageView) headerStub.findViewById(R.id.mainImage);
+			mMainImageView = (ImageView) headerStub.findViewById(R.id.article_header_image);
 			Picasso picassoInstance = Picasso.with(this);
 			picassoInstance.setDebugging(true);
 			picassoInstance.load(mImageURL).into(mMainImageView, new Callback() {

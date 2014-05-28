@@ -1,4 +1,4 @@
-package com.example.try_masterdetail;
+package com.example.try_masterdetail.homescreen.adapter;
 
 import java.util.List;
 
@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.try_masterdetail.R;
+import com.example.try_masterdetail.R.dimen;
+import com.example.try_masterdetail.R.id;
+import com.example.try_masterdetail.R.layout;
 
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;

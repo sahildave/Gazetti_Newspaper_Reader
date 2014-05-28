@@ -79,7 +79,11 @@ public class WebsiteDetailFragment extends Fragment {
 		}
 		Log.d(TAG, "DetailFragment onAttach");
 
-		mCallbacks = (TaskCallbacks) activity;
+		try {
+			mCallbacks = (TaskCallbacks) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement ToolbarListener");
+		}
 	}
 
 	@Override
@@ -198,7 +202,7 @@ public class WebsiteDetailFragment extends Fragment {
 				mImageURL = result[1];
 			}
 
-			if (result[0].length() == 0) {
+			if (result[0] == null || result[0].length() == 0) {
 				result[0] = titleTextBackup;
 			}
 

@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/homescreen_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#77000000"
+        android:columnWidth="@dimen/cell_dimen"
+        android:fadingEdge="horizontal"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:scrollbars="none"
+        android:stretchMode="spacingWidthUniform"
+        android:verticalSpacing="10dp" />
+
+</FrameLayout>

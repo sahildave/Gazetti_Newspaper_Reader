@@ -1,24 +1,22 @@
-package com.example.try_masterdetail;
+package com.example.try_masterdetail.homescreen;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -26,26 +24,63 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.try_masterdetail.AddCellDialogFragment.AddCellDialogListener;
-import com.example.try_masterdetail.EditCellDialogFragment.EditCellDialogListener;
+import com.example.try_masterdetail.R;
+import com.example.try_masterdetail.homescreen.adapter.CSVObject;
+import com.example.try_masterdetail.homescreen.adapter.GridCellModel;
+import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
+import com.example.try_masterdetail.homescreen.adapter.ReadCSV;
 import com.example.try_masterdetail.news_activities.WebsiteListActivity;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
-public class MainActivity extends FragmentActivity implements AddCellDialogListener, EditCellDialogListener {
+public class HomeScreenFragment extends Fragment {
+	Callbacks activityCallback;
 
+	private GridView gridview;
 	List<GridCellModel> cellList;
 	ImageAdapter adapter;
-	FragmentManager fm = getSupportFragmentManager();
-	private final static String TAG = "HomeScreen";
+
+	public HomeScreenFragment() {
+
+	}
+
+	public interface Callbacks {
+		public void showAddNewCellDialog(List<GridCellModel> cellList, ImageAdapter adapter);
+
+		public void showEditCellDialog(int position, String newspaper, String category, List<GridCellModel> cellList,
+				ImageAdapter adapter);
+	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.homescreen_activity);
-		GridView gridview = (GridView) findViewById(R.id.gridview);
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			activityCallback = (Callbacks) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement ToolbarListener");
+		}
+	}
 
-		if (findViewById(R.id.homescreen_background_kenburns) == null) {
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		// Log.d(TAG, "ListFragment in onCreate ");
+		setRetainInstance(true);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.homescreen_fragment, container, false);
+		return rootView;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		gridview = (GridView) getActivity().findViewById(R.id.gridview);
+
+		if (getActivity().findViewById(R.id.homescreen_background_kenburns) == null) {
 			loadImageForBackground();
 		}
 
@@ -59,7 +94,7 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		cellList.add(new GridCellModel("toi", "Entertainment"));
 		cellList.add(new GridCellModel("add_new", "Add New"));
 
-		adapter = new ImageAdapter(this, cellList);
+		adapter = new ImageAdapter(getActivity(), cellList);
 
 		SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(adapter);
 		AlphaInAnimationAdapter animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
@@ -70,30 +105,17 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		// gridview.setAdapter(adapter);
 
 		registerForContextMenu(gridview);
-
-		if (isFirstTime()) {
-
-			new AlertDialog.Builder(MainActivity.this).setTitle("Updated")
-					.setMessage(R.string.first_message)
-					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					}).show();
-
-		}
-
 		gridview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
 				if (position == (cellList.size() - 1)) {
-					showAddNewCellDialog();
+					activityCallback.showAddNewCellDialog(cellList, adapter);
 				} else {
 					GridCellModel clickedObject = cellList.get(position);
 					String npImage = clickedObject.getNewspaperImage();
 					String catName = clickedObject.getTitleCategory();
 
-					ReadCSV readCsv = new ReadCSV(MainActivity.this);
+					ReadCSV readCsv = new ReadCSV(getActivity());
 					CSVObject csvObject = readCsv.getObjectByNPImage(npImage, catName);
 
 					String npId = csvObject.getNpId();
@@ -103,7 +125,7 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 					npId = String.valueOf(Integer.parseInt(npId) + 1);
 					catId = String.valueOf(Integer.parseInt(catId) + 1);
 
-					Intent detailIntent = new Intent(MainActivity.this, WebsiteListActivity.class);
+					Intent detailIntent = new Intent(getActivity(), WebsiteListActivity.class);
 					detailIntent.putExtra("npId", npId);
 					detailIntent.putExtra("catId", catId);
 					detailIntent.putExtra("npName", npName);
@@ -122,10 +144,10 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		Random rand = new Random();
 		int n = rand.nextInt(4) + 1;
 		String backgroundImageUri = "image_" + n;
-		int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getPackageName());
+		int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
 		System.out.println(n + ", " + resID);
 		if (resID == 0) {
-			resID = getResources().getIdentifier("image_0", "drawable", getPackageName());
+			resID = getResources().getIdentifier("image_0", "drawable", getActivity().getPackageName());
 		}
 
 		// Bitmap Options
@@ -141,8 +163,6 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		// height and width of screen
 		int reqHeight = getResources().getDisplayMetrics().heightPixels;
 		int reqWidth = getResources().getDisplayMetrics().widthPixels;
-
-		Log.d(TAG, "image - " + imageHeight + " x " + imageWidth + " , screen - " + reqHeight + " x " + reqWidth);
 
 		// SampleSize Calculations
 		if (imageHeight > reqHeight || imageWidth > reqWidth) {
@@ -170,13 +190,11 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 			}
 		}
 
-		Log.d(TAG, "inSampleSize - " + inSampleSize);
-
 		// TODO: Check what is inBitmap
 
 		options.inJustDecodeBounds = false;
 		Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);
-		ImageView homeScreenBackground = (ImageView) findViewById(R.id.homescreen_background);
+		ImageView homeScreenBackground = (ImageView) getActivity().findViewById(R.id.homescreen_background);
 		homeScreenBackground.setImageBitmap(mBitmap);
 
 	}
@@ -184,7 +202,7 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.gridview_context_menu, menu);
 	}
 
@@ -198,14 +216,14 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		switch (item.getItemId()) {
 		case R.id.edit:
 			if (position == (cellList.size() - 1)) {
-				Toast.makeText(this, "Cannot Edit", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "Cannot Edit", Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			showEditCellDialog(position, newspaper, category);
+			activityCallback.showEditCellDialog(position, newspaper, category, cellList, adapter);
 			return true;
 		case R.id.delete:
 			if (position == (cellList.size() - 1)) {
-				Toast.makeText(this, "Cannot Delete", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "Cannot Delete", Toast.LENGTH_SHORT).show();
 				return true;
 			}
 			cellList.remove(position);
@@ -216,66 +234,14 @@ public class MainActivity extends FragmentActivity implements AddCellDialogListe
 		}
 	}
 
-	protected void showAddNewCellDialog() {
-		AddCellDialogFragment addCellDialog = new AddCellDialogFragment();
-		addCellDialog.show(fm, "addCell");
-	}
-
-	protected void showEditCellDialog(int position, String newspaper, String category) {
-		if (newspaper.length() > 7 && newspaper.substring(newspaper.length() - 7).equals("_custom")) {
-			newspaper = newspaper.substring(0, newspaper.length() - 7);
-		}
-		int newspaperId = cellList.get(position).getDefaultNewspaperId(newspaper);
-
-		EditCellDialogFragment editCellDialog = EditCellDialogFragment.newInstance(position, newspaperId, category);
-		editCellDialog.show(fm, "editCell");
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
-	public void onFinishEditingListener(int editPosition, String npName, String cat, boolean edited) {
-
-		if (edited) {
-
-			ReadCSV readCsv = new ReadCSV(this);
-			CSVObject csvObject = readCsv.getObjectByNPName(npName, cat);
-
-			GridCellModel newCell = new GridCellModel(csvObject.getNpImage(), csvObject.getCatName());
-			cellList.set(editPosition, newCell);
-			adapter.notifyDataSetChanged();
-		}
-
-	}
-
-	@Override
-	public void onFinishAddingListener(String npName, String cat) {
-
-		ReadCSV readCsv = new ReadCSV(this);
-		CSVObject csvObject = readCsv.getObjectByNPName(npName, cat);
-
-		GridCellModel newCell = new GridCellModel(csvObject.getNpImage(), csvObject.getCatName());
-		cellList.add(cellList.size() - 1, newCell);
-		adapter.notifyDataSetChanged();
-
-		readCsv.close();
-
-	}
-
-	/***
-	 * Checks that application runs first time and write flag at
-	 * SharedPreferences
-	 * 
-	 * @return true if 1st time
-	 */
-	private boolean isFirstTime() {
-		SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-		boolean ranBefore = preferences.getBoolean("RanBefore", false);
-		if (!ranBefore) {
-			// first time
-			SharedPreferences.Editor editor = preferences.edit();
-			editor.putBoolean("RanBefore", true);
-			editor.commit();
-		}
-		return !ranBefore;
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 	}
 
 }

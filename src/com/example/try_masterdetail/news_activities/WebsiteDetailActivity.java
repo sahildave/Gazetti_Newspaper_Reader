@@ -169,12 +169,9 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 			Log.d(TAG, "Loading Image...");
 
 			mTitleTextView = (TextView) headerStub.findViewById(R.id.article_header_title);
-			Log.d(TAG_ASYNC, "headerStub is NULL? " + (headerStub == null));
-			Log.d(TAG_ASYNC, "mTitleTextView is NULL? " + (mTitleTextView == null));
 			mTitleTextView.setText(titleText);
 
-			mMainImageView = (ImageView) headerStub.findViewById(R.id.mainImage);
-			Log.d(TAG_ASYNC, "mMainImageView is NULL? " + (mMainImageView == null));
+			mMainImageView = (ImageView) headerStub.findViewById(R.id.article_header_image);
 			Picasso picassoInstance = Picasso.with(this);
 			picassoInstance.setDebugging(true);
 			picassoInstance.load(mImageURL).into(mMainImageView, new Callback() {
