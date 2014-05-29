@@ -1,6 +1,6 @@
 package com.example.try_masterdetail.homescreen.adapter;
 
-public class CSVObject {
+public class NewsCatCsvObject {
 
 	String npId;
 	String npName;

@@ -5,8 +5,8 @@ public class GridCellModel {
 	private String newspaperImage;
 	private String titleCategory;
 
-	public GridCellModel(String newspaperTitle, String categoryTitle) {
-		setNewspaperImage(newspaperTitle);
+	public GridCellModel(String newspaperImage, String categoryTitle) {
+		setNewspaperImage(newspaperImage);
 		setTitleCategory(categoryTitle);
 	}
 

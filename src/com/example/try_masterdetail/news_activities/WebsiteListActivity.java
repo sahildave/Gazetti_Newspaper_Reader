@@ -34,6 +34,7 @@ import com.crashlytics.android.Crashlytics;
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
 import com.example.try_masterdetail.news_activities.adapter.NavDrawerListAdapter;
+import com.example.try_masterdetail.preference.SettingsActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -499,6 +500,9 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 			@Override
 			public void onClick(View view) {
 				Toast.makeText(getApplicationContext(), "You selected Settings", Toast.LENGTH_SHORT).show();
+
+				Intent settingIntent = new Intent(WebsiteListActivity.this, SettingsActivity.class);
+				startActivity(settingIntent);
 				mDrawerLayout.closeDrawer(mLeftDrawer);
 			}
 		});

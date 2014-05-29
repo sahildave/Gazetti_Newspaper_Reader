@@ -6,23 +6,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
-public class ReadCSV {
+public class ReadNewsCatCSV {
 
-	Activity activity;
-	CSVObject object;
+	Context activity;
+	NewsCatCsvObject object = null;
 	AssetManager assetManager;
 	InputStream inputStream;
 	BufferedReader br = null;
 	String line = "";
 	String csvSplitBy = ",";
 
-	public ReadCSV(Activity activity) {
+	public ReadNewsCatCSV(Context activity) {
 		this.activity = activity;
-		object = new CSVObject();
+		object = new NewsCatCsvObject();
 		this.assetManager = activity.getAssets();
 		this.inputStream = null;
 
@@ -34,7 +33,7 @@ public class ReadCSV {
 
 	}
 
-	public CSVObject getObjectByNPName(String npName, String catName) {
+	public NewsCatCsvObject getObjectByNPName(String npName, String catName) {
 		try {
 
 			br = new BufferedReader(new InputStreamReader(inputStream));
@@ -68,7 +67,7 @@ public class ReadCSV {
 		return object;
 	}
 
-	public CSVObject getObjectByNPImage(String npImage, String catName) {
+	public NewsCatCsvObject getObjectByNPImage(String npImage, String catName) {
 		try {
 
 			br = new BufferedReader(new InputStreamReader(inputStream));
@@ -102,8 +101,43 @@ public class ReadCSV {
 		return object;
 	}
 
+	public NewsCatCsvObject getObjectByNPId(String npId, String catId) {
+
+		try {
+
+			br = new BufferedReader(new InputStreamReader(inputStream));
+			System.out.println(npId + ", " + catId);
+			while ((line = br.readLine()) != null) {
+				String[] np = line.split(csvSplitBy);
+
+				if (np[0].equals(npId) && np[2].equals(catId)) {
+
+					object.setNpId(np[0]);
+					object.setNpName(np[1]);
+					object.setCatId(np[2]);
+					object.setCatName(np[3]);
+					object.setNpImage(np[4]);
+					object.setCatImage(np[5]);
+					break;
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return object;
+	}
+
 	public void close() {
 		object = null;
+		if (br != null) {
+			try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 	}
 }

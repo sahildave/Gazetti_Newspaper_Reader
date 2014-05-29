@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment;
-import com.example.try_masterdetail.homescreen.adapter.CSVObject;
+import com.example.try_masterdetail.homescreen.adapter.CellListObjects;
+import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
 import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment;
 import com.example.try_masterdetail.homescreen.adapter.GridCellModel;
 import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
-import com.example.try_masterdetail.homescreen.adapter.ReadCSV;
+import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
 import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
 import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
 
@@ -101,12 +102,15 @@ public class HomeScreenActivity extends FragmentActivity implements HomeScreenFr
 
 		if (edited) {
 
-			ReadCSV readCsv = new ReadCSV(this);
-			CSVObject csvObject = readCsv.getObjectByNPName(npName, cat);
+			ReadNewsCatCSV readCsv = new ReadNewsCatCSV(this);
+			NewsCatCsvObject csvObject = readCsv.getObjectByNPName(npName, cat);
 
 			GridCellModel newCell = new GridCellModel(csvObject.getNpImage(), csvObject.getCatName());
 			cellList.set(editPosition, newCell);
 			adapter.notifyDataSetChanged();
+
+			CellListObjects cellListObject = new CellListObjects(this);
+			cellListObject.saveCellList(cellList);
 		}
 
 	}
@@ -114,14 +118,15 @@ public class HomeScreenActivity extends FragmentActivity implements HomeScreenFr
 	@Override
 	public void onFinishAddingListener(String npName, String cat) {
 
-		ReadCSV readCsv = new ReadCSV(this);
-		CSVObject csvObject = readCsv.getObjectByNPName(npName, cat);
+		ReadNewsCatCSV readCsv = new ReadNewsCatCSV(this);
+		NewsCatCsvObject csvObject = readCsv.getObjectByNPName(npName, cat);
 
 		GridCellModel newCell = new GridCellModel(csvObject.getNpImage(), csvObject.getCatName());
 		cellList.add(cellList.size() - 1, newCell);
 		adapter.notifyDataSetChanged();
-
-		readCsv.close();
+		
+		CellListObjects cellListObject = new CellListObjects(this);
+		cellListObject.saveCellList(cellList);
 
 	}
 

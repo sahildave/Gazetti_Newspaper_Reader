@@ -97,12 +97,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		npNameString = getArguments().getString("npName");
 		catIdString = getArguments().getString("catId");
 		listViewHeaderColor = getArguments().getInt("color");
-		try {
-			mCallbacks = (Callbacks) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement ToolbarListener");
-		}
-
+		mCallbacks = (Callbacks) activity;
 	}
 
 	@Override

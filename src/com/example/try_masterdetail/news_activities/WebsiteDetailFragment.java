@@ -1,12 +1,5 @@
 package com.example.try_masterdetail.news_activities;
 
-import java.io.IOException;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -79,11 +72,8 @@ public class WebsiteDetailFragment extends Fragment {
 		}
 		Log.d(TAG, "DetailFragment onAttach");
 
-		try {
-			mCallbacks = (TaskCallbacks) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement ToolbarListener");
-		}
+		mCallbacks = (TaskCallbacks) activity;
+
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Vaarta </string>
+    <string name="app_name">TRY_NEWS</string>
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
@@ -12,7 +12,7 @@
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="add_cell_dialog_add">Add</string>
     <string name="add_cell_dialog_cancel">Cancel</string>
-    <string name="first_message">Now you can read The Times of India too.\n\nAbout the title - Vaarta, is a Sanskrit word for News, Story, or anything that can be said or reported.\n\nEnjoy!</string>
+    <string name="first_message">Now you can read The Times of India too.\n\nEnjoy!</string>
 
     <string-array name="newspaper_array">
         <item>The Hindu</item>

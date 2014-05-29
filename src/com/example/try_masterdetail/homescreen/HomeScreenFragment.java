@@ -1,15 +1,20 @@
 package com.example.try_masterdetail.homescreen;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -25,11 +30,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.R;
-import com.example.try_masterdetail.homescreen.adapter.CSVObject;
+import com.example.try_masterdetail.homescreen.adapter.CellListObjects;
 import com.example.try_masterdetail.homescreen.adapter.GridCellModel;
 import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
-import com.example.try_masterdetail.homescreen.adapter.ReadCSV;
+import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
+import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
 import com.example.try_masterdetail.news_activities.WebsiteListActivity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
@@ -39,6 +47,13 @@ public class HomeScreenFragment extends Fragment {
 	private GridView gridview;
 	List<GridCellModel> cellList;
 	ImageAdapter adapter;
+	private int feedVersion;
+	SwingBottomInAnimationAdapter animAdapter;
+	AlphaInAnimationAdapter animAdapterMultiple;
+
+	private String TAG = "HomeScreen";
+
+	private boolean firstRun;
 
 	public HomeScreenFragment() {
 
@@ -64,45 +79,50 @@ public class HomeScreenFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Log.d(TAG, "ListFragment in onCreate ");
+		Log.d(TAG, "ListFragment in onCreate ");
 		setRetainInstance(true);
+
+		SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
+		feedVersion = sharedPref.getInt("feedVersion", 0);
+
+		firstRun = true;
+		Log.d(TAG, "FEEDVERSION onCreate - " + feedVersion);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.homescreen_fragment, container, false);
+		firstRun = false;
 		return rootView;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
+		// cellList = new ArrayList<GridCellModel>();
 		gridview = (GridView) getActivity().findViewById(R.id.gridview);
 
 		if (getActivity().findViewById(R.id.homescreen_background_kenburns) == null) {
 			loadImageForBackground();
 		}
+		Log.d(TAG, "ListFragment in onViewCreated ");
+		Log.d(TAG, "FEEDVERSION onViewCreated - " + feedVersion);
 
-		cellList = new ArrayList<GridCellModel>();
+		CellListObjects cellListObject = new CellListObjects(getActivity());
+		cellList = cellListObject.getCellListFromPrefs();
 
-		cellList.add(new GridCellModel("th", "Sports"));
-		cellList.add(new GridCellModel("th", "National"));
-		cellList.add(new GridCellModel("th", "International"));
-		cellList.add(new GridCellModel("toi", "National"));
-		cellList.add(new GridCellModel("toi", "Science"));
-		cellList.add(new GridCellModel("toi", "Entertainment"));
-		cellList.add(new GridCellModel("add_new", "Add New"));
+		GridCellModel modelObject = cellList.get(cellList.size() - 1);
+		if (!modelObject.getNewspaperImage().equals("add_new")) {
+			cellList.add(new GridCellModel("add_new", "Add New"));
+		}
 
 		adapter = new ImageAdapter(getActivity(), cellList);
 
-		SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(adapter);
-		AlphaInAnimationAdapter animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
+		animAdapter = new SwingBottomInAnimationAdapter(adapter);
+		animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
 		animAdapterMultiple.setAbsListView(gridview);
 
 		gridview.setAdapter(animAdapterMultiple);
-
-		// gridview.setAdapter(adapter);
 
 		registerForContextMenu(gridview);
 		gridview.setOnItemClickListener(new OnItemClickListener() {
@@ -115,8 +135,8 @@ public class HomeScreenFragment extends Fragment {
 					String npImage = clickedObject.getNewspaperImage();
 					String catName = clickedObject.getTitleCategory();
 
-					ReadCSV readCsv = new ReadCSV(getActivity());
-					CSVObject csvObject = readCsv.getObjectByNPImage(npImage, catName);
+					ReadNewsCatCSV readCsvNpImage = new ReadNewsCatCSV(getActivity());
+					NewsCatCsvObject csvObject = readCsvNpImage.getObjectByNPImage(npImage, catName);
 
 					String npId = csvObject.getNpId();
 					String catId = csvObject.getCatId();
@@ -125,12 +145,12 @@ public class HomeScreenFragment extends Fragment {
 					npId = String.valueOf(Integer.parseInt(npId) + 1);
 					catId = String.valueOf(Integer.parseInt(catId) + 1);
 
-					Intent detailIntent = new Intent(getActivity(), WebsiteListActivity.class);
-					detailIntent.putExtra("npId", npId);
-					detailIntent.putExtra("catId", catId);
-					detailIntent.putExtra("npName", npName);
-					detailIntent.putExtra("catName", catName);
-					startActivity(detailIntent);
+					Intent headlinesIntent = new Intent(getActivity(), WebsiteListActivity.class);
+					headlinesIntent.putExtra("npId", npId);
+					headlinesIntent.putExtra("catId", catId);
+					headlinesIntent.putExtra("npName", npName);
+					headlinesIntent.putExtra("catName", catName);
+					startActivity(headlinesIntent);
 
 				}
 
@@ -228,6 +248,9 @@ public class HomeScreenFragment extends Fragment {
 			}
 			cellList.remove(position);
 			adapter.notifyDataSetChanged();
+
+			CellListObjects cellListObject = new CellListObjects(getActivity());
+			cellListObject.saveCellList(cellList);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -235,13 +258,42 @@ public class HomeScreenFragment extends Fragment {
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG, "ListFragment in onResume ");
+		Log.d(TAG, "FEEDVERSION onResume - " + feedVersion);
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+		SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
+		int newfeedVersion = sharedPref.getInt("feedVersion", 0);
+		Log.d(TAG, "NEWFEEDVERSION onResume - " + newfeedVersion);
+
+		if (!firstRun && (newfeedVersion > feedVersion)) {
+			// TODO
+			Log.d(TAG, "RELOADING - " + cellList.size());
+			feedVersion = newfeedVersion;
+			CellListObjects cellListObject = new CellListObjects(getActivity());
+			// cellListObject.saveCellList(cellList);
+			cellList.clear();
+			cellList = cellListObject.getCellListFromPrefs();
+
+			GridCellModel modelObject = cellList.get(cellList.size() - 1);
+			if (!modelObject.getNewspaperImage().equals("add_new")) {
+				cellList.add(new GridCellModel("add_new", "Add New"));
+			}
+
+			adapter = new ImageAdapter(getActivity(), cellList);
+			// adapter.notifyDataSetChanged();
+
+			animAdapter = new SwingBottomInAnimationAdapter(adapter);
+			animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
+			animAdapterMultiple.setAbsListView(gridview);
+
+			gridview.setAdapter(animAdapterMultiple);
+
+			Log.d(TAG, "LOADED - " + cellList.size());
+
+		}
+
 	}
 
 }
