@@ -1,8 +1,5 @@
 package com.example.try_masterdetail.homescreen;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -36,8 +33,7 @@ import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
 import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
 import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
 import com.example.try_masterdetail.news_activities.WebsiteListActivity;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.example.try_masterdetail.preference.FeedPrefObject;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
@@ -111,8 +107,12 @@ public class HomeScreenFragment extends Fragment {
 		CellListObjects cellListObject = new CellListObjects(getActivity());
 		cellList = cellListObject.getCellListFromPrefs();
 
-		GridCellModel modelObject = cellList.get(cellList.size() - 1);
-		if (!modelObject.getNewspaperImage().equals("add_new")) {
+		if (cellList.size() > 0) {
+			GridCellModel modelObject = cellList.get(cellList.size() - 1);
+			if (!modelObject.getNewspaperImage().equals("add_new")) {
+				cellList.add(new GridCellModel("add_new", "Add New"));
+			}
+		} else {
 			cellList.add(new GridCellModel("add_new", "Add New"));
 		}
 
@@ -152,6 +152,7 @@ public class HomeScreenFragment extends Fragment {
 					headlinesIntent.putExtra("catName", catName);
 					startActivity(headlinesIntent);
 
+					readCsvNpImage.close();
 				}
 
 			}
@@ -251,6 +252,9 @@ public class HomeScreenFragment extends Fragment {
 
 			CellListObjects cellListObject = new CellListObjects(getActivity());
 			cellListObject.saveCellList(cellList);
+
+			FeedPrefObject feedPrefObject = new FeedPrefObject(getActivity());
+			feedPrefObject.updateFeedPrefs();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -276,8 +280,12 @@ public class HomeScreenFragment extends Fragment {
 			cellList.clear();
 			cellList = cellListObject.getCellListFromPrefs();
 
-			GridCellModel modelObject = cellList.get(cellList.size() - 1);
-			if (!modelObject.getNewspaperImage().equals("add_new")) {
+			if (cellList.size() > 0) {
+				GridCellModel modelObject = cellList.get(cellList.size() - 1);
+				if (!modelObject.getNewspaperImage().equals("add_new")) {
+					cellList.add(new GridCellModel("add_new", "Add New"));
+				}
+			} else {
 				cellList.add(new GridCellModel("add_new", "Add New"));
 			}
 

@@ -6,7 +6,9 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +41,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 	private int lastExpandedGroupPosition = -1;
 
 	public static ExpandableListView expandableList;
+	TypedArray explist_np_images;
 
 	public MyExpandableListAdapter(Context context, List<String> listDataHeader,
 			HashMap<String, List<String>> listChildData) {
@@ -56,6 +59,8 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 		mChildCheckStates = gson.fromJson(str, type);
 		Log.d("HomeScreen", "Old Feeds - " + str);
 		// mChildCheckStates = new HashMap<Integer, boolean[]>();
+
+		explist_np_images = mContext.getResources().obtainTypedArray(R.array.explist_newspaper_images);
 	}
 
 	@Override
@@ -77,9 +82,15 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
 			groupViewHolder = (GroupViewHolder) convertView.getTag();
 		}
+
 		groupViewHolder.mGroupText.setText(groupText);
 		groupViewHolder.mGroupText.setTypeface(null, Typeface.BOLD);
 
+		int imageResId = explist_np_images.getResourceId(groupPosition, -1);
+		Drawable image = mContext.getResources().getDrawable(imageResId);
+		image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
+		groupViewHolder.mGroupText.setCompoundDrawables(null, null, image, null);
+		System.out.println(imageResId + ", " + image.hashCode());
 		return convertView;
 	}
 

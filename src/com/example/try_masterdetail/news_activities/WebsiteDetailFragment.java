@@ -108,8 +108,8 @@ public class WebsiteDetailFragment extends Fragment {
 
 		if (npNameString.equals("The Hindu")) {
 			mNewspaperTile.setImageResource(R.drawable.ic_hindu);
-		} else {
-			mNewspaperTile.setImageResource(R.drawable.ic_launcher);
+		} else if (npNameString.equals("The Times of India")) {
+			mNewspaperTile.setImageResource(R.drawable.ic_toi);
 		}
 
 		mNewspaperTile.setOnClickListener(webViewCalled);

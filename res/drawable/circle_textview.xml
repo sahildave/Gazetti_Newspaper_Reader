@@ -3,12 +3,9 @@
     android:shape="oval"
     android:useLevel="false" >
 
-    <gradient
-        android:angle="270"
-        android:endColor="#bbffffff"
-        android:gradientRadius="100"
-        android:startColor="#ffffffff"
-        android:type="radial" />
+    <solid
+        android:type="radial"
+        android:color="@color/green_welcome_dark" />
 
     <size
         android:height="110dp"

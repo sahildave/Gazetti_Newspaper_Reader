@@ -12,6 +12,7 @@ import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
 import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
 import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
 import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
+import com.example.try_masterdetail.preference.FeedPrefObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -109,8 +110,14 @@ public class HomeScreenActivity extends FragmentActivity implements HomeScreenFr
 			cellList.set(editPosition, newCell);
 			adapter.notifyDataSetChanged();
 
+			readCsv.close();
+
 			CellListObjects cellListObject = new CellListObjects(this);
 			cellListObject.saveCellList(cellList);
+
+			// Update feedPrefs
+			FeedPrefObject feedPrefObject = new FeedPrefObject(this);
+			feedPrefObject.updateFeedPrefs();
 		}
 
 	}
@@ -124,9 +131,15 @@ public class HomeScreenActivity extends FragmentActivity implements HomeScreenFr
 		GridCellModel newCell = new GridCellModel(csvObject.getNpImage(), csvObject.getCatName());
 		cellList.add(cellList.size() - 1, newCell);
 		adapter.notifyDataSetChanged();
-		
+
+		readCsv.close();
+
 		CellListObjects cellListObject = new CellListObjects(this);
 		cellListObject.saveCellList(cellList);
+
+		// Update feedPrefs
+		FeedPrefObject feedPrefObject = new FeedPrefObject(this);
+		feedPrefObject.updateFeedPrefs();
 
 	}
 

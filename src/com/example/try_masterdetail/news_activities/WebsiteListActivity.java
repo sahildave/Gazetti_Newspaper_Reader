@@ -502,6 +502,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 				Toast.makeText(getApplicationContext(), "You selected Settings", Toast.LENGTH_SHORT).show();
 
 				Intent settingIntent = new Intent(WebsiteListActivity.this, SettingsActivity.class);
+				settingIntent.putExtra("ActionBarColor", currentColor);
 				startActivity(settingIntent);
 				mDrawerLayout.closeDrawer(mLeftDrawer);
 			}

@@ -41,19 +41,31 @@ public class FeedPrefObject {
 		for (GridCellModel objects : cellListFromPrefs) {
 			String npImage = objects.getNewspaperImage();
 			String catName = objects.getTitleCategory();
+			System.out.println(npImage + ", " + catName);
 
-			ReadNewsCatCSV readCsv = new ReadNewsCatCSV(context);
-			NewsCatCsvObject csvObjectNpImage = readCsv.getObjectByNPImage(npImage, catName);
-			if (csvObjectNpImage != null) {
-				String npIdString = csvObjectNpImage.getNpId();
-				String catIdString = csvObjectNpImage.getCatId();
+			if (!npImage.equals("add_new")) {
+				ReadNewsCatCSV readCsv = new ReadNewsCatCSV(context);
+				NewsCatCsvObject csvObjectNpImage = readCsv.getObjectByNPImage(npImage, catName);
 
-				int npIdint = Integer.parseInt(npIdString);
-				int catIdint = Integer.parseInt(catIdString);
+				System.out.println(csvObjectNpImage.toString());
 
-				mChildCheckStates.get(npIdint)[catIdint] = true;
+				if (csvObjectNpImage != null && csvObjectNpImage.getNpId() != null) {
+					String npIdString = csvObjectNpImage.getNpId();
+					String catIdString = csvObjectNpImage.getCatId();
+
+					int npIdint = Integer.parseInt(npIdString);
+					int catIdint = Integer.parseInt(catIdString);
+
+					if (!mChildCheckStates.containsKey(npIdint)) {
+						boolean value[] = new boolean[5];
+						mChildCheckStates.put(npIdint, value);
+					}
+
+					mChildCheckStates.get(npIdint)[catIdint] = true;
+				}
+				saveFeedPrefs(mChildCheckStates);
+				readCsv.close();
 			}
-			saveFeedPrefs(mChildCheckStates);
 		}
 
 	}

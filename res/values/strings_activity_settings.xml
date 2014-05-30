@@ -5,10 +5,16 @@
     <!-- Strings related to Settings -->
 
     <string name="pref_feeds_selected_defvalue">{\"0\":[false,false,false,false,false],\"1\":[false,false,false,false,false]}</string>
-	
-	<string name="cell_list_defvalue">[]</string>
-   <!-- <string name="cell_list_defvalue">[{\"newspaperImage\":\"th\",\"titleCategory\":\"National\"},{\"newspaperImage\":\"toi\",\"titleCategory\":\"National\"}]</string> -->
-    
+
+    <array name="pref_newspaper_photos">
+        <item>@drawable/ic_hindu</item>
+        <item>@drawable/ic_toi</item>
+    </array>
+
+    <string name="cell_list_defvalue">[]</string>
+    <!-- <string name="cell_list_defvalue">[{\"newspaperImage\":\"th\",\"titleCategory\":\"National\"},{\"newspaperImage\":\"toi\",\"titleCategory\":\"National\"}]</string> -->
+
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
     <string name="pref_title_social_recommendations">Enable social recommendations</string>

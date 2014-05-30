@@ -16,7 +16,6 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.R;
-import com.example.try_masterdetail.preference.NewspaperSelectFragment.NewspaperCallback;
 
 public class FeedSelectFragment extends Fragment {
 
@@ -53,7 +52,7 @@ public class FeedSelectFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (!(activity instanceof NewspaperCallback)) {
+		if (!(activity instanceof FeedSelectCallback)) {
 			throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
 		}
 		callback = (FeedSelectCallback) activity;

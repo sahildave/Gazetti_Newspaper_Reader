@@ -17,9 +17,6 @@
     <string-array name="newspaper_array">
         <item>The Hindu</item>
         <item>The Times of India</item>
-        <item>First Post</item>
-        <item>Hindustan Times</item>
-        <item>The Indian Express</item>
     </string-array>
     <string-array name="toi_cat">
         <item>National</item>
@@ -72,6 +69,10 @@
         <item>@color/green_sports</item>
         <item>@color/purple_science</item>
         <item>@color/red_entertainment</item>
+    </array>
+    <array name="explist_newspaper_images">
+        <item>@drawable/ic_hindu</item>
+        <item>@drawable/ic_toi</item>
     </array>
 
 </resources>
