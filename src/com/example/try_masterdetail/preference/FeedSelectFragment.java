@@ -25,7 +25,7 @@ public class FeedSelectFragment extends Fragment {
 	public static final String ARG_PAGE = "page";
 
 	private int mPageNumber;
-	private MyExpandableListAdapter expListAdapter;
+	private PreferenceExpListAdapter expListAdapter;
 	private List<String> listDataHeader;
 	private HashMap<String, List<String>> listDataChild;
 
@@ -67,25 +67,24 @@ public class FeedSelectFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout containing a title and body text.
-		Toast.makeText(getActivity(), mPageNumber + "", Toast.LENGTH_SHORT).show();
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.feed_select_fragment_explist, container, false);
 		ExpandableListView expListView = (ExpandableListView) rootView.findViewById(R.id.feed_select_expandable_list);
 
 		prepareListData();
-		expListAdapter = new MyExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+		expListAdapter = new PreferenceExpListAdapter(getActivity(), listDataHeader, listDataChild);
 		expListView.setAdapter(expListAdapter);
 		expListAdapter.setExpList(expListView);
 
 		// Watch for button clicks.
-		Button button = (Button) rootView.findViewById(R.id.feed_select_explist_back_button);
-		button.setOnClickListener(new OnClickListener() {
+		Button back_button = (Button) rootView.findViewById(R.id.feed_select_explist_back_button);
+		back_button.setOnClickListener(new OnClickListener() {
 			public void onClick(View back) {
 				callback.fsFragBackButton();
 			}
 		});
 
-		button = (Button) rootView.findViewById(R.id.feed_select_explist_done_button);
-		button.setOnClickListener(new OnClickListener() {
+		Button done_button = (Button) rootView.findViewById(R.id.feed_select_explist_done_button);
+		done_button.setOnClickListener(new OnClickListener() {
 			public void onClick(View next) {
 				HashMap<Integer, boolean[]> mChildCheckStates = expListAdapter.getClickedStates();
 				callback.fsFragDoneButton(mChildCheckStates);
@@ -112,18 +111,18 @@ public class FeedSelectFragment extends Fragment {
 
 		// Adding child data
 		List<String> th = new ArrayList<String>();
-		th.add("TH - National");
-		th.add("TH - International");
-		th.add("TH - Politics");
-		th.add("TH - Sports");
-		th.add("TH - Entertainment");
+		th.add("National");
+		th.add("International");
+		th.add("Sports");
+		th.add("Science");
+		th.add("Entertainment");
 
 		List<String> toi = new ArrayList<String>();
-		toi.add("TOI - National");
-		toi.add("TOI - International");
-		toi.add("TOI - Politics");
-		toi.add("TOI - Sports");
-		toi.add("TOI - Entertainment");
+		toi.add("National");
+		toi.add("International");
+		toi.add("Sports");
+		toi.add("Science");
+		toi.add("Entertainment");
 
 		// Header, Child data
 		listDataChild.put(listDataHeader.get(0), th);

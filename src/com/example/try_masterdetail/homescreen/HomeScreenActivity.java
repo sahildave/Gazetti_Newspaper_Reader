@@ -13,9 +13,11 @@ import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
 import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
 import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
 import com.example.try_masterdetail.preference.FeedPrefObject;
+import com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,6 +35,10 @@ public class HomeScreenActivity extends FragmentActivity implements HomeScreenFr
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homescreen_activity);
+
+		Intent welcomIntent = new Intent(this, WelcomeScreenViewPagerActivity.class);
+		startActivity(welcomIntent);
+
 		fm = getSupportFragmentManager();
 		homeScreenFragment = fm.findFragmentByTag("homeScreen");
 

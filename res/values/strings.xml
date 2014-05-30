@@ -75,4 +75,7 @@
         <item>@drawable/ic_toi</item>
     </array>
 
+    <string name="title_activity_welcome_screen_view_pager">WelcomeScreenViewPagerActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>
