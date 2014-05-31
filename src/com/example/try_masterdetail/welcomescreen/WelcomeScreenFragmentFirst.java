@@ -33,7 +33,8 @@ public class WelcomeScreenFragmentFirst extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_screen_first, container, false);
+		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_screen_first_fragment, container,
+				false);
 		return rootView;
 	}
 

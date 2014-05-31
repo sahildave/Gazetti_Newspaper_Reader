@@ -260,7 +260,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
 			mMainImageView = (ImageView) headerStub.findViewById(R.id.article_header_image);
 			Picasso picassoInstance = Picasso.with(this);
-			picassoInstance.setDebugging(true);
+//			picassoInstance.setDebugging(true);	//TODO:Turn on for debugging
 			picassoInstance.load(mImageURL).into(mMainImageView, new Callback() {
 
 				@Override

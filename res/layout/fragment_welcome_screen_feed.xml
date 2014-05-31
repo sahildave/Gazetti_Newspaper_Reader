@@ -5,10 +5,41 @@
     android:background="@color/green_welcome" >
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="48dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="240dp"
+            android:layout_height="0.5dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/white" />
+
+        <Button
+            android:id="@+id/welcome_feed_select_explist_done_button"
+            style="@style/ButtonAppTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Let&apos;s Get Started!"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/linearLayout2"
+        android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
+        android:layout_marginTop="64dp"
         android:orientation="vertical" >
 
         <TextView
@@ -27,7 +58,7 @@
             android:layout_width="240dp"
             android:layout_height="0.5dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginTop="16dp"
             android:background="@android:color/white" />
 
@@ -35,28 +66,11 @@
             android:id="@+id/welcome_feed_select_expandable_list"
             style="@style/ExpListDarkTheme"
             android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:cacheColorHint="@android:color/transparent"
             android:fadingEdgeLength="1dp"
             android:scrollbars="none" />
-
-        <Button
-            android:id="@+id/welcome_feed_select_explist_done_button"
-            style="@style/ButtonAppTheme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="Let&apos;s Get Started!"
-            android:textColor="@android:color/white" />
-
-        <View
-            android:layout_width="240dp"
-            android:layout_height="0.5dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="32dp"
-            android:background="@android:color/white" />
     </LinearLayout>
 
 </RelativeLayout>

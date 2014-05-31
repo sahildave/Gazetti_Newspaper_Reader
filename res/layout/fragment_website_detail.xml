@@ -43,12 +43,12 @@
 
                 <ImageButton
                     android:id="@+id/newspaperTile"
-                    style="@style/ImageButtonAppTheme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:onClick="viewInBrowser"
+                    android:scaleType="center"
                     android:src="@drawable/ic_hindu" />
 
                 <TextView

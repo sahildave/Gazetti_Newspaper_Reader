@@ -2,27 +2,25 @@ package com.example.try_masterdetail.homescreen;
 
 import java.util.List;
 
-import com.example.try_masterdetail.R;
-import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment;
-import com.example.try_masterdetail.homescreen.adapter.CellListObjects;
-import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
-import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment;
-import com.example.try_masterdetail.homescreen.adapter.GridCellModel;
-import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
-import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
-import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
-import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
-import com.example.try_masterdetail.preference.FeedPrefObject;
-import com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+
+import com.example.try_masterdetail.R;
+import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment;
+import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
+import com.example.try_masterdetail.homescreen.adapter.CellListObjects;
+import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment;
+import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
+import com.example.try_masterdetail.homescreen.adapter.GridCellModel;
+import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
+import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
+import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
+import com.example.try_masterdetail.preference.FeedPrefObject;
+import com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity;
 
 public class HomeScreenActivity extends FragmentActivity implements HomeScreenFragment.Callbacks,
 		AddCellDialogListener, EditCellDialogListener {
@@ -36,8 +34,10 @@ public class HomeScreenActivity extends FragmentActivity implements HomeScreenFr
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homescreen_activity);
 
-		Intent welcomIntent = new Intent(this, WelcomeScreenViewPagerActivity.class);
-		startActivity(welcomIntent);
+		if (getIntent().getBooleanExtra("Exit me", false)) {
+			finish();
+			return; // add this to prevent from doing unnecessary stuffs
+		}
 
 		fm = getSupportFragmentManager();
 		homeScreenFragment = fm.findFragmentByTag("homeScreen");
@@ -50,12 +50,16 @@ public class HomeScreenActivity extends FragmentActivity implements HomeScreenFr
 
 		if (isFirstTime()) {
 
-			new AlertDialog.Builder(HomeScreenActivity.this).setTitle("Updated").setMessage(R.string.first_message)
-					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					}).show();
+			// new
+			// AlertDialog.Builder(HomeScreenActivity.this).setTitle("Updated").setMessage(R.string.first_message)
+			// .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			// public void onClick(DialogInterface dialog, int id) {
+			// dialog.cancel();
+			// }
+			// }).show();
+
+			Intent welcomIntent = new Intent(this, WelcomeScreenViewPagerActivity.class);
+			startActivity(welcomIntent);
 
 		}
 
@@ -68,14 +72,9 @@ public class HomeScreenActivity extends FragmentActivity implements HomeScreenFr
 	 * @return true if 1st time
 	 */
 	private boolean isFirstTime() {
-		SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+		SharedPreferences preferences = getSharedPreferences("RanBeforePref", MODE_PRIVATE);
 		boolean ranBefore = preferences.getBoolean("RanBefore", false);
-		if (!ranBefore) {
-			// first time
-			SharedPreferences.Editor editor = preferences.edit();
-			editor.putBoolean("RanBefore", true);
-			editor.commit();
-		}
+		System.out.print("Actvitiy - " + ranBefore);
 		return !ranBefore;
 	}
 

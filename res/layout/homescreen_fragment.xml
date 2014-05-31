@@ -21,6 +21,7 @@
         android:horizontalSpacing="10dp"
         android:numColumns="auto_fit"
         android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="24dp"
         android:scrollbars="none"
         android:stretchMode="spacingWidthUniform"
         android:verticalSpacing="10dp" />

@@ -4,24 +4,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.R;
+import com.example.try_masterdetail.homescreen.HomeScreenActivity;
 import com.example.try_masterdetail.homescreen.adapter.CellListObjects;
 import com.example.try_masterdetail.preference.FeedPrefObject;
+import com.jfeinstein.jazzyviewpager.JazzyViewPager;
+import com.jfeinstein.jazzyviewpager.JazzyViewPager.TransitionEffect;
 
 public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
 		WelcomeScreenFragmentExpList.WelcomeScreenFeedSelectCallback {
 
 	private static final int NUM_ITEMS = 2;
-	private ViewPager mPager;
+	private JazzyViewPager mPager;
 	private PagerAdapter mPagerAdapter;
 	private boolean selected;
 
@@ -34,9 +39,68 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
 		fragmentList.add(WelcomeScreenFragmentFirst.create(0));
 		fragmentList.add(WelcomeScreenFragmentExpList.create(1));
 
-		mPager = (ViewPager) findViewById(R.id.welcome_screen_pager);
 		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragmentList);
+
+		mPager = (JazzyViewPager) findViewById(R.id.welcome_screen_pager);
+		mPager.setTransitionEffect(TransitionEffect.Tablet);
+		mPager.setFadeEnabled(true);
 		mPager.setAdapter(mPagerAdapter);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (mPager.getCurrentItem() == 0) {
+			super.onBackPressed();
+
+			// go back home
+			Intent intent = new Intent(this, HomeScreenActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.putExtra("Exit me", true);
+			startActivity(intent);
+			finish();
+
+			// } else if (mPager.getCurrentItem() == 1 && selected) {
+			// welcomeFinished();
+		} else if (mPager.getCurrentItem() == 1 && !selected) {
+			mPager.setCurrentItem(0);
+		} else if (mPager.getCurrentItem() == 1 && selected) {
+			super.onBackPressed();
+		}
+
+	}
+
+	private void welcomeFinished() {
+		SharedPreferences preferences = getSharedPreferences("RanBeforePref", MODE_PRIVATE);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putBoolean("RanBefore", true);
+		editor.commit();
+
+		SharedPreferences preferences2 = getSharedPreferences("RanBeforePref", MODE_PRIVATE);
+		boolean ranBefore = preferences2.getBoolean("RanBefore", false);
+		System.out.print("Pager - " + ranBefore);
+	}
+
+	@Override
+	public void fsFragBackButton() {
+		onBackPressed();
+	}
+
+	@Override
+	public void fsFragDoneButton(HashMap<Integer, boolean[]> mChildCheckStates) {
+		
+		Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
+		selected = true;
+		welcomeFinished();
+		onBackPressed();
+
+		// Update feedPrefs
+		FeedPrefObject feedPrefObject = new FeedPrefObject(this);
+		feedPrefObject.saveFeedPrefs(mChildCheckStates);
+
+		// Update cellList
+		CellListObjects cellListObject = new CellListObjects(this);
+		cellListObject.updateCellListByFeedPrefs();
+
 	}
 
 	private class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
@@ -58,38 +122,13 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
 		public int getCount() {
 			return NUM_ITEMS;
 		}
-	}
 
-	@Override
-	public void onBackPressed() {
-		if (mPager.getCurrentItem() == 0) {
-			Toast.makeText(this, "Please select feeds from the next page", Toast.LENGTH_LONG).show();
-		} else if (mPager.getCurrentItem() == 1 && selected) {
-			super.onBackPressed();
-		} else if (mPager.getCurrentItem() == 1) {
-			Toast.makeText(this, "Click \"Let\'s Get Started!\" to start reading", Toast.LENGTH_LONG).show();
+		@Override
+		public Object instantiateItem(ViewGroup container, final int position) {
+			Object obj = super.instantiateItem(container, position);
+			mPager.setObjectForPosition(obj, position);
+			return obj;
 		}
-
 	}
 
-	@Override
-	public void fsFragBackButton() {
-		onBackPressed();
-	}
-
-	@Override
-	public void fsFragDoneButton(HashMap<Integer, boolean[]> mChildCheckStates) {
-		Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
-		selected = true;
-		onBackPressed();
-
-		// Update feedPrefs
-		FeedPrefObject feedPrefObject = new FeedPrefObject(this);
-		feedPrefObject.saveFeedPrefs(mChildCheckStates);
-
-		// Update cellList
-		CellListObjects cellListObject = new CellListObjects(this);
-		cellListObject.updateCellListByFeedPrefs();
-
-	}
 }

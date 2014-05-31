@@ -19,7 +19,9 @@
         android:gravity="center"
         android:horizontalSpacing="10dp"
         android:numColumns="auto_fit"
+        android:paddingLeft="@dimen/tablet_homescreen_horizontal"
         android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/tablet_homescreen_vertical"
         android:scrollbars="none"
         android:stretchMode="spacingWidthUniform"
         android:verticalSpacing="10dp" />
