@@ -15,4 +15,14 @@
 
     <style name="ExpListDarkTheme" parent="android:Widget.Holo.ExpandableListView"></style>
 
+    <style name="TransparentActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="android:background">@drawable/actionbar_transparent_background</item>
+        <item name="android:titleTextStyle">@style/TransparentTransparentActionBarText</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="TransparentTransparentActionBarText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

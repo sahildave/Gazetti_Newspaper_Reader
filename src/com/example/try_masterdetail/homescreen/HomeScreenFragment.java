@@ -3,6 +3,7 @@ package com.example.try_masterdetail.homescreen;
 import java.util.List;
 import java.util.Random;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -19,11 +22,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.R;
@@ -36,20 +43,25 @@ import com.example.try_masterdetail.news_activities.WebsiteListActivity;
 import com.example.try_masterdetail.preference.FeedPrefObject;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.nineoldandroids.view.ViewHelper;
 
 public class HomeScreenFragment extends Fragment {
-	Callbacks activityCallback;
-
+	private Callbacks activityCallback;
 	private GridView gridview;
-	List<GridCellModel> cellList;
-	ImageAdapter adapter;
+	private List<GridCellModel> cellList;
+	private ImageAdapter adapter;
 	private int feedVersion;
-	SwingBottomInAnimationAdapter animAdapter;
-	AlphaInAnimationAdapter animAdapterMultiple;
+	private SwingBottomInAnimationAdapter animAdapter;
+	private AlphaInAnimationAdapter animAdapterMultiple;
 
 	private String TAG = "HomeScreen";
 
 	private boolean firstRun;
+	private boolean phoneMode;
+	private ImageView phoneBackgroundImage;
+	private FrameLayout homescreenFramelayout;
+	private ActionBar actionBar;
+	private View actionBarCustomView;
 
 	public HomeScreenFragment() {
 
@@ -70,6 +82,9 @@ public class HomeScreenFragment extends Fragment {
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + " must implement ToolbarListener");
 		}
+
+		actionBar = ((ActionBarActivity) activity).getSupportActionBar();
+		actionBarCustomView = actionBar.getCustomView();
 	}
 
 	@Override
@@ -88,6 +103,13 @@ public class HomeScreenFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.homescreen_fragment, container, false);
+		// phoneBackgroundImage = (ImageView)
+		// rootView.findViewById(R.id.homescreen_background);
+
+		homescreenFramelayout = (FrameLayout) rootView.findViewById(R.id.homescreen_framelayout);
+		phoneBackgroundImage = new ImageView(getActivity());
+		phoneBackgroundImage.setScaleType(ScaleType.FIT_XY);
+
 		firstRun = false;
 		return rootView;
 	}
@@ -97,8 +119,9 @@ public class HomeScreenFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 		// cellList = new ArrayList<GridCellModel>();
 		gridview = (GridView) getActivity().findViewById(R.id.gridview);
-
 		if (getActivity().findViewById(R.id.homescreen_background_kenburns) == null) {
+			// Phone
+			phoneMode = true;
 			loadImageForBackground();
 		}
 		Log.d(TAG, "ListFragment in onViewCreated ");
@@ -158,18 +181,68 @@ public class HomeScreenFragment extends Fragment {
 			}
 		});
 
+		if (phoneMode) {
+
+			gridview.setOnScrollListener(new OnScrollListener() {
+
+				@Override
+				public void onScrollStateChanged(AbsListView view, int scrollState) {
+				}
+
+				@Override
+				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+					if (firstVisibleItem != 0) {
+						return;
+					}
+					if (null != gridview.getChildAt(0)) {
+						int topMargin = (gridview.getChildAt(0).getTop() - gridview.getChildAt(0).getHeight()) / 2;
+						ViewHelper.setTranslationY(phoneBackgroundImage, topMargin);
+
+						int actionBarTopMargin = gridview.getChildAt(0).getTop() - actionBarCustomView.getHeight();
+
+						if (actionBarTopMargin < ((-1) * actionBarCustomView.getHeight())) {
+							actionBarTopMargin = ((-1) * actionBarCustomView.getHeight());
+						}
+						ViewHelper.setTranslationY(actionBarCustomView, actionBarTopMargin);
+
+						int gridviewTopPadding = actionBarTopMargin + actionBarCustomView.getHeight();
+
+						// THIS LINES IS THE CULPRIT
+						// I have initial padding set to ?attr/actionBarSize and
+						// want to reduce it as the actionbar moves up so that
+						// it seems grid is moving upwards.
+						// If I comment the line below, the gridviewTopPadding
+						// int goes from 96 to 0 when scrolled up and comes back
+						// to 96
+						// when scrolled down, like it should.
+						// But if I use this line it goes from 96 to 0 but never
+						// when comes back to 96 again.
+						gridview.setPadding(0, gridview.getChildAt(0).getTop(), 0, 0);
+
+						Log.d(TAG, "gridviewTopPadding - " + gridviewTopPadding);
+					}
+				}
+
+			});
+		}
 	}
 
 	private void loadImageForBackground() {
 		// get a random image, if null then get image_0
 		Random rand = new Random();
 		int n = rand.nextInt(4) + 1;
-		String backgroundImageUri = "image_" + n;
+		String backgroundImageUri = "i_" + n;
 		int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
-		System.out.println(n + ", " + resID);
+
+		Log.d(TAG, "PHOTO ---- " + n + ", " + resID);
+
 		if (resID == 0) {
-			resID = getResources().getIdentifier("image_0", "drawable", getActivity().getPackageName());
+			resID = getResources().getIdentifier("i_0", "drawable", getActivity().getPackageName());
 		}
+
+		// String backgroundImageUri = "i_3";
+		// int resID = getResources().getIdentifier(backgroundImageUri,
+		// "drawable", getActivity().getPackageName());
 
 		// Bitmap Options
 		BitmapFactory.Options options = new BitmapFactory.Options();
@@ -215,8 +288,11 @@ public class HomeScreenFragment extends Fragment {
 
 		options.inJustDecodeBounds = false;
 		Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);
-		ImageView homeScreenBackground = (ImageView) getActivity().findViewById(R.id.homescreen_background);
-		homeScreenBackground.setImageBitmap(mBitmap);
+
+		int height = reqWidth * mBitmap.getHeight() / mBitmap.getWidth();
+		homescreenFramelayout.addView(phoneBackgroundImage, 0, new FrameLayout.LayoutParams(reqWidth, height));
+
+		phoneBackgroundImage.setImageBitmap(mBitmap);
 
 	}
 

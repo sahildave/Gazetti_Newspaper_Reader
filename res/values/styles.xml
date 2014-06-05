@@ -1,11 +1,18 @@
 <resources>
 
-    <!-- style for both the dialog boxes -->
     <style name="dialogBoxText" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <!-- actionbar style -->
+    <style name="TransparentActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="background">@drawable/actionbar_transparent_background</item>
+        <item name="titleTextStyle">@style/TransparentTransparentActionBarText</item>
+    </style>
+
+    <style name="TransparentTransparentActionBarText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/actionbar_background</item>
         <item name="background">@drawable/actionbar_background</item>

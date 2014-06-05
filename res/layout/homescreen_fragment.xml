@@ -1,14 +1,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homescreen_framelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/homescreen_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop" />
+<!--     <ImageView -->
+<!--         android:id="@+id/homescreen_background" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:adjustViewBounds="true" -->
+<!--         android:scaleType="fitCenter" /> -->
 
     <GridView
         android:id="@+id/gridview"
@@ -21,7 +22,6 @@
         android:horizontalSpacing="10dp"
         android:numColumns="auto_fit"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="24dp"
         android:scrollbars="none"
         android:stretchMode="spacingWidthUniform"
         android:verticalSpacing="10dp" />
