@@ -1360,10 +1360,10 @@ containing a value of this type.
         public static final int help=0x7f070055;
         public static final int home=0x7f070021;
         public static final int homeAsUp=0x7f070012;
-        public static final int homescreen_action_bar_title=0x7f070087;
+        public static final int homescreen_background=0x7f070089;
         public static final int homescreen_background_kenburns=0x7f07008b;
-        public static final int homescreen_container=0x7f070088;
-        public static final int homescreen_framelayout=0x7f070089;
+        public static final int homescreen_container=0x7f070087;
+        public static final int homescreen_framelayout=0x7f070088;
         public static final int icon=0x7f07003b;
         public static final int ifRoom=0x7f070017;
         public static final int image=0x7f070038;
@@ -1541,14 +1541,13 @@ containing a value of this type.
         public static final int header_view=0x7f03002b;
         public static final int headline_list_row=0x7f03002c;
         public static final int headline_list_row_twopane=0x7f03002d;
-        public static final int homescreen_actionbar=0x7f03002e;
-        public static final int homescreen_activity=0x7f03002f;
-        public static final int homescreen_fragment=0x7f030030;
-        public static final int homescreen_fragment_kenburns=0x7f030031;
-        public static final int nav_drawer_list_item=0x7f030032;
-        public static final int support_simple_spinner_dropdown_item=0x7f030033;
-        public static final int welcome_feed_select_explist_group=0x7f030034;
-        public static final int welcome_feed_select_explist_rowdetail=0x7f030035;
+        public static final int homescreen_activity=0x7f03002e;
+        public static final int homescreen_fragment=0x7f03002f;
+        public static final int homescreen_fragment_kenburns=0x7f030030;
+        public static final int nav_drawer_list_item=0x7f030031;
+        public static final int support_simple_spinner_dropdown_item=0x7f030032;
+        public static final int welcome_feed_select_explist_group=0x7f030033;
+        public static final int welcome_feed_select_explist_rowdetail=0x7f030034;
     }
     public static final class menu {
         public static final int activity_main=0x7f0f0000;

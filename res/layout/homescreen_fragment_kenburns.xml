@@ -20,8 +20,8 @@
         android:horizontalSpacing="10dp"
         android:numColumns="auto_fit"
         android:paddingLeft="@dimen/tablet_homescreen_horizontal"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="?attr/actionBarSize"
+        android:paddingRight="@dimen/tablet_homescreen_horizontal"
+        android:paddingTop="24dp"
         android:scrollbars="none"
         android:stretchMode="spacingWidthUniform"
         android:verticalSpacing="10dp" />

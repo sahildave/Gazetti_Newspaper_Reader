@@ -83,8 +83,6 @@ public class HomeScreenFragment extends Fragment {
 			throw new ClassCastException(activity.toString() + " must implement ToolbarListener");
 		}
 
-		actionBar = ((ActionBarActivity) activity).getSupportActionBar();
-		actionBarCustomView = actionBar.getCustomView();
 	}
 
 	@Override
@@ -107,6 +105,7 @@ public class HomeScreenFragment extends Fragment {
 		// rootView.findViewById(R.id.homescreen_background);
 
 		homescreenFramelayout = (FrameLayout) rootView.findViewById(R.id.homescreen_framelayout);
+		gridview = (GridView) rootView.findViewById(R.id.gridview);
 		phoneBackgroundImage = new ImageView(getActivity());
 		phoneBackgroundImage.setScaleType(ScaleType.FIT_XY);
 
@@ -118,7 +117,7 @@ public class HomeScreenFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		// cellList = new ArrayList<GridCellModel>();
-		gridview = (GridView) getActivity().findViewById(R.id.gridview);
+
 		if (getActivity().findViewById(R.id.homescreen_background_kenburns) == null) {
 			// Phone
 			phoneMode = true;
@@ -181,50 +180,6 @@ public class HomeScreenFragment extends Fragment {
 			}
 		});
 
-		if (phoneMode) {
-
-			gridview.setOnScrollListener(new OnScrollListener() {
-
-				@Override
-				public void onScrollStateChanged(AbsListView view, int scrollState) {
-				}
-
-				@Override
-				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-					if (firstVisibleItem != 0) {
-						return;
-					}
-					if (null != gridview.getChildAt(0)) {
-						int topMargin = (gridview.getChildAt(0).getTop() - gridview.getChildAt(0).getHeight()) / 2;
-						ViewHelper.setTranslationY(phoneBackgroundImage, topMargin);
-
-						int actionBarTopMargin = gridview.getChildAt(0).getTop() - actionBarCustomView.getHeight();
-
-						if (actionBarTopMargin < ((-1) * actionBarCustomView.getHeight())) {
-							actionBarTopMargin = ((-1) * actionBarCustomView.getHeight());
-						}
-						ViewHelper.setTranslationY(actionBarCustomView, actionBarTopMargin);
-
-						int gridviewTopPadding = actionBarTopMargin + actionBarCustomView.getHeight();
-
-						// THIS LINES IS THE CULPRIT
-						// I have initial padding set to ?attr/actionBarSize and
-						// want to reduce it as the actionbar moves up so that
-						// it seems grid is moving upwards.
-						// If I comment the line below, the gridviewTopPadding
-						// int goes from 96 to 0 when scrolled up and comes back
-						// to 96
-						// when scrolled down, like it should.
-						// But if I use this line it goes from 96 to 0 but never
-						// when comes back to 96 again.
-						gridview.setPadding(0, gridview.getChildAt(0).getTop(), 0, 0);
-
-						Log.d(TAG, "gridviewTopPadding - " + gridviewTopPadding);
-					}
-				}
-
-			});
-		}
 	}
 
 	private void loadImageForBackground() {
