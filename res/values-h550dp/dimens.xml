@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="homescreen_horizontal">32dp</dimen>
+    <dimen name="homescreen_vertical">32dp</dimen>
+    <dimen name="welcome_screen_top">64dp</dimen>
+    <dimen name="welcome_screen_bottom">48dp</dimen>
+
+</resources>

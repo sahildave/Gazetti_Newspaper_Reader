@@ -8,5 +8,10 @@
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
     <item name="activity_website_list" type="layout">@layout/activity_website_twopane</item>
+    <item name="homescreen_fragment" type="layout">@layout/homescreen_fragment_kenburns</item>
+    <item name="headline_list_row" type="layout">@layout/headline_list_row_twopane</item>
+    
+    <item name="image_oasis_1" type="drawable">@drawable/image_garden</item>
+    
 
 </resources>

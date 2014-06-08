@@ -1,0 +1,29 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.flaviofaria.kenburnsview.KenBurnsView
+        android:id="@+id/homescreen_background_kenburns"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/image_oasis_1" />
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#77000000"
+        android:columnWidth="@dimen/cell_dimen"
+        android:fadingEdge="horizontal"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:paddingLeft="@dimen/tablet_homescreen_horizontal"
+        android:paddingRight="@dimen/tablet_homescreen_horizontal"
+        android:paddingTop="24dp"
+        android:scrollbars="none"
+        android:stretchMode="spacingWidthUniform"
+        android:verticalSpacing="10dp" />
+
+</FrameLayout>
