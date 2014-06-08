@@ -59,9 +59,6 @@ public class HomeScreenFragment extends Fragment {
 	private boolean firstRun;
 	private boolean phoneMode;
 	private ImageView phoneBackgroundImage;
-	private FrameLayout homescreenFramelayout;
-	private ActionBar actionBar;
-	private View actionBarCustomView;
 
 	public HomeScreenFragment() {
 
@@ -104,10 +101,8 @@ public class HomeScreenFragment extends Fragment {
 		// phoneBackgroundImage = (ImageView)
 		// rootView.findViewById(R.id.homescreen_background);
 
-		homescreenFramelayout = (FrameLayout) rootView.findViewById(R.id.homescreen_framelayout);
 		gridview = (GridView) rootView.findViewById(R.id.gridview);
-		phoneBackgroundImage = new ImageView(getActivity());
-		phoneBackgroundImage.setScaleType(ScaleType.FIT_XY);
+		phoneBackgroundImage = (ImageView) rootView.findViewById(R.id.homescreen_background);
 
 		firstRun = false;
 		return rootView;
@@ -243,9 +238,6 @@ public class HomeScreenFragment extends Fragment {
 
 		options.inJustDecodeBounds = false;
 		Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);
-
-		int height = reqWidth * mBitmap.getHeight() / mBitmap.getWidth();
-		homescreenFramelayout.addView(phoneBackgroundImage, 0, new FrameLayout.LayoutParams(reqWidth, height));
 
 		phoneBackgroundImage.setImageBitmap(mBitmap);
 

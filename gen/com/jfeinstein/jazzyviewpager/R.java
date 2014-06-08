@@ -29,7 +29,7 @@ public final class R {
 		public static final int fliphorizontal = 0x7f070005;
 		public static final int flipvertical = 0x7f070004;
 		public static final int jazzy_key = 0x7f07000c;
-		public static final int jazzy_pager = 0x7f07004d;
+		public static final int jazzy_pager = 0x7f07004e;
 		public static final int menu_accordian = 0x7f07009b;
 		public static final int menu_cube_in = 0x7f070092;
 		public static final int menu_cube_out = 0x7f070093;
@@ -51,7 +51,7 @@ public final class R {
 		public static final int zoomout = 0x7f070008;
 	}
 	public static final class layout {
-		public static final int activity_main = 0x7f030017;
+		public static final int activity_main = 0x7f030018;
 	}
 	public static final class menu {
 		public static final int activity_main = 0x7f0f0000;

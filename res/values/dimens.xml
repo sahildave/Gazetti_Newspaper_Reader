@@ -9,5 +9,7 @@
     <dimen name="tablet_homescreen_vertical">32dp</dimen>
     <dimen name="phone_homescreen_horizontal">16dp</dimen>
     <dimen name="phone_homescreen_vertical">24dp</dimen>
+    <dimen name="welcome_screen_top">32dp</dimen>
+    <dimen name="welcome_screen_bottom">24dp</dimen>
 
 </resources>

@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -22,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.try_masterdetail.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -44,7 +42,6 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 	ProgressBar detailViewProgress;
 	TextView mTitleTextView;
 	ImageView mMainImageView;
-	ImageLoader mImageLoader;
 	String mImageURL;
 	String mArticleURL;
 	String titleText = "";

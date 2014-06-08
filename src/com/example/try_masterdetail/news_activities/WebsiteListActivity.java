@@ -35,7 +35,6 @@ import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
 import com.example.try_masterdetail.news_activities.adapter.NavDrawerListAdapter;
 import com.example.try_masterdetail.preference.SettingsActivity;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -80,7 +79,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 	ProgressBar detailViewProgress;
 	TextView mTitleTextView;
 	ImageView mMainImageView;
-	ImageLoader mImageLoader;
 	String mImageURL;
 	String mArticleURL;
 	String titleText = "";
@@ -260,7 +258,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
 			mMainImageView = (ImageView) headerStub.findViewById(R.id.article_header_image);
 			Picasso picassoInstance = Picasso.with(this);
-//			picassoInstance.setDebugging(true);	//TODO:Turn on for debugging
+			// picassoInstance.setDebugging(true); //TODO:Turn on for debugging
 			picassoInstance.load(mImageURL).into(mMainImageView, new Callback() {
 
 				@Override

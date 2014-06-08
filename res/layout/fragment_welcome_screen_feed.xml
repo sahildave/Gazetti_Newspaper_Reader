@@ -11,7 +11,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="@dimen/welcome_screen_bottom"
         android:layout_marginTop="16dp"
         android:orientation="vertical" >
 
@@ -39,7 +39,7 @@
         android:layout_above="@id/linearLayout2"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="@dimen/welcome_screen_top"
         android:orientation="vertical" >
 
         <TextView

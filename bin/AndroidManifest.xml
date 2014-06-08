@@ -21,6 +21,7 @@
         <activity
             android:name="com.example.try_masterdetail.homescreen.HomeScreenActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,6 +56,7 @@
         <activity
             android:name="com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity"
             android:label="@string/title_activity_welcome_screen_view_pager"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="stateHidden" >
         </activity>
@@ -62,6 +64,11 @@
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="87c84a40032ae05d94252fa67f6bc87bb5e08308" />
+
+        <activity
+            android:name="com.example.try_masterdetail.LicensesActivity"
+            android:label="@string/title_activity_licenses" >
+        </activity>
     </application>
 
 </manifest>

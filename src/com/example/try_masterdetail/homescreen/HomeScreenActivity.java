@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.try_masterdetail.R;
@@ -23,7 +23,7 @@ import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
 import com.example.try_masterdetail.preference.FeedPrefObject;
 import com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity;
 
-public class HomeScreenActivity extends ActionBarActivity implements HomeScreenFragment.Callbacks,
+public class HomeScreenActivity extends FragmentActivity implements HomeScreenFragment.Callbacks,
 		AddCellDialogListener, EditCellDialogListener {
 	private Fragment homeScreenFragment;
 	private FragmentManager fm;

@@ -10,6 +10,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
+import com.example.try_masterdetail.LicensesActivity;
 import com.example.try_masterdetail.R;
 
 public class SettingsActivity extends PreferenceActivity {
@@ -22,6 +23,7 @@ public class SettingsActivity extends PreferenceActivity {
 		super.onPostCreate(savedInstanceState);
 
 		setupSimplePreferencesScreen();
+
 		ActionBarColorId = getIntent().getIntExtra("ActionBarColor", -1);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -33,8 +35,9 @@ public class SettingsActivity extends PreferenceActivity {
 			}
 		}
 
-		Preference myPref = (Preference) findPreference("feedSelectKey");
-		myPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		// Feed Selector
+		Preference feedSelectPref = (Preference) findPreference("feedSelectPref");
+		feedSelectPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
 
 				Intent feedIntent = new Intent(SettingsActivity.this, FeedSelectViewpager.class);
@@ -42,6 +45,20 @@ public class SettingsActivity extends PreferenceActivity {
 					feedIntent.putExtra("ActionBarColor", ActionBarColorId);
 				}
 				startActivity(feedIntent);
+				return false;
+			}
+		});
+
+		// License Section
+		Preference licensePref = (Preference) findPreference("licensePref");
+		licensePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+
+				Intent licenseIntent = new Intent(SettingsActivity.this, LicensesActivity.class);
+				if (ActionBarColorId != -1) {
+					licenseIntent.putExtra("ActionBarColor", ActionBarColorId);
+				}
+				startActivity(licenseIntent);
 				return false;
 			}
 		});
