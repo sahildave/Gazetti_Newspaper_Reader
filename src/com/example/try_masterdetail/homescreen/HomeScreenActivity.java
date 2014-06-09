@@ -6,8 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.try_masterdetail.R;
@@ -23,18 +27,25 @@ import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
 import com.example.try_masterdetail.preference.FeedPrefObject;
 import com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity;
 
-public class HomeScreenActivity extends FragmentActivity implements HomeScreenFragment.Callbacks,
+public class HomeScreenActivity extends ActionBarActivity implements HomeScreenFragment.Callbacks,
 		AddCellDialogListener, EditCellDialogListener {
 	private Fragment homeScreenFragment;
 	private FragmentManager fm;
 	private List<GridCellModel> cellList;
 	private ImageAdapter adapter;
+	public View actionBarCustomView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
 		setContentView(R.layout.homescreen_activity);
+
+		actionBarCustomView = LayoutInflater.from(this).inflate(R.layout.homescreen_actionbar, null);
+		ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
+				ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		getSupportActionBar().setCustomView(actionBarCustomView, params);
 
 		if (getIntent().getBooleanExtra("Exit me", false)) {
 			finish();

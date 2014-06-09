@@ -3,13 +3,13 @@ package com.example.try_masterdetail.homescreen;
 import java.util.List;
 import java.util.Random;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -27,10 +27,8 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.R;
@@ -59,6 +57,9 @@ public class HomeScreenFragment extends Fragment {
 	private boolean firstRun;
 	private boolean phoneMode;
 	private ImageView phoneBackgroundImage;
+	private ActionBar actionBar;
+	private View actionBarCustomView;
+	private Drawable gridViewBackground;
 
 	public HomeScreenFragment() {
 
@@ -79,6 +80,9 @@ public class HomeScreenFragment extends Fragment {
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + " must implement ToolbarListener");
 		}
+
+		actionBar = ((ActionBarActivity) activity).getSupportActionBar();
+		actionBarCustomView = actionBar.getCustomView();
 
 	}
 
@@ -103,6 +107,7 @@ public class HomeScreenFragment extends Fragment {
 
 		gridview = (GridView) rootView.findViewById(R.id.gridview);
 		phoneBackgroundImage = (ImageView) rootView.findViewById(R.id.homescreen_background);
+		gridViewBackground = gridview.getBackground();
 
 		firstRun = false;
 		return rootView;
@@ -174,6 +179,37 @@ public class HomeScreenFragment extends Fragment {
 
 			}
 		});
+
+		if (phoneMode) {
+
+			gridview.setOnScrollListener(new OnScrollListener() {
+
+				@Override
+				public void onScrollStateChanged(AbsListView view, int scrollState) {
+				}
+
+				@Override
+				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+					if (firstVisibleItem != 0) {
+						return;
+					}
+					if (null != gridview.getChildAt(0)) {
+						int topMargin = actionBarCustomView.getHeight()
+								+ (gridview.getChildAt(0).getTop() - gridview.getChildAt(0).getHeight()) / 2;
+						ViewHelper.setTranslationY(phoneBackgroundImage, topMargin);
+
+						int actionBarTopMargin = gridview.getChildAt(0).getTop() - actionBarCustomView.getHeight();
+
+						if (actionBarTopMargin < ((-1) * actionBarCustomView.getHeight())) {
+							actionBarTopMargin = ((-1) * actionBarCustomView.getHeight());
+						}
+						ViewHelper.setTranslationY(actionBarCustomView, actionBarTopMargin);
+
+					}
+				}
+
+			});
+		}
 
 	}
 

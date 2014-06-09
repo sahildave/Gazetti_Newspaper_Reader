@@ -1,6 +1,13 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- style for both the dialog boxes -->
+    <style name="TransparentActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@drawable/actionbar_transparent_background</item>
+    </style>
+
+    <style name="TransparentActionBarText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="dialogBoxText" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@android:color/black</item>
     </style>
@@ -14,15 +21,5 @@
     </style>
 
     <style name="ExpListDarkTheme" parent="android:Widget.Holo.ExpandableListView"></style>
-
-    <style name="TransparentActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
-        <item name="android:background">@drawable/actionbar_transparent_background</item>
-        <item name="android:titleTextStyle">@style/TransparentTransparentActionBarText</item>
-        <item name="android:windowActionBarOverlay">true</item>
-    </style>
-
-    <style name="TransparentTransparentActionBarText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
 
 </resources>
