@@ -78,5 +78,6 @@
     <string name="title_activity_welcome_screen_view_pager">WelcomeScreenViewPagerActivity</string>
     <string name="title_activity_licenses">LicensesActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_about_me">AboutMeActivity</string>
 
 </resources>

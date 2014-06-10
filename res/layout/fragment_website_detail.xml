@@ -47,7 +47,7 @@
                     android:layout_height="48dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-					android:background="?attr/selectableItemBackground"
+                    android:background="?attr/selectableItemBackground"
                     android:onClick="viewInBrowser"
                     android:scaleType="center"
                     android:src="@drawable/ic_hindu" />
@@ -95,8 +95,6 @@
     </ScrollView>
 
     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/detailViewProgressBar"
         android:layout_width="match_parent"
         android:layout_height="6dp"

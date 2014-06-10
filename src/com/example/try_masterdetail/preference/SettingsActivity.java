@@ -10,7 +10,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
-import com.example.try_masterdetail.LicensesActivity;
+import com.example.try_masterdetail.AboutMeActivity;
 import com.example.try_masterdetail.R;
 
 public class SettingsActivity extends PreferenceActivity {
@@ -45,7 +45,7 @@ public class SettingsActivity extends PreferenceActivity {
 					feedIntent.putExtra("ActionBarColor", ActionBarColorId);
 				}
 				startActivity(feedIntent);
-				return false;
+				return true;
 			}
 		});
 
@@ -59,6 +59,20 @@ public class SettingsActivity extends PreferenceActivity {
 					licenseIntent.putExtra("ActionBarColor", ActionBarColorId);
 				}
 				startActivity(licenseIntent);
+				return true;
+			}
+		});
+
+		// About Me
+		Preference aboutPref = (Preference) findPreference("aboutPref");
+		aboutPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+
+				Intent aboutMeIntent = new Intent(SettingsActivity.this, AboutMeActivity.class);
+				if (ActionBarColorId != -1) {
+					aboutMeIntent.putExtra("ActionBarColor", ActionBarColorId);
+				}
+				startActivity(aboutMeIntent);
 				return false;
 			}
 		});

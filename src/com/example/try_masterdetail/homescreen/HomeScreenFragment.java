@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -106,7 +107,8 @@ public class HomeScreenFragment extends Fragment {
 		// rootView.findViewById(R.id.homescreen_background);
 
 		gridview = (GridView) rootView.findViewById(R.id.gridview);
-		phoneBackgroundImage = (ImageView) rootView.findViewById(R.id.homescreen_background);
+		// phoneBackgroundImage = (ImageView)
+		// rootView.findViewById(R.id.homescreen_background);
 		gridViewBackground = gridview.getBackground();
 
 		firstRun = false;
@@ -194,9 +196,6 @@ public class HomeScreenFragment extends Fragment {
 						return;
 					}
 					if (null != gridview.getChildAt(0)) {
-						int topMargin = actionBarCustomView.getHeight()
-								+ (gridview.getChildAt(0).getTop() - gridview.getChildAt(0).getHeight()) / 2;
-						ViewHelper.setTranslationY(phoneBackgroundImage, topMargin);
 
 						int actionBarTopMargin = gridview.getChildAt(0).getTop() - actionBarCustomView.getHeight();
 
@@ -274,8 +273,10 @@ public class HomeScreenFragment extends Fragment {
 
 		options.inJustDecodeBounds = false;
 		Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);
+		gridViewBackground = new BitmapDrawable(getResources(), mBitmap);
+		gridview.setBackgroundDrawable(gridViewBackground);
 
-		phoneBackgroundImage.setImageBitmap(mBitmap);
+		// phoneBackgroundImage.setImageBitmap(mBitmap);
 
 	}
 

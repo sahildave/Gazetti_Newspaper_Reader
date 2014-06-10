@@ -11,7 +11,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.try_masterdetail.R;
@@ -34,6 +38,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 	private List<GridCellModel> cellList;
 	private ImageAdapter adapter;
 	public View actionBarCustomView;
+	private ImageButton settingsFromActionbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,16 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 				ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		getSupportActionBar().setCustomView(actionBarCustomView, params);
+
+		settingsFromActionbar = (ImageButton) actionBarCustomView.findViewById(R.id.settingsFromActionBar);
+		settingsFromActionbar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(HomeScreenActivity.this, "Touched Settings", Toast.LENGTH_SHORT).show();
+
+			}
+		});
 
 		if (getIntent().getBooleanExtra("Exit me", false)) {
 			finish();

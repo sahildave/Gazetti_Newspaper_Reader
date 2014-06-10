@@ -47,11 +47,13 @@
         </activity>
         <activity
             android:name="com.example.try_masterdetail.preference.SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings"
+            android:theme="@style/SettingsTheme" >
         </activity>
         <activity
             android:name="com.example.try_masterdetail.preference.FeedSelectViewpager"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings"
+            android:theme="@style/SettingsTheme" >
         </activity>
         <activity
             android:name="com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity"
@@ -60,15 +62,19 @@
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="stateHidden" >
         </activity>
+        <activity
+            android:name="com.example.try_masterdetail.preference.LicensesActivity"
+            android:label="@string/title_activity_licenses" >
+        </activity>
+        <activity
+            android:name="com.example.try_masterdetail.AboutMeActivity"
+            android:label="@string/title_activity_about_me"
+            android:theme="@style/SettingsTheme" >
+        </activity>
 
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="87c84a40032ae05d94252fa67f6bc87bb5e08308" />
-
-        <activity
-            android:name="com.example.try_masterdetail.LicensesActivity"
-            android:label="@string/title_activity_licenses" >
-        </activity>
     </application>
 
 </manifest>

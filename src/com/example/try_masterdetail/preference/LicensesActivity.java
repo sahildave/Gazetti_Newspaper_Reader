@@ -1,10 +1,12 @@
-package com.example.try_masterdetail;
+package com.example.try_masterdetail.preference;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.webkit.WebView;
+
+import com.example.try_masterdetail.R;
 
 public class LicensesActivity extends ActionBarActivity {
 

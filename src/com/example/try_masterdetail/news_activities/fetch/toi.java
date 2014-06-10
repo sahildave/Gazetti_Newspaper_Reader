@@ -46,7 +46,7 @@ public class toi {
 			// get HeaderImageUrl
 			mImageURL = getImageURL(doc);
 
-			// get p elements with class = body
+			// get p elements with class = Normal
 			String ToiArticleXPath = ".Normal"; // (//*[@id="article-block"]/div/p[1])
 			Element bodyArticleElements = doc.select(ToiArticleXPath).first();
 			String temp = bodyArticleElements.text();

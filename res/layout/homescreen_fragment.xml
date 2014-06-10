@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/homescreen_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop" />
+    <!-- <ImageView -->
+    <!-- android:id="@+id/homescreen_background" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="match_parent" -->
+    <!-- android:adjustViewBounds="true" -->
+    <!-- android:scaleType="centerCrop" /> -->
 
     <GridView
         android:id="@+id/gridview"
@@ -17,6 +17,7 @@
         android:background="#77000000"
         android:clipToPadding="false"
         android:columnWidth="@dimen/cell_dimen"
+        android:fadingEdge="none"
         android:gravity="center"
         android:horizontalSpacing="10dp"
         android:numColumns="auto_fit"

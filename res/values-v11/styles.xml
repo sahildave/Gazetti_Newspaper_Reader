@@ -4,10 +4,6 @@
         <item name="android:background">@drawable/actionbar_transparent_background</item>
     </style>
 
-    <style name="TransparentActionBarText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
     <style name="dialogBoxText" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@android:color/black</item>
     </style>

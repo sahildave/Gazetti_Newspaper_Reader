@@ -334,7 +334,7 @@ public final class R {
 		public static final int abc_popup_menu_item_layout = 0x7f030014;
 		public static final int abc_search_dropdown_item_icons_2line = 0x7f030015;
 		public static final int abc_search_view = 0x7f030016;
-		public static final int support_simple_spinner_dropdown_item = 0x7f030034;
+		public static final int support_simple_spinner_dropdown_item = 0x7f030035;
 	}
 	public static final class string {
 		public static final int abc_action_bar_home_description = 0x7f090002;
@@ -580,7 +580,7 @@ public final class R {
 		public static final int Spinner_popupPromptView = 8;
 		public static final int Spinner_prompt = 6;
 		public static final int Spinner_spinnerMode = 7;
-		public static final int[] Theme = { 0x7f010047, 0x7f010048, 0x7f010049, 0x7f01004a, 0x7f01004b, 0x7f01004c };
+		public static final int[] Theme = { 0x7f010047, 0x7f010048, 0x7f010049, 0x7f01004a, 0x7f01004b, 0x7f01004c, 0x7f010082 };
 		public static final int Theme_actionDropDownStyle = 0;
 		public static final int Theme_dropdownListPreferredItemHeight = 1;
 		public static final int Theme_listChoiceBackgroundIndicator = 5;
