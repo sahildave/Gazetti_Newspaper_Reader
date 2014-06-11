@@ -57,6 +57,7 @@
                     android:layout_height="24dp"
                     android:layout_toRightOf="@id/newspaperTile"
                     android:gravity="left|bottom"
+                    android:paddingLeft="8dp"
                     android:text="Date" />
 
                 <TextView
@@ -66,6 +67,7 @@
                     android:layout_below="@id/pubDateView"
                     android:layout_toRightOf="@id/newspaperTile"
                     android:gravity="left|top"
+                    android:paddingLeft="8dp"
                     android:text="National" />
 
                 <TextView
@@ -73,7 +75,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_alignParentRight="true"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
+                    android:drawablePadding="4dp"
                     android:drawableLeft="@drawable/ic_webview"
                     android:gravity="center_vertical|right"
                     android:lines="2"

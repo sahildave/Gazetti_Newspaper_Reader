@@ -9,7 +9,7 @@
         android:layout_gravity="left"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:src="@drawable/ic_action_home" />
+        android:src="@drawable/ic_home" />
 
     <TextView
         android:id="@+id/homescreen_action_bar_title"

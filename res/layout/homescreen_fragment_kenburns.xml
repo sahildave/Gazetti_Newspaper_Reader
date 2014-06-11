@@ -21,7 +21,7 @@
         android:numColumns="auto_fit"
         android:paddingLeft="@dimen/tablet_homescreen_horizontal"
         android:paddingRight="@dimen/tablet_homescreen_horizontal"
-        android:paddingTop="24dp"
+        android:paddingTop="?attr/actionBarSize"
         android:scrollbars="none"
         android:stretchMode="spacingWidthUniform"
         android:verticalSpacing="10dp" />

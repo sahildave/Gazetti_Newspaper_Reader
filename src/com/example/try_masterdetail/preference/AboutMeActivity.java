@@ -3,7 +3,10 @@ package com.example.try_masterdetail.preference;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.BulletSpan;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.try_masterdetail.R;
@@ -34,8 +37,31 @@ public class AboutMeActivity extends ActionBarActivity {
 
 		upcomingFeatures = (TextView) findViewById(R.id.aboutMeUpcomingFeatures);
 
-		String upcomingList = getResources().getString(R.string.aboutMeUpcoming);
-		upcomingFeatures.setText(Html.fromHtml(upcomingList));
+		CharSequence t1 = getText(R.string.aboutMeUpcoming_one);
+		SpannableString s1 = new SpannableString(t1);
+		s1.setSpan(new BulletSpan(15), 0, t1.length(), 0);
+
+		CharSequence t2 = getText(R.string.aboutMeUpcoming_two);
+		SpannableString s2 = new SpannableString(t2);
+		s2.setSpan(new BulletSpan(15), 0, t2.length(), 0);
+
+		CharSequence t3 = getText(R.string.aboutMeUpcoming_three);
+		SpannableString s3 = new SpannableString(t3);
+		s3.setSpan(new BulletSpan(15), 0, t3.length(), 0);
+
+		upcomingFeatures.setText(TextUtils.concat(s1, s2, s3));
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == android.R.id.home) {
+			onBackPressed();
+
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 
 	}
 
