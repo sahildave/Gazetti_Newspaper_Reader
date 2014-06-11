@@ -20,7 +20,7 @@ public final class R {
 		public static final int holo_blue = 0x7f080000;
 	}
 	public static final class drawable {
-		public static final int ic_launcher = 0x7f02008d;
+		public static final int ic_launcher = 0x7f02008c;
 	}
 	public static final class id {
 		public static final int accordion = 0x7f07000b;

@@ -5,19 +5,21 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="CustomActionBarTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    <style name="WithoutBackgroundTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="SettingsTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    <style name="WithBackgroundTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="TrasnparentActionBarTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/TransparentActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:icon">@drawable/ic_home</item>
         <item name="android:windowBackground">@null</item>
         <item name="android:windowActionBarOverlay">true</item>
     </style>

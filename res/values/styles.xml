@@ -1,7 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="TransparentActionBar" parent="@style/Widget.AppCompat.ActionBar">
-        <item name="background">@drawable/actionbar_transparent_background</item>
+        <item name="background">@drawable/actionbar_transparent_full</item>
     </style>
 
     <style name="dialogBoxText" parent="@android:style/TextAppearance.Small">

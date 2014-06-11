@@ -3,6 +3,7 @@
     android:id="@+id/website_detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.example.try_masterdetail.news_activities.WebsiteDetailActivity"
     tools:ignore="MergeRootFrame" />
 

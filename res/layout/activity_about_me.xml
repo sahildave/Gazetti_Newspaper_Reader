@@ -124,8 +124,7 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:gravity="bottom|center_horizontal"
-                android:orientation="horizontal"
-                android:paddingBottom="8dp" >
+                android:orientation="horizontal" >
 
                 <TextView
                     android:layout_width="0dp"
