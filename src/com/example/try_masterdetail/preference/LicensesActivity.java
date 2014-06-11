@@ -24,6 +24,11 @@ public class LicensesActivity extends ActionBarActivity {
 			getSupportActionBar().setDisplayShowTitleEnabled(false);
 			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ActionBarColorId));
 			getSupportActionBar().setDisplayShowTitleEnabled(true);
+		} else {
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
+			getSupportActionBar().setBackgroundDrawable(
+					new ColorDrawable(getResources().getColor(R.color.actionbar_default_color)));
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
 		}
 		getSupportActionBar().setTitle("Open Source Licenses");
 		((WebView) findViewById(R.id.licenses_web_view)).loadUrl("file:///android_asset/licenses.html");

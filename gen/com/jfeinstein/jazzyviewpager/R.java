@@ -20,7 +20,7 @@ public final class R {
 		public static final int holo_blue = 0x7f080000;
 	}
 	public static final class drawable {
-		public static final int ic_launcher = 0x7f02008b;
+		public static final int ic_launcher = 0x7f02008d;
 	}
 	public static final class id {
 		public static final int accordion = 0x7f07000b;
@@ -29,19 +29,19 @@ public final class R {
 		public static final int fliphorizontal = 0x7f070005;
 		public static final int flipvertical = 0x7f070004;
 		public static final int jazzy_key = 0x7f07000c;
-		public static final int jazzy_pager = 0x7f07004f;
-		public static final int menu_accordian = 0x7f07009e;
-		public static final int menu_cube_in = 0x7f070095;
-		public static final int menu_cube_out = 0x7f070096;
-		public static final int menu_flip_horizontal = 0x7f070098;
-		public static final int menu_flip_vertical = 0x7f070097;
-		public static final int menu_rotate_down = 0x7f07009d;
-		public static final int menu_rotate_up = 0x7f07009c;
-		public static final int menu_stack = 0x7f070099;
-		public static final int menu_standard = 0x7f070093;
-		public static final int menu_tablet = 0x7f070094;
-		public static final int menu_zoom_in = 0x7f07009a;
-		public static final int menu_zoom_out = 0x7f07009b;
+		public static final int jazzy_pager = 0x7f070052;
+		public static final int menu_accordian = 0x7f07009f;
+		public static final int menu_cube_in = 0x7f070096;
+		public static final int menu_cube_out = 0x7f070097;
+		public static final int menu_flip_horizontal = 0x7f070099;
+		public static final int menu_flip_vertical = 0x7f070098;
+		public static final int menu_rotate_down = 0x7f07009e;
+		public static final int menu_rotate_up = 0x7f07009d;
+		public static final int menu_stack = 0x7f07009a;
+		public static final int menu_standard = 0x7f070094;
+		public static final int menu_tablet = 0x7f070095;
+		public static final int menu_zoom_in = 0x7f07009b;
+		public static final int menu_zoom_out = 0x7f07009c;
 		public static final int rotatedown = 0x7f07000a;
 		public static final int rotateup = 0x7f070009;
 		public static final int stack = 0x7f070006;

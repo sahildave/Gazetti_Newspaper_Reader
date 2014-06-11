@@ -10,7 +10,6 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
-import com.example.try_masterdetail.AboutMeActivity;
 import com.example.try_masterdetail.R;
 
 public class SettingsActivity extends PreferenceActivity {
@@ -31,6 +30,11 @@ public class SettingsActivity extends PreferenceActivity {
 			if (ActionBarColorId != -1) {
 				getActionBar().setDisplayShowTitleEnabled(false);
 				getActionBar().setBackgroundDrawable(new ColorDrawable(ActionBarColorId));
+				getActionBar().setDisplayShowTitleEnabled(true);
+			} else {
+				getActionBar().setDisplayShowTitleEnabled(false);
+				getActionBar().setBackgroundDrawable(
+						new ColorDrawable(getResources().getColor(R.color.actionbar_default_color)));
 				getActionBar().setDisplayShowTitleEnabled(true);
 			}
 		}

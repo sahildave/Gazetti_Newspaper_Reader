@@ -23,7 +23,8 @@
             android:id="@+id/website_detail_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2" />
+            android:layout_weight="2"
+            android:background="@android:color/white" />
     </LinearLayout>
 
     <!-- Listview to display navigation drawer -->
@@ -36,7 +37,7 @@
         android:background="@color/nav_list_background_bottom"
         android:orientation="vertical" >
 
-         <TextView
+        <TextView
             android:id="@+id/nav_bar_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +50,6 @@
             android:text="Home"
             android:textAppearance="@android:style/TextAppearance.Large"
             android:textStyle="bold" />
-
 
         <View
             android:layout_width="match_parent"

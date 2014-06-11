@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">App_name</string>
+    <string name="app_name">Gazetti</string>
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
-    <string name="title_app">Vaarta</string>
+    <string name="title_app">Gazetti</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
@@ -75,9 +75,17 @@
         <item>@drawable/ic_toi</item>
     </array>
 
-    <string name="title_activity_welcome_screen_view_pager">WelcomeScreenViewPagerActivity</string>
-    <string name="title_activity_licenses">LicensesActivity</string>
+    <string name="title_activity_welcome_screen_view_pager">Welcome</string>
+    <string name="title_activity_licenses">Licenses</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_about_me">AboutMeActivity</string>
+    <string name="title_activity_about_me">About Me</string>
+    <string name="aboutMeSalutation">Hi! I am Sahil,</string>
+    <string name="aboutMeMessage">First of all thanks a lot for downloading this and I hope you enjoy it. 
+        The app currently is in active development. The upcoming features are listed below. 
+        I am a solo developer and adding new stuff can take time. 
+        This app is aimed at making reading news clutter free and shows you what you need to read. 
+        If you\'d like to support please click any of the buttons below.</string>
+    <string name="aboutMeUpcomingHeading">Upcoming Features:</string>
+    <string name="aboutMeUpcoming">&#8226; Dark theme<br />&#8226;	New home screen layout<br />&#8226;	Business newspapers and category<br /></string>
 
 </resources>

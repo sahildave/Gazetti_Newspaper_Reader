@@ -28,7 +28,9 @@ import com.example.try_masterdetail.homescreen.adapter.GridCellModel;
 import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
 import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
 import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
+import com.example.try_masterdetail.news_activities.WebsiteListActivity;
 import com.example.try_masterdetail.preference.FeedPrefObject;
+import com.example.try_masterdetail.preference.SettingsActivity;
 import com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity;
 
 public class HomeScreenActivity extends ActionBarActivity implements HomeScreenFragment.Callbacks,
@@ -58,6 +60,8 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(HomeScreenActivity.this, "Touched Settings", Toast.LENGTH_SHORT).show();
+				Intent settingIntent = new Intent(HomeScreenActivity.this, SettingsActivity.class);
+				startActivity(settingIntent);
 
 			}
 		});

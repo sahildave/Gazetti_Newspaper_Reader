@@ -7,7 +7,6 @@
 
     <style name="CustomActionBarTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
-        <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 

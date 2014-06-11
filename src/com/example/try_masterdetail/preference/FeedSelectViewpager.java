@@ -47,6 +47,11 @@ public class FeedSelectViewpager extends ActionBarActivity implements FeedSelect
 			getSupportActionBar().setDisplayShowTitleEnabled(false);
 			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ActionBarColorId));
 			getSupportActionBar().setDisplayShowTitleEnabled(true);
+		} else {
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
+			getSupportActionBar().setBackgroundDrawable(
+					new ColorDrawable(getResources().getColor(R.color.actionbar_default_color)));
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
 		}
 
 		getSupportActionBar().setTitle("Select Feeds");

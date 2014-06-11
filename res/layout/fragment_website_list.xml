@@ -25,12 +25,4 @@
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@drawable/divider"
-        android:dividerHeight="0.5dp"
-        android:scrollbars="none" />
-
 </LinearLayout>
