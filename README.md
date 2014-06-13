@@ -1,10 +1,12 @@
 Gazetti
 ==============
 
+
 An upcoming blazingly fast Android app to make reading newspaper easy and "not boring".
 --------------
 
 minSDK - API 10 (2.3.3)
+
 Current Release - 0.1_alpha APK (You can only view news publish before 4th June from this release)
 
 This app is focussed on giving full control to the user for what he wants to read, down to the category level. You can select the Newspapers, and the categories from the newspaper which you want to read. If you dont like *Politics*, dont select it in your feed selector.
@@ -22,8 +24,8 @@ Technology used
 
 Features to be added before Beta Release
 -------------------
-- 5 newspapers with 5 categories would be added before the Beta release. 
-- The user would be able to request any newspaper or category he'd like to see in the next edition.
+- 5 newspapers with 5 categories. 
+- Request Page - The user would be able to request any newspaper or category he'd like to see in the next edition.
 
 Features to be added before Stable release
 -------------------
