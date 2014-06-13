@@ -4,16 +4,15 @@
     android:layout_height="match_parent" >
 
     <com.flaviofaria.kenburnsview.KenBurnsView
-        android:id="@+id/homescreen_background_kenburns"
+        android:id="@+id/kenBurnsView_Background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/image_oasis_1" />
+        android:src="@drawable/land_1" />
 
     <GridView
         android:id="@+id/gridview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#77000000"
         android:columnWidth="@dimen/cell_dimen"
         android:fadingEdge="horizontal"
         android:gravity="center"
@@ -25,5 +24,25 @@
         android:scrollbars="none"
         android:stretchMode="spacingWidthUniform"
         android:verticalSpacing="10dp" />
+
+    <LinearLayout
+        android:id="@+id/photoCreditLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:gravity="bottom|right"
+        android:orientation="horizontal"
+        android:visibility="invisible" >
+
+        <TextView
+            android:id="@+id/photoCreditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
 
 </FrameLayout>

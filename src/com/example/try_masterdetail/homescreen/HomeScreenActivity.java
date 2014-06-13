@@ -2,6 +2,7 @@ package com.example.try_masterdetail.homescreen;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,11 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -28,31 +30,40 @@ import com.example.try_masterdetail.homescreen.adapter.GridCellModel;
 import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
 import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
 import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
-import com.example.try_masterdetail.news_activities.WebsiteListActivity;
 import com.example.try_masterdetail.preference.FeedPrefObject;
 import com.example.try_masterdetail.preference.SettingsActivity;
 import com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity;
 
 public class HomeScreenActivity extends ActionBarActivity implements HomeScreenFragment.Callbacks,
 		AddCellDialogListener, EditCellDialogListener {
+
+	private String TAG = "HomeScreen";
+
 	private Fragment homeScreenFragment;
 	private FragmentManager fm;
 	private List<GridCellModel> cellList;
 	private ImageAdapter adapter;
-	public View actionBarCustomView;
+	private View actionBarCustomView;
 	private ImageButton settingsFromActionbar;
 
+	@SuppressLint("InlinedApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate - " + (null == savedInstanceState));
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
-		setContentView(R.layout.homescreen_activity);
 
 		actionBarCustomView = LayoutInflater.from(this).inflate(R.layout.homescreen_actionbar, null);
 		ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
 				ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+
 		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		getSupportActionBar().setCustomView(actionBarCustomView, params);
+
+		setContentView(R.layout.homescreen_activity);
+
+		Log.d(TAG, "Activity customview NULL ? " + (null == actionBarCustomView));
+		Log.d(TAG, "Activity actionbar NULL ? " + (null == getSupportActionBar()));
 
 		settingsFromActionbar = (ImageButton) actionBarCustomView.findViewById(R.id.settingsFromActionBar);
 		settingsFromActionbar.setOnClickListener(new OnClickListener() {
@@ -178,6 +189,30 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 		FeedPrefObject feedPrefObject = new FeedPrefObject(this);
 		feedPrefObject.updateFeedPrefs();
 
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG, "activity onDestroy");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG, "activity onPause");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, "activity onResume");
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG, "activity onStart");
 	}
 
 }

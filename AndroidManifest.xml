@@ -76,7 +76,6 @@
         <activity
             android:name="com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity"
             android:label="@string/title_activity_welcome_screen_view_pager"
-            android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="stateHidden" >
         </activity>

@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -30,6 +28,8 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.R;
@@ -40,6 +40,7 @@ import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
 import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
 import com.example.try_masterdetail.news_activities.WebsiteListActivity;
 import com.example.try_masterdetail.preference.FeedPrefObject;
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.nineoldandroids.view.ViewHelper;
@@ -55,12 +56,15 @@ public class HomeScreenFragment extends Fragment {
 
 	private String TAG = "HomeScreen";
 
-	private boolean firstRun;
+	private boolean firstRun = false;
 	private boolean phoneMode;
-	private ImageView phoneBackgroundImage;
 	private ActionBar actionBar;
 	private View actionBarCustomView;
-	private Drawable gridViewBackground;
+	private ImageView phoneBackgroundImage;
+	private LinearLayout photoCreditLayout;
+	private TextView photoCreditText;
+	private KenBurnsView kenBurnsView;
+	private Activity activity;
 
 	public HomeScreenFragment() {
 
@@ -82,8 +86,7 @@ public class HomeScreenFragment extends Fragment {
 			throw new ClassCastException(activity.toString() + " must implement ToolbarListener");
 		}
 
-		actionBar = ((ActionBarActivity) activity).getSupportActionBar();
-		actionBarCustomView = actionBar.getCustomView();
+		this.activity = activity;
 
 	}
 
@@ -103,30 +106,34 @@ public class HomeScreenFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.homescreen_fragment, container, false);
-		// phoneBackgroundImage = (ImageView)
-		// rootView.findViewById(R.id.homescreen_background);
+
+		actionBar = ((ActionBarActivity) activity).getSupportActionBar();
+		actionBarCustomView = actionBar.getCustomView();
 
 		gridview = (GridView) rootView.findViewById(R.id.gridview);
-		// phoneBackgroundImage = (ImageView)
-		// rootView.findViewById(R.id.homescreen_background);
-		gridViewBackground = gridview.getBackground();
+		phoneBackgroundImage = (ImageView) rootView.findViewById(R.id.phone_homescreen_background);
+		photoCreditLayout = (LinearLayout) rootView.findViewById(R.id.photoCreditLayout);
+		photoCreditText = (TextView) rootView.findViewById(R.id.photoCreditText);
 
-		firstRun = false;
 		return rootView;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		// cellList = new ArrayList<GridCellModel>();
 
-		if (getActivity().findViewById(R.id.homescreen_background_kenburns) == null) {
+		if (view.findViewById(R.id.kenBurnsView_Background) == null) {
 			// Phone
 			phoneMode = true;
-			loadImageForBackground();
+			loadPhoneBackground();
+
+		} else {
+			phoneMode = false;
+			kenBurnsView = (KenBurnsView) view.findViewById(R.id.kenBurnsView_Background);
+			Log.d(TAG, "loading for tablet");
+			// loadTabletBackground();
+
 		}
-		Log.d(TAG, "ListFragment in onViewCreated ");
-		Log.d(TAG, "FEEDVERSION onViewCreated - " + feedVersion);
 
 		CellListObjects cellListObject = new CellListObjects(getActivity());
 		cellList = cellListObject.getCellListFromPrefs();
@@ -212,22 +219,19 @@ public class HomeScreenFragment extends Fragment {
 
 	}
 
-	private void loadImageForBackground() {
+	private void loadPhoneBackground() {
 		// get a random image, if null then get image_0
 		Random rand = new Random();
 		int n = rand.nextInt(4) + 1;
-		String backgroundImageUri = "i_" + n;
+		String backgroundImageUri = "port_" + n;
+
 		int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
 
-		Log.d(TAG, "PHOTO ---- " + n + ", " + resID);
-
 		if (resID == 0) {
-			resID = getResources().getIdentifier("i_0", "drawable", getActivity().getPackageName());
+			resID = getResources().getIdentifier("port_0", "drawable", getActivity().getPackageName());
 		}
 
-		// String backgroundImageUri = "i_3";
-		// int resID = getResources().getIdentifier(backgroundImageUri,
-		// "drawable", getActivity().getPackageName());
+		Log.d(TAG, "PHOTO ---- " + n + ", " + resID);
 
 		// Bitmap Options
 		BitmapFactory.Options options = new BitmapFactory.Options();
@@ -273,11 +277,13 @@ public class HomeScreenFragment extends Fragment {
 
 		options.inJustDecodeBounds = false;
 		Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);
-		gridViewBackground = new BitmapDrawable(getResources(), mBitmap);
-		gridview.setBackgroundDrawable(gridViewBackground);
 
-		// phoneBackgroundImage.setImageBitmap(mBitmap);
+		Log.d(TAG, "bitmap - " + mBitmap.getHeight());
 
+		phoneBackgroundImage.setImageBitmap(mBitmap);
+
+		// gridViewBackground = new BitmapDrawable(getResources(), mBitmap);
+		// gridview.setBackgroundDrawable(gridViewBackground);
 	}
 
 	@Override
@@ -324,12 +330,9 @@ public class HomeScreenFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.d(TAG, "ListFragment in onResume ");
-		Log.d(TAG, "FEEDVERSION onResume - " + feedVersion);
 
 		SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
 		int newfeedVersion = sharedPref.getInt("feedVersion", 0);
-		Log.d(TAG, "NEWFEEDVERSION onResume - " + newfeedVersion);
 
 		if (!firstRun && (newfeedVersion > feedVersion)) {
 			// TODO
@@ -362,6 +365,26 @@ public class HomeScreenFragment extends Fragment {
 
 		}
 
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		Log.d(TAG, "Fragment in onDetach");
+
+		actionBar = null;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		Log.d(TAG, "fragment onDestroyView");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG, "fragment onStop");
 	}
 
 }
