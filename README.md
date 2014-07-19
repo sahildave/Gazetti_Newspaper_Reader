@@ -32,3 +32,13 @@ Features to be added before Stable release
 - Dark theme/Night mode
 - Business Newspaper and Category
 - Non-English Language support.
+
+Screenshots
+--------------------
+![](https://raw.githubusercontent.com/sahildave/Gazetti_Newspaper_Reader/master/screens/phone_news.png)
+
+
+![](https://raw.githubusercontent.com/sahildave/Gazetti_Newspaper_Reader/master/screens/phone_home.jpg)
+
+
+![](https://raw.githubusercontent.com/sahildave/Gazetti_Newspaper_Reader/master/screens/tab_news.png)
