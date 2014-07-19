@@ -172,28 +172,31 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 				getNewListItems();
 
 			}
-		} else {
-			Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
-
-			ParseQuery<ParseObject> query = ParseQuery.getQuery("freshNewsArticle");
-			query.whereEqualTo("newspaper_id", npIdString);
-			query.whereEqualTo("cat_id", catIdString);
-			query.orderByDescending("createdAt");
-			query.fromLocalDatastore();
-
-			query.findInBackground(new FindCallback<ParseObject>() {
-				@Override
-				public void done(final List<ParseObject> articleObjectList, ParseException arg1) {
-					// Log.d(TAG, " articleObjectList " +
-					// articleObjectList.size());
-					retainedList.clear();
-					retainedList.addAll(0, articleObjectList);
-					mListView.setAdapter(customAdapter);
-					customAdapter.notifyDataSetChanged();
-					((TextView) headerOnList).setText("Data from Local Storage");
-				}
-
-			});
+			// } else {
+			// Toast.makeText(context, "No network connection available.",
+			// Toast.LENGTH_LONG).show();
+			//
+			// ParseQuery<ParseObject> query =
+			// ParseQuery.getQuery("freshNewsArticle");
+			// query.whereEqualTo("newspaper_id", npIdString);
+			// query.whereEqualTo("cat_id", catIdString);
+			// query.orderByDescending("createdAt");
+			// query.fromLocalDatastore();
+			//
+			// query.findInBackground(new FindCallback<ParseObject>() {
+			// @Override
+			// public void done(final List<ParseObject> articleObjectList,
+			// ParseException arg1) {
+			// // Log.d(TAG, " articleObjectList " +
+			// // articleObjectList.size());
+			// retainedList.clear();
+			// retainedList.addAll(0, articleObjectList);
+			// mListView.setAdapter(customAdapter);
+			// customAdapter.notifyDataSetChanged();
+			// ((TextView) headerOnList).setText("Data from Local Storage");
+			// }
+			//
+			// });
 		}
 
 	}

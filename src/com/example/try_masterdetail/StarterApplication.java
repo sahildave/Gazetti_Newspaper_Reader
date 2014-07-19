@@ -23,7 +23,7 @@ public class StarterApplication extends Application {
 
 		// Add your initialization code here
 		Parse.initialize(this, "EIBQFrIyVZBHDTwmEZqxaWn6yx10UNPo4gy7kkmR", "Fj96ZYVQziKR132klHkXDSpireivZZRaKZOmB0SK");
-		Parse.enableLocalDatastore(this);
+		// Parse.enableLocalDatastore(this);
 		Log.d(TAG, "in Application");
 	}
 }
