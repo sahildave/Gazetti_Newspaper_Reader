@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
+import com.example.try_masterdetail.news_activities.fetch.firstPost;
 import com.example.try_masterdetail.news_activities.fetch.hindu;
 import com.example.try_masterdetail.news_activities.fetch.toi;
 
@@ -105,6 +106,7 @@ public class WebsiteDetailFragment extends Fragment {
 
 		mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
 		mViewInBrowser = (TextView) rootView.findViewById(R.id.viewInBrowser);
+		// TODO: category in subtitle
 
 		if (npNameString.equals("The Hindu")) {
 			mNewspaperTile.setImageResource(R.drawable.ic_hindu);
@@ -182,13 +184,17 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		protected String[] doInBackground(Void... params) {
-			if (npNameString.equals("The Hindu")) {
+			if (npNameString.equalsIgnoreCase("The Hindu")) {
 				hindu hinduObject = new hindu(mArticleURL, mArticlePubDate);
 				result = hinduObject.getHinduArticle();
 				mImageURL = result[1];
-			} else {
+			} else if (npNameString.equalsIgnoreCase("The Times of India")) {
 				toi toiObject = new toi(mArticleURL, mArticlePubDate);
 				result = toiObject.getToiArticle();
+				mImageURL = result[1];
+			} else if (npNameString.equalsIgnoreCase("FirstPost")) {
+				firstPost fpObject = new firstPost(mArticleURL, mArticlePubDate);
+				result = fpObject.getFirstPostArticle();
 				mImageURL = result[1];
 			}
 

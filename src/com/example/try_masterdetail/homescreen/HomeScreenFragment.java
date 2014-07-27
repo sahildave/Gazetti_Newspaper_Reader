@@ -91,9 +91,53 @@ public class HomeScreenFragment extends Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+
+		SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
+		int newfeedVersion = sharedPref.getInt("feedVersion", 0);
+
+		Log.d(TAG, "HomeScreenFragment in onResume: firstRun - " + firstRun + ", newfeedVerision - " + newfeedVersion
+				+ ", feedVersion - " + feedVersion);
+//		if (!firstRun && (newfeedVersion > feedVersion)) {
+		if ((newfeedVersion > feedVersion)) {
+			
+			// TODO
+			Log.d(TAG, "RELOADING - " + cellList.size());
+			feedVersion = newfeedVersion;
+			CellListObjects cellListObject = new CellListObjects(getActivity());
+			// cellListObject.saveCellList(cellList);
+			cellList.clear();
+			cellList = cellListObject.getCellListFromPrefs();
+
+			if (cellList.size() > 0) {
+				GridCellModel modelObject = cellList.get(cellList.size() - 1);
+				if (!modelObject.getNewspaperImage().equals("add_new")) {
+					cellList.add(new GridCellModel("add_new", "Add New"));
+				}
+			} else {
+				cellList.add(new GridCellModel("add_new", "Add New"));
+			}
+
+			adapter = new ImageAdapter(getActivity(), cellList);
+			// adapter.notifyDataSetChanged();
+
+			animAdapter = new SwingBottomInAnimationAdapter(adapter);
+			animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
+			animAdapterMultiple.setAbsListView(gridview);
+
+			gridview.setAdapter(animAdapterMultiple);
+
+			Log.d(TAG, "LOADED - " + cellList.size());
+
+		}
+
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "ListFragment in onCreate ");
+		Log.d(TAG, "HomeScreenFragment in onCreate ");
 		setRetainInstance(true);
 
 		SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
@@ -326,65 +370,4 @@ public class HomeScreenFragment extends Fragment {
 			return super.onContextItemSelected(item);
 		}
 	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-
-		SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
-		int newfeedVersion = sharedPref.getInt("feedVersion", 0);
-
-		if (!firstRun && (newfeedVersion > feedVersion)) {
-			// TODO
-			Log.d(TAG, "RELOADING - " + cellList.size());
-			feedVersion = newfeedVersion;
-			CellListObjects cellListObject = new CellListObjects(getActivity());
-			// cellListObject.saveCellList(cellList);
-			cellList.clear();
-			cellList = cellListObject.getCellListFromPrefs();
-
-			if (cellList.size() > 0) {
-				GridCellModel modelObject = cellList.get(cellList.size() - 1);
-				if (!modelObject.getNewspaperImage().equals("add_new")) {
-					cellList.add(new GridCellModel("add_new", "Add New"));
-				}
-			} else {
-				cellList.add(new GridCellModel("add_new", "Add New"));
-			}
-
-			adapter = new ImageAdapter(getActivity(), cellList);
-			// adapter.notifyDataSetChanged();
-
-			animAdapter = new SwingBottomInAnimationAdapter(adapter);
-			animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
-			animAdapterMultiple.setAbsListView(gridview);
-
-			gridview.setAdapter(animAdapterMultiple);
-
-			Log.d(TAG, "LOADED - " + cellList.size());
-
-		}
-
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		Log.d(TAG, "Fragment in onDetach");
-
-		actionBar = null;
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		Log.d(TAG, "fragment onDestroyView");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		Log.d(TAG, "fragment onStop");
-	}
-
 }

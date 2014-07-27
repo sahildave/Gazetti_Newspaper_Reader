@@ -7,12 +7,14 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.try_masterdetail.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class CellListObjects {
+	private String TAG = "HomeScreen";
 	Context context;
 	List<GridCellModel> cellList;
 
@@ -40,15 +42,18 @@ public class CellListObjects {
 
 		for (Integer npIdint : feedsRequired.keySet()) {
 			String npIdString = npIdint.toString();
-			// Log.d("FEED", npIdString);
+			// Log.d(TAG, "updateCellListByFeedPrefs npIdString - " +
+			// npIdString);
 
 			for (int catIdint = 0; catIdint < feedsRequired.get(npIdint).length; catIdint++) {
-				// Log.d("FEED", " - " + catIdint);
+				// Log.d(TAG, "updateCellListByFeedPrefs catIdint - " +
+				// catIdint);
 
 				Boolean isSelected = feedsRequired.get(npIdint)[catIdint];
 				if (isSelected) {
 					ReadNewsCatCSV readCsv = new ReadNewsCatCSV(context);
-					System.out.println(npIdString + ", " + catIdint);
+					// Log.d(TAG, "updateCellListByFeedPrefs npIdString - " +
+					// npIdString + ", catIdint - " + catIdint);
 
 					String catIdString = String.valueOf(catIdint);
 					NewsCatCsvObject csvObjectNpId = readCsv.getObjectByNPId(npIdString, catIdString);
@@ -71,7 +76,8 @@ public class CellListObjects {
 	public void saveCellList(List<GridCellModel> cellList) {
 		Gson gson = new Gson();
 		String cellListString = gson.toJson(cellList);
-		System.out.println("CELLLIST SAVED - " + cellListString);
+
+		// Log.d(TAG, "CELLLIST SAVED - " + cellListString);
 
 		SharedPreferences cellListPrefs = context.getSharedPreferences("CellList", Context.MODE_PRIVATE);
 		SharedPreferences.Editor prefEditor = cellListPrefs.edit();
@@ -87,7 +93,7 @@ public class CellListObjects {
 		SharedPreferences sharedPref = context.getSharedPreferences("CellList", Context.MODE_PRIVATE);
 		String defValueCellList = context.getResources().getString(R.string.cell_list_defvalue);
 		String str = sharedPref.getString("CellListPreference", defValueCellList);
-
+		// Log.d(TAG, "getCellListFromPrefs CellListPreference - " + str);
 		Gson gson = new Gson();
 		Type type = new TypeToken<List<GridCellModel>>() {
 		}.getType();

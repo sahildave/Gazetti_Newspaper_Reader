@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ImageAdapter extends BaseAdapter {
+	// private String TAG = "HomeScreen";
 	private Context mContext;
 	private int cell_dimen;
 	private LayoutInflater mInflater;
@@ -66,7 +67,6 @@ public class ImageAdapter extends BaseAdapter {
 
 		String uri = modelObject.getNewspaperImage();
 		int resID = mContext.getResources().getIdentifier(uri, "drawable", mContext.getPackageName());
-		Log.d("Fullscreen", "Adapter --- uri - " + uri + ", resID - " + resID);
 
 		holder.cellItemImage.setLayoutParams(new RelativeLayout.LayoutParams(cell_dimen, cell_dimen));
 		holder.cellItemImage.setScaleType(ImageView.ScaleType.CENTER_CROP);

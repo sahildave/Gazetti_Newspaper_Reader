@@ -67,8 +67,7 @@
                     android:layout_below="@id/pubDateView"
                     android:layout_toRightOf="@id/newspaperTile"
                     android:gravity="left|top"
-                    android:paddingLeft="8dp"
-                    android:text="National" />
+                    android:paddingLeft="8dp" />
 
                 <TextView
                     android:id="@+id/viewInBrowser"
@@ -77,8 +76,8 @@
                     android:layout_alignParentRight="true"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:drawablePadding="4dp"
                     android:drawableLeft="@drawable/ic_webview"
+                    android:drawablePadding="4dp"
                     android:gravity="center_vertical|right"
                     android:lines="2"
                     android:onClick="viewInBrowser"

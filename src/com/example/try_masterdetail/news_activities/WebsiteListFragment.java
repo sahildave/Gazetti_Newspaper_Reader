@@ -44,6 +44,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	private static int mActivatedPosition = 1;
 
 	// For HeadlinesList
+	public String dbToSearch;
 	private SwipeRefreshLayout mListViewContainer;
 	private CustomAdapter customAdapter;
 	private ListView mListView;
@@ -98,6 +99,13 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		catIdString = getArguments().getString("catId");
 		listViewHeaderColor = getArguments().getInt("color");
 		mCallbacks = (Callbacks) activity;
+
+		if (npIdString.equals("2")) {
+			dbToSearch = "temp_class";
+		} else {
+			dbToSearch = "freshNewsArticle";
+		}
+
 	}
 
 	@Override
@@ -177,7 +185,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 			// Toast.LENGTH_LONG).show();
 			//
 			// ParseQuery<ParseObject> query =
-			// ParseQuery.getQuery("freshNewsArticle");
+			// ParseQuery.getQuery(dbToSearch);
 			// query.whereEqualTo("newspaper_id", npIdString);
 			// query.whereEqualTo("cat_id", catIdString);
 			// query.orderByDescending("createdAt");
@@ -204,7 +212,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 	private void getNewListItems() {
 
 		mListViewContainer.setRefreshing(true);
-		ParseQuery<ParseObject> queryGetNewItems = ParseQuery.getQuery("freshNewsArticle");
+		ParseQuery<ParseObject> queryGetNewItems = ParseQuery.getQuery(dbToSearch);
 		queryGetNewItems.whereEqualTo("newspaper_id", npIdString);
 		queryGetNewItems.whereEqualTo("cat_id", catIdString);
 		queryGetNewItems.orderByDescending("createdAt");
@@ -255,7 +263,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
 	private void getOldListItems(Date lastObjectCreatedAtDate) {
 
-		ParseQuery<ParseObject> queryGetOldItems = ParseQuery.getQuery("freshNewsArticle");
+		ParseQuery<ParseObject> queryGetOldItems = ParseQuery.getQuery(dbToSearch);
 		queryGetOldItems.whereEqualTo("newspaper_id", npIdString);
 		queryGetOldItems.whereEqualTo("cat_id", catIdString);
 		queryGetOldItems.whereLessThan("createdAt", lastObjectCreatedAtDate);

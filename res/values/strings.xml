@@ -17,6 +17,7 @@
     <string-array name="newspaper_array">
         <item>The Hindu</item>
         <item>The Times of India</item>
+        <item>First Post</item>
     </string-array>
     <string-array name="toi_cat">
         <item>National</item>
@@ -73,6 +74,7 @@
     <array name="explist_newspaper_images">
         <item>@drawable/ic_hindu</item>
         <item>@drawable/ic_toi</item>
+        <item>@drawable/ic_whatsapp</item>
     </array>
 
     <string name="title_activity_welcome_screen_view_pager">Welcome</string>

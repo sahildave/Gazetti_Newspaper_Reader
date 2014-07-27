@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class FeedPrefObject {
+	private String TAG = "HomeScreen";
 
 	Context context;
 	List<GridCellModel> cellList;
@@ -30,6 +31,7 @@ public class FeedPrefObject {
 		String defValueCellList = context.getResources().getString(R.string.cell_list_defvalue);
 		String str = sharedPref.getString("CellListPreference", defValueCellList);
 
+		// Log.d(TAG, "updateFeedPrefs feedPrefsObject - " + str);
 		Gson gson = new Gson();
 		Type type = new TypeToken<List<GridCellModel>>() {
 		}.getType();
@@ -41,13 +43,15 @@ public class FeedPrefObject {
 		for (GridCellModel objects : cellListFromPrefs) {
 			String npImage = objects.getNewspaperImage();
 			String catName = objects.getTitleCategory();
-			System.out.println(npImage + ", " + catName);
+			// Log.d(TAG, "updateFeedPrefs npImage - " + npImage +
+			// ", catName - " + catName);
 
 			if (!npImage.equals("add_new")) {
 				ReadNewsCatCSV readCsv = new ReadNewsCatCSV(context);
 				NewsCatCsvObject csvObjectNpImage = readCsv.getObjectByNPImage(npImage, catName);
 
-				System.out.println(csvObjectNpImage.toString());
+				// Log.d(TAG, "updateFeedPrefs csvObjectNpImage - " +
+				// csvObjectNpImage.toString());
 
 				if (csvObjectNpImage != null && csvObjectNpImage.getNpId() != null) {
 					String npIdString = csvObjectNpImage.getNpId();
@@ -79,6 +83,6 @@ public class FeedPrefObject {
 		prefEditor.putString("feedPreference", feedsChecked);
 		prefEditor.commit();
 
-		Log.d("HomeScreen", "New Feeds - " + feedsChecked);
+		// Log.d(TAG, "New Feeds - " + feedsChecked);
 	}
 }

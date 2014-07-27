@@ -98,6 +98,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
 		// Adding child data
 		listDataHeader.add(0, "The Hindu");
 		listDataHeader.add(1, "The Times of India");
+		listDataHeader.add(2, "First Post");
 
 		// Adding child data
 		List<String> th = new ArrayList<String>();
@@ -114,8 +115,16 @@ public class WelcomeScreenFragmentExpList extends Fragment {
 		toi.add("Science");
 		toi.add("Entertainment");
 
+		List<String> fp = new ArrayList<String>();
+		fp.add("National");
+		fp.add("International");
+		fp.add("Sports");
+		fp.add("Science");
+		fp.add("Entertainment");
+
 		// Header, Child data
 		listDataChild.put(listDataHeader.get(0), th);
 		listDataChild.put(listDataHeader.get(1), toi);
+		listDataChild.put(listDataHeader.get(2), fp);
 	}
 }

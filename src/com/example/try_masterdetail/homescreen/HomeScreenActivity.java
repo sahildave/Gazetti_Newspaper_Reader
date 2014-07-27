@@ -62,9 +62,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 
 		setContentView(R.layout.homescreen_activity);
 
-		Log.d(TAG, "Activity customview NULL ? " + (null == actionBarCustomView));
-		Log.d(TAG, "Activity actionbar NULL ? " + (null == getSupportActionBar()));
-
 		settingsFromActionbar = (ImageButton) actionBarCustomView.findViewById(R.id.settingsFromActionBar);
 		settingsFromActionbar.setOnClickListener(new OnClickListener() {
 
@@ -117,7 +114,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 	private boolean isFirstTime() {
 		SharedPreferences preferences = getSharedPreferences("RanBeforePref", MODE_PRIVATE);
 		boolean ranBefore = preferences.getBoolean("RanBefore", false);
-		System.out.print("Actvitiy - " + ranBefore);
 		return !ranBefore;
 	}
 
@@ -173,9 +169,12 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 	@Override
 	public void onFinishAddingListener(String npName, String cat) {
 
+		// Log.d(TAG, "npName - " + npName + ", cat - " + cat);
 		ReadNewsCatCSV readCsv = new ReadNewsCatCSV(this);
 		NewsCatCsvObject csvObject = readCsv.getObjectByNPName(npName, cat);
 
+		// Log.d(TAG, "csvObject - " + csvObject.getNpImage() + ", " +
+		// csvObject.getCatName());
 		GridCellModel newCell = new GridCellModel(csvObject.getNpImage(), csvObject.getCatName());
 		cellList.add(cellList.size() - 1, newCell);
 		adapter.notifyDataSetChanged();
@@ -189,30 +188,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 		FeedPrefObject feedPrefObject = new FeedPrefObject(this);
 		feedPrefObject.updateFeedPrefs();
 
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Log.d(TAG, "activity onDestroy");
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		Log.d(TAG, "activity onPause");
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d(TAG, "activity onResume");
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		Log.d(TAG, "activity onStart");
 	}
 
 }
