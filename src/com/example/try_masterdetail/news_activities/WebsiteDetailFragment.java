@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
+import com.example.try_masterdetail.news_activities.fetch.IndianExpress;
 import com.example.try_masterdetail.news_activities.fetch.firstPost;
 import com.example.try_masterdetail.news_activities.fetch.hindu;
 import com.example.try_masterdetail.news_activities.fetch.toi;
@@ -195,6 +196,10 @@ public class WebsiteDetailFragment extends Fragment {
 			} else if (npNameString.equalsIgnoreCase("FirstPost")) {
 				firstPost fpObject = new firstPost(mArticleURL, mArticlePubDate);
 				result = fpObject.getFirstPostArticle();
+				mImageURL = result[1];
+			} else if (npNameString.equalsIgnoreCase("The Indian Express")) {
+				IndianExpress tieObject = new IndianExpress(mArticleURL, mArticlePubDate);
+				result = tieObject.getFirstPostArticle();
 				mImageURL = result[1];
 			}
 

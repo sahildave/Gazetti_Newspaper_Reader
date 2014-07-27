@@ -99,6 +99,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
 		listDataHeader.add(0, "The Hindu");
 		listDataHeader.add(1, "The Times of India");
 		listDataHeader.add(2, "First Post");
+		listDataHeader.add(3, "The Indian Express");
 
 		// Adding child data
 		List<String> th = new ArrayList<String>();
@@ -122,9 +123,17 @@ public class WelcomeScreenFragmentExpList extends Fragment {
 		fp.add("Science");
 		fp.add("Entertainment");
 
+		List<String> tie = new ArrayList<String>();
+		tie.add("National");
+		tie.add("International");
+		tie.add("Sports");
+		tie.add("Science");
+		tie.add("Entertainment");
+
 		// Header, Child data
 		listDataChild.put(listDataHeader.get(0), th);
 		listDataChild.put(listDataHeader.get(1), toi);
 		listDataChild.put(listDataHeader.get(2), fp);
+		listDataChild.put(listDataHeader.get(3), tie);
 	}
 }

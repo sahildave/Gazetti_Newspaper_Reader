@@ -18,6 +18,7 @@
         <item>The Hindu</item>
         <item>The Times of India</item>
         <item>First Post</item>
+        <item>The Indian Express</item>
     </string-array>
     <string-array name="toi_cat">
         <item>National</item>
@@ -75,6 +76,7 @@
         <item>@drawable/ic_hindu</item>
         <item>@drawable/ic_toi</item>
         <item>@drawable/ic_whatsapp</item>
+        <item>@drawable/ic_facebook</item>
     </array>
 
     <string name="title_activity_welcome_screen_view_pager">Welcome</string>

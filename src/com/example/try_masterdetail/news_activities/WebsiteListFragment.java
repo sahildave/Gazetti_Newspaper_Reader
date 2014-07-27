@@ -100,7 +100,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		listViewHeaderColor = getArguments().getInt("color");
 		mCallbacks = (Callbacks) activity;
 
-		if (npIdString.equals("2")) {
+		if (npIdString.equals("2") || npIdString.equals("3")) {
 			dbToSearch = "temp_class";
 		} else {
 			dbToSearch = "freshNewsArticle";
