@@ -23,7 +23,7 @@ public class IndianExpress {
 		Log.d("ASYNC", "JSoup FirstPost " + mArticleURL);
 	}
 
-	public String[] getFirstPostArticle() {
+	public String[] getTIEArticle() {
 
 		Document doc;
 		String[] result = new String[4];

@@ -248,7 +248,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 				((TextView) headerOnList).setText(dateLastUpdatedString);
 				mListViewContainer.setRefreshing(false);
 
-				ParseObject.pinAllInBackground(articleObjectList);
+//				ParseObject.pinAllInBackground(articleObjectList);
 
 				if (mTwoPane) {
 					mListView.performItemClick(customAdapter.getView(mActivatedPosition - 1, null, null),

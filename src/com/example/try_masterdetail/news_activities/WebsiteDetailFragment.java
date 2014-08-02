@@ -185,6 +185,7 @@ public class WebsiteDetailFragment extends Fragment {
 
 		@Override
 		protected String[] doInBackground(Void... params) {
+
 			if (npNameString.equalsIgnoreCase("The Hindu")) {
 				hindu hinduObject = new hindu(mArticleURL, mArticlePubDate);
 				result = hinduObject.getHinduArticle();
@@ -193,15 +194,17 @@ public class WebsiteDetailFragment extends Fragment {
 				toi toiObject = new toi(mArticleURL, mArticlePubDate);
 				result = toiObject.getToiArticle();
 				mImageURL = result[1];
-			} else if (npNameString.equalsIgnoreCase("FirstPost")) {
+			} else if (npNameString.equalsIgnoreCase("First Post")) {
 				firstPost fpObject = new firstPost(mArticleURL, mArticlePubDate);
 				result = fpObject.getFirstPostArticle();
 				mImageURL = result[1];
 			} else if (npNameString.equalsIgnoreCase("The Indian Express")) {
 				IndianExpress tieObject = new IndianExpress(mArticleURL, mArticlePubDate);
-				result = tieObject.getFirstPostArticle();
+				result = tieObject.getTIEArticle();
 				mImageURL = result[1];
 			}
+
+			Log.d(TAG, "result is null ? " + (result == null) + ", for " + npNameString);
 
 			if (result[0] == null || result[0].length() == 0) {
 				result[0] = titleTextBackup;

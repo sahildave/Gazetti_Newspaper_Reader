@@ -53,11 +53,11 @@ public class firstPost {
 			mImageURL = getImageURL(bodyElement);
 			Log.d("ASYNC", "Jsoup imageURL - " + mImageURL);
 
-			// get p elements with class = stry_cont
-			String FirstPostArticleXPath = ".stry_cont"; // (//*[@id="article-block"]/div/p[1])
+			// get p elements with class = fullCont
+			String FirstPostArticleXPath = ".fullCont"; // (//*[@id="article-block"]/div/p[1])
 			Element bodyArticleElements = doc.select(FirstPostArticleXPath).first();
 
-			Elements mainImageElement = bodyElement.select("div.stry_cont img");
+			Elements mainImageElement = bodyElement.select("div.fullCont img");
 			String imgSubtitleText = mainImageElement.first().attr("alt");
 
 			String temp = bodyArticleElements.text();
@@ -84,24 +84,14 @@ public class firstPost {
 	}
 
 	private String getImageURL(Element bodyElement) {
-		if (bodyElement.select("div.stry_cont img").size() != 0) {
+		if (bodyElement.select("div.fullCont img").size() != 0) {
 			// get image elements with class = main-image
-			// Log.d(TAG, "in main-image");
-			Elements mainImageElement = bodyElement.select("div.stry_cont img");
-			mImageURL = mainImageElement.first().attr("src");
+			Log.d("ASYNC", "in main-image");
+			Elements mainImageElement = bodyElement.select("div.fullCont img");
+			mImageURL = mainImageElement.get(1).attr("src");
 			// Log.d(TAG, "ImageUrl - " + mImageURL);
-		} else if (bodyElement.select("div#contartcarousel").size() != 0) {
-
-			// get image elements with carousel
-			// Log.d(TAG, "in contartcarousel ");
-			Elements carouselElements = bodyElement.select("div#contartcarousel");
-			Elements carouselImage = carouselElements.select("div#pic").first().select("img");
-			mImageURL = carouselImage.attr("src");
-			// Log.d(TAG, mImageURL);
 		} else {
-
-			// Log.d(TAG, "IMAGE NOT FOUND!");
-
+			Log.d("ASYNC", "IMAGE NOT FOUND!");
 		}
 
 		return mImageURL;
