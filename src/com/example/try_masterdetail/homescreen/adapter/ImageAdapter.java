@@ -3,14 +3,10 @@ package com.example.try_masterdetail.homescreen.adapter;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.try_masterdetail.R;
-import com.example.try_masterdetail.R.dimen;
-import com.example.try_masterdetail.R.id;
-import com.example.try_masterdetail.R.layout;
 
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,9 +19,9 @@ public class ImageAdapter extends BaseAdapter {
 	private Context mContext;
 	private int cell_dimen;
 	private LayoutInflater mInflater;
-	List<GridCellModel> cellList;
+	List<CellModel> cellList;
 
-	public ImageAdapter(Context c, List<GridCellModel> cellList) {
+	public ImageAdapter(Context c, List<CellModel> cellList) {
 		mContext = c;
 		this.cell_dimen = (int) c.getResources().getDimension(R.dimen.cell_dimen);
 		mInflater = LayoutInflater.from(c);
@@ -63,7 +59,7 @@ public class ImageAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		GridCellModel modelObject = cellList.get(position);
+		CellModel modelObject = cellList.get(position);
 
 		String uri = modelObject.getNewspaperImage();
 		int resID = mContext.getResources().getIdentifier(uri, "drawable", mContext.getPackageName());

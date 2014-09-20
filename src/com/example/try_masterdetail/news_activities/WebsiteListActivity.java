@@ -357,7 +357,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// The action bar home/up action should open or close the drawer.
+		// The action bar home/up action should open or closeUtilObject the drawer.
 		// ActionBarDrawerToggle will take care of this.
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
@@ -425,7 +425,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 										 * caret
 										 */
 		R.string.drawer_open, /* "open drawer" description for accessibility */
-		R.string.drawer_close /* "close drawer" description for accessibility */
+		R.string.drawer_close /* "closeUtilObject drawer" description for accessibility */
 		) {
 			public void onDrawerClosed(View view) {
 				getSupportActionBar().setTitle(mTitle);
@@ -476,7 +476,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 				getSupportFragmentManager().beginTransaction()
 						.replace(R.id.website_list_container, mlistFragment, "listContent").commit();
 
-				// update selected item and title, then close the drawer
+				// update selected item and title, then closeUtilObject the drawer
 				mDrawerList.setItemChecked(position, true);
 				mDrawerList.setSelection(position);
 				setTitle(npName + " - " + mDrawerItems[position]);

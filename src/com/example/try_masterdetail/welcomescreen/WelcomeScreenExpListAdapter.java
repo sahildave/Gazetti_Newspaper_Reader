@@ -1,28 +1,19 @@
 package com.example.try_masterdetail.welcomescreen;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
-
 import com.example.try_masterdetail.R;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.example.try_masterdetail.util.UserSelectionUtil;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 
@@ -49,18 +40,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 		this.mListDataHeader = listDataHeader;
 		this.mListDataChild = listChildData;
 
-		SharedPreferences sharedPref = context.getSharedPreferences("FeedPrefs", Context.MODE_PRIVATE);
-		String defValue = context.getResources().getString(R.string.pref_feeds_selected_defvalue);
-		String str = sharedPref.getString("feedPreference", defValue);
-		Gson gson = new Gson();
-		Type type = new TypeToken<HashMap<Integer, boolean[]>>() {
-		}.getType();
-
-		mChildCheckStates = gson.fromJson(str, type);
-		Log.d("HomeScreen", "Old Feeds - " + str);
-		System.out.println("listDataHeader newadapter - " + (listDataHeader.size()));
-		System.out.println("listDataChild newadapter - " + (listDataHeader.size()));
-		// mChildCheckStates = new HashMap<Integer, boolean[]>();
+		mChildCheckStates = UserSelectionUtil.getUserFeedSelection();
 
 		explist_np_images = mContext.getResources().obtainTypedArray(R.array.explist_newspaper_images);
 	}
@@ -104,7 +84,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 		final int mGroupPosition = groupPosition;
 		final int mChildPosition = childPosition;
 
-		childText = getChild(groupPosition, childPosition).toString();
+		childText = (String) getChild(groupPosition, childPosition);
 
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

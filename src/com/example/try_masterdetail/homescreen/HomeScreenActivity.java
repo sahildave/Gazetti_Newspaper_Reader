@@ -1,8 +1,5 @@
 package com.example.try_masterdetail.homescreen;
 
-import java.util.List;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,24 +12,21 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
+import com.example.try_masterdetail.util.CellListUtil;
+import com.example.try_masterdetail.util.Constants;
 import com.example.try_masterdetail.R;
-import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment;
+import com.example.try_masterdetail.homescreen.adapter.*;
 import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
-import com.example.try_masterdetail.homescreen.adapter.CellListObjects;
-import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment;
 import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
-import com.example.try_masterdetail.homescreen.adapter.GridCellModel;
-import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
-import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
-import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
-import com.example.try_masterdetail.preference.FeedPrefObject;
+import com.example.try_masterdetail.util.UserSelectionUtil;
 import com.example.try_masterdetail.preference.SettingsActivity;
+import com.example.try_masterdetail.util.CsvFileUtil;
 import com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity;
+
+import java.util.List;
 
 public class HomeScreenActivity extends ActionBarActivity implements HomeScreenFragment.Callbacks,
 		AddCellDialogListener, EditCellDialogListener {
@@ -40,47 +34,41 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 	private String TAG = "HomeScreen";
 
 	private Fragment homeScreenFragment;
-	private FragmentManager fm;
-	private List<GridCellModel> cellList;
+	private FragmentManager fragmentManager;
+	private List<CellModel> cellList;
 	private ImageAdapter adapter;
 	private View actionBarCustomView;
 	private ImageButton settingsFromActionbar;
+    private UserSelectionUtil userSelectionUtil;
+    private CellListUtil cellListUtil;
 
-	@SuppressLint("InlinedApi")
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate - " + (null == savedInstanceState));
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
 
-		actionBarCustomView = LayoutInflater.from(this).inflate(R.layout.homescreen_actionbar, null);
-		ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-				ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-
-		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		getSupportActionBar().setCustomView(actionBarCustomView, params);
+        setupCustomActionBar();
 
 		setContentView(R.layout.homescreen_activity);
-
 		settingsFromActionbar = (ImageButton) actionBarCustomView.findViewById(R.id.settingsFromActionBar);
 		settingsFromActionbar.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(HomeScreenActivity.this, "Touched Settings", Toast.LENGTH_SHORT).show();
 				Intent settingIntent = new Intent(HomeScreenActivity.this, SettingsActivity.class);
 				startActivity(settingIntent);
-
 			}
 		});
 
+        // When coming from WelcomeScreen but without completing the task, the intent would have "Exit Me"
 		if (getIntent().getBooleanExtra("Exit me", false)) {
-			finish();
+			this.finish();
 			return; // add this to prevent from doing unnecessary stuffs
 		}
 
-		fm = getSupportFragmentManager();
-		homeScreenFragment = fm.findFragmentByTag("homeScreen");
+		fragmentManager = getSupportFragmentManager();
+		homeScreenFragment = fragmentManager.findFragmentByTag("homeScreen");
 
 		if (homeScreenFragment == null) {
 			homeScreenFragment = new HomeScreenFragment();
@@ -88,57 +76,62 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 					.add(R.id.homescreen_container, homeScreenFragment, "homeScreen").commit();
 		}
 
-		if (isFirstTime()) {
-
-			// new
-			// AlertDialog.Builder(HomeScreenActivity.this).setTitle("Updated").setMessage(R.string.first_message)
-			// .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			// public void onClick(DialogInterface dialog, int id) {
-			// dialog.cancel();
-			// }
-			// }).show();
-
+        //TODO: Move to Application Class.?
+		if (isFirstRun()) {
+            //Show welcomeActivity if first time user
 			Intent welcomIntent = new Intent(this, WelcomeScreenViewPagerActivity.class);
 			startActivity(welcomIntent);
 
 		}
 
+        initUtils();
+
 	}
 
-	/*
-	 * Checks that application runs first time and write flag at
-	 * SharedPreferences
-	 * 
-	 * @return true if 1st time
-	 */
-	private boolean isFirstTime() {
-		SharedPreferences preferences = getSharedPreferences("RanBeforePref", MODE_PRIVATE);
-		boolean ranBefore = preferences.getBoolean("RanBefore", false);
-		return !ranBefore;
+    private void initUtils() {
+        cellListUtil = new CellListUtil(this);
+        userSelectionUtil = new UserSelectionUtil(this);
+    }
+
+    private void setupCustomActionBar() {
+        actionBarCustomView = LayoutInflater.from(this).inflate(R.layout.homescreen_actionbar, null);
+        ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
+                ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(actionBarCustomView, params);
+    }
+
+	private boolean isFirstRun() {
+		SharedPreferences preferences = getSharedPreferences(Constants.IS_FIRST_RUN, MODE_PRIVATE);
+		boolean firstRun = preferences.getBoolean(Constants.IS_FIRST_RUN, true);
+		return firstRun;
 	}
 
 	@Override
-	public void showAddNewCellDialog(List<GridCellModel> cellList, ImageAdapter adapter) {
+	public void showAddNewCellDialog(List<CellModel> cellList, ImageAdapter adapter) {
 		this.cellList = cellList;
 		this.adapter = adapter;
 
 		AddCellDialogFragment addCellDialog = new AddCellDialogFragment();
-		addCellDialog.show(fm, "addCell");
+		addCellDialog.show(fragmentManager, "addCell");
 
 	}
 
 	@Override
-	public void showEditCellDialog(int position, String newspaper, String category, List<GridCellModel> cellList,
+	public void showEditCellDialog(int position, String newspaper, String category, List<CellModel> cellList,
 			ImageAdapter adapter) {
 		this.cellList = cellList;
 		this.adapter = adapter;
+
+        //Remove "custom" tag if on newspaper page
 		if (newspaper.length() > 7 && newspaper.substring(newspaper.length() - 7).equals("_custom")) {
 			newspaper = newspaper.substring(0, newspaper.length() - 7);
 		}
 		int newspaperId = cellList.get(position).getDefaultNewspaperId(newspaper);
 
 		EditCellDialogFragment editCellDialog = EditCellDialogFragment.newInstance(position, newspaperId, category);
-		editCellDialog.show(fm, "editCell");
+		editCellDialog.show(fragmentManager, "editCell");
 
 	}
 
@@ -147,21 +140,17 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 
 		if (edited) {
 
-			ReadNewsCatCSV readCsv = new ReadNewsCatCSV(this);
-			NewsCatCsvObject csvObject = readCsv.getObjectByNPName(npName, cat);
+			CsvFileUtil csvFile = new CsvFileUtil(this);
+			NewsCatModel csvObject = csvFile.getObjectByNPName(npName, cat);
 
-			GridCellModel newCell = new GridCellModel(csvObject.getNpImage(), csvObject.getCatName());
+			CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
 			cellList.set(editPosition, newCell);
 			adapter.notifyDataSetChanged();
 
-			readCsv.close();
+			csvFile.closeUtilObject();
 
-			CellListObjects cellListObject = new CellListObjects(this);
-			cellListObject.saveCellList(cellList);
-
-			// Update feedPrefs
-			FeedPrefObject feedPrefObject = new FeedPrefObject(this);
-			feedPrefObject.updateFeedPrefs();
+			cellListUtil.saveCellListToSharedPrefs(cellList);
+			userSelectionUtil.updateUserSelectionSharedPrefs();
 		}
 
 	}
@@ -169,24 +158,17 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 	@Override
 	public void onFinishAddingListener(String npName, String cat) {
 
-		// Log.d(TAG, "npName - " + npName + ", cat - " + cat);
-		ReadNewsCatCSV readCsv = new ReadNewsCatCSV(this);
-		NewsCatCsvObject csvObject = readCsv.getObjectByNPName(npName, cat);
+		CsvFileUtil csvFile = new CsvFileUtil(this);
+		NewsCatModel csvObject = csvFile.getObjectByNPName(npName, cat);
 
-		// Log.d(TAG, "csvObject - " + csvObject.getNpImage() + ", " +
-		// csvObject.getCatName());
-		GridCellModel newCell = new GridCellModel(csvObject.getNpImage(), csvObject.getCatName());
+		CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
 		cellList.add(cellList.size() - 1, newCell);
 		adapter.notifyDataSetChanged();
 
-		readCsv.close();
+		csvFile.closeUtilObject();
 
-		CellListObjects cellListObject = new CellListObjects(this);
-		cellListObject.saveCellList(cellList);
-
-		// Update feedPrefs
-		FeedPrefObject feedPrefObject = new FeedPrefObject(this);
-		feedPrefObject.updateFeedPrefs();
+		cellListUtil.saveCellListToSharedPrefs(cellList);
+		userSelectionUtil.updateUserSelectionSharedPrefs();
 
 	}
 

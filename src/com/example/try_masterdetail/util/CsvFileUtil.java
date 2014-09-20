@@ -1,28 +1,25 @@
-package com.example.try_masterdetail.homescreen.adapter;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+package com.example.try_masterdetail.util;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import com.example.try_masterdetail.homescreen.adapter.NewsCatModel;
 
-public class ReadNewsCatCSV {
+import java.io.*;
 
-	Context activity;
-	NewsCatCsvObject object = null;
+public class CsvFileUtil {
+
+	Context context;
+	NewsCatModel object = null;
 	AssetManager assetManager;
 	InputStream inputStream;
 	BufferedReader br = null;
 	String line = "";
 	String csvSplitBy = ",";
 
-	public ReadNewsCatCSV(Context activity) {
-		this.activity = activity;
-		object = new NewsCatCsvObject();
-		this.assetManager = activity.getAssets();
+	public CsvFileUtil(Context context) {
+		this.context = context;
+		object = new NewsCatModel();
+		this.assetManager = context.getAssets();
 		this.inputStream = null;
 
 		try {
@@ -33,7 +30,7 @@ public class ReadNewsCatCSV {
 
 	}
 
-	public NewsCatCsvObject getObjectByNPName(String npName, String catName) {
+	public NewsCatModel getObjectByNPName(String npName, String catName) {
 		try {
 
 			br = new BufferedReader(new InputStreamReader(inputStream));
@@ -41,13 +38,7 @@ public class ReadNewsCatCSV {
 				String[] np = line.split(csvSplitBy);
 
 				if (np[1].equals(npName) && np[3].equals(catName)) {
-
-					object.setNpId(np[0]);
-					object.setNpName(np[1]);
-					object.setCatId(np[2]);
-					object.setCatName(np[3]);
-					object.setNpImage(np[4]);
-					object.setCatImage(np[5]);
+                    setupReturnObject(np);
 					break;
 				}
 			}
@@ -67,7 +58,7 @@ public class ReadNewsCatCSV {
 		return object;
 	}
 
-	public NewsCatCsvObject getObjectByNPImage(String npImage, String catName) {
+    public NewsCatModel getObjectByNPImage(String npImage, String catName) {
 		try {
 
 			br = new BufferedReader(new InputStreamReader(inputStream));
@@ -75,13 +66,7 @@ public class ReadNewsCatCSV {
 				String[] np = line.split(csvSplitBy);
 
 				if (np[4].equals(npImage) && np[3].equals(catName)) {
-
-					object.setNpId(np[0]);
-					object.setNpName(np[1]);
-					object.setCatId(np[2]);
-					object.setCatName(np[3]);
-					object.setNpImage(np[4]);
-					object.setCatImage(np[5]);
+                    setupReturnObject(np);
 					break;
 				}
 			}
@@ -101,23 +86,17 @@ public class ReadNewsCatCSV {
 		return object;
 	}
 
-	public NewsCatCsvObject getObjectByNPId(String npId, String catId) {
+	public NewsCatModel getObjectByNPId(String npId, String catId) {
 
 		try {
 
 			br = new BufferedReader(new InputStreamReader(inputStream));
-			System.out.println(npId + ", " + catId);
 			while ((line = br.readLine()) != null) {
-				String[] np = line.split(csvSplitBy);
+                String[] np = line.split(csvSplitBy);
 
-				if (np[0].equals(npId) && np[2].equals(catId)) {
-
-					object.setNpId(np[0]);
-					object.setNpName(np[1]);
-					object.setCatId(np[2]);
-					object.setCatName(np[3]);
-					object.setNpImage(np[4]);
-					object.setCatImage(np[5]);
+                System.out.println("getObjectByNPId == "+ np[0] +" - "+npId + ", "+np[2]+" - " + catId);
+                if (np[0].equals(npId) && np[2].equals(catId)) {
+                    setupReturnObject(np);
 					break;
 				}
 			}
@@ -125,11 +104,19 @@ public class ReadNewsCatCSV {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 		return object;
 	}
 
-	public void close() {
+	public void closeUtilObject() {
 		object = null;
 		if (br != null) {
 			try {
@@ -140,4 +127,15 @@ public class ReadNewsCatCSV {
 		}
 
 	}
+
+    private void setupReturnObject(String[] np) {
+
+        object.setNpId(np[0]);
+        object.setNpName(np[1]);
+        object.setCatId(np[2]);
+        object.setCatName(np[3]);
+        object.setNpImage(np[4]);
+        object.setCatImage(np[5]);
+        System.out.println("Object - "+object.toString());
+    }
 }

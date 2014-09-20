@@ -1,9 +1,5 @@
 package com.example.try_masterdetail.preference;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -13,16 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
-
 import com.example.try_masterdetail.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
 
 public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
 
@@ -49,9 +44,9 @@ public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
 		this.mListDataHeader = listDataHeader;
 		this.mListDataChild = listChildData;
 
-		SharedPreferences sharedPref = context.getSharedPreferences("FeedPrefs", Context.MODE_PRIVATE);
+		SharedPreferences sharedPref = context.getSharedPreferences("UserFeedSelection", Context.MODE_PRIVATE);
 		String defValue = context.getResources().getString(R.string.pref_feeds_selected_defvalue);
-		String str = sharedPref.getString("feedPreference", defValue);
+		String str = sharedPref.getString("userFeedSelection", defValue);
 		Gson gson = new Gson();
 		Type type = new TypeToken<HashMap<Integer, boolean[]>>() {
 		}.getType();

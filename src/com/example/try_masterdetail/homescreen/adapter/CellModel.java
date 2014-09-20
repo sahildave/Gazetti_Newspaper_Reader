@@ -1,11 +1,11 @@
 package com.example.try_masterdetail.homescreen.adapter;
 
-public class GridCellModel {
+public class CellModel {
 
 	private String newspaperImage;
 	private String titleCategory;
 
-	public GridCellModel(String newspaperImage, String categoryTitle) {
+	public CellModel(String newspaperImage, String categoryTitle) {
 		setNewspaperImage(newspaperImage);
 		setTitleCategory(categoryTitle);
 	}

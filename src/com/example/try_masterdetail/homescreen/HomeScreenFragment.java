@@ -33,13 +33,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.R;
-import com.example.try_masterdetail.homescreen.adapter.CellListObjects;
-import com.example.try_masterdetail.homescreen.adapter.GridCellModel;
-import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
-import com.example.try_masterdetail.homescreen.adapter.NewsCatCsvObject;
-import com.example.try_masterdetail.homescreen.adapter.ReadNewsCatCSV;
+import com.example.try_masterdetail.homescreen.adapter.*;
+import com.example.try_masterdetail.util.CellListUtil;
+import com.example.try_masterdetail.util.CsvFileUtil;
 import com.example.try_masterdetail.news_activities.WebsiteListActivity;
-import com.example.try_masterdetail.preference.FeedPrefObject;
+import com.example.try_masterdetail.util.UserSelectionUtil;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
@@ -48,7 +46,7 @@ import com.nineoldandroids.view.ViewHelper;
 public class HomeScreenFragment extends Fragment {
 	private Callbacks activityCallback;
 	private GridView gridview;
-	private List<GridCellModel> cellList;
+	private List<CellModel> cellList;
 	private ImageAdapter adapter;
 	private int feedVersion;
 	private SwingBottomInAnimationAdapter animAdapter;
@@ -71,9 +69,9 @@ public class HomeScreenFragment extends Fragment {
 	}
 
 	public interface Callbacks {
-		public void showAddNewCellDialog(List<GridCellModel> cellList, ImageAdapter adapter);
+		public void showAddNewCellDialog(List<CellModel> cellList, ImageAdapter adapter);
 
-		public void showEditCellDialog(int position, String newspaper, String category, List<GridCellModel> cellList,
+		public void showEditCellDialog(int position, String newspaper, String category, List<CellModel> cellList,
 				ImageAdapter adapter);
 	}
 
@@ -105,18 +103,18 @@ public class HomeScreenFragment extends Fragment {
 			// TODO
 			Log.d(TAG, "RELOADING - " + cellList.size());
 			feedVersion = newfeedVersion;
-			CellListObjects cellListObject = new CellListObjects(getActivity());
-			// cellListObject.saveCellList(cellList);
+			CellListUtil cellListObject = new CellListUtil(getActivity());
+			// cellListObject.saveCellListToSharedPrefs(cellList);
 			cellList.clear();
-			cellList = cellListObject.getCellListFromPrefs();
+			cellList = cellListObject.getCellListFromSharedPrefs();
 
 			if (cellList.size() > 0) {
-				GridCellModel modelObject = cellList.get(cellList.size() - 1);
+				CellModel modelObject = cellList.get(cellList.size() - 1);
 				if (!modelObject.getNewspaperImage().equals("add_new")) {
-					cellList.add(new GridCellModel("add_new", "Add New"));
+					cellList.add(new CellModel("add_new", "Add New"));
 				}
 			} else {
-				cellList.add(new GridCellModel("add_new", "Add New"));
+				cellList.add(new CellModel("add_new", "Add New"));
 			}
 
 			adapter = new ImageAdapter(getActivity(), cellList);
@@ -179,16 +177,16 @@ public class HomeScreenFragment extends Fragment {
 
 		}
 
-		CellListObjects cellListObject = new CellListObjects(getActivity());
-		cellList = cellListObject.getCellListFromPrefs();
+		CellListUtil cellListObject = new CellListUtil(getActivity());
+		cellList = cellListObject.getCellListFromSharedPrefs();
 
 		if (cellList.size() > 0) {
-			GridCellModel modelObject = cellList.get(cellList.size() - 1);
+			CellModel modelObject = cellList.get(cellList.size() - 1);
 			if (!modelObject.getNewspaperImage().equals("add_new")) {
-				cellList.add(new GridCellModel("add_new", "Add New"));
+				cellList.add(new CellModel("add_new", "Add New"));
 			}
 		} else {
-			cellList.add(new GridCellModel("add_new", "Add New"));
+			cellList.add(new CellModel("add_new", "Add New"));
 		}
 
 		adapter = new ImageAdapter(getActivity(), cellList);
@@ -206,12 +204,12 @@ public class HomeScreenFragment extends Fragment {
 				if (position == (cellList.size() - 1)) {
 					activityCallback.showAddNewCellDialog(cellList, adapter);
 				} else {
-					GridCellModel clickedObject = cellList.get(position);
+					CellModel clickedObject = cellList.get(position);
 					String npImage = clickedObject.getNewspaperImage();
 					String catName = clickedObject.getTitleCategory();
 
-					ReadNewsCatCSV readCsvNpImage = new ReadNewsCatCSV(getActivity());
-					NewsCatCsvObject csvObject = readCsvNpImage.getObjectByNPImage(npImage, catName);
+					CsvFileUtil readCsvNpImage = new CsvFileUtil(getActivity());
+					NewsCatModel csvObject = readCsvNpImage.getObjectByNPImage(npImage, catName);
 
 					String npId = csvObject.getNpId();
 					String catId = csvObject.getCatId();
@@ -227,7 +225,7 @@ public class HomeScreenFragment extends Fragment {
 					headlinesIntent.putExtra("catName", catName);
 					startActivity(headlinesIntent);
 
-					readCsvNpImage.close();
+					readCsvNpImage.closeUtilObject();
 				}
 
 			}
@@ -360,11 +358,11 @@ public class HomeScreenFragment extends Fragment {
 			cellList.remove(position);
 			adapter.notifyDataSetChanged();
 
-			CellListObjects cellListObject = new CellListObjects(getActivity());
-			cellListObject.saveCellList(cellList);
+			CellListUtil cellListObject = new CellListUtil(getActivity());
+			cellListObject.saveCellListToSharedPrefs(cellList);
 
-			FeedPrefObject feedPrefObject = new FeedPrefObject(getActivity());
-			feedPrefObject.updateFeedPrefs();
+			UserSelectionUtil userSelectionUtil = new UserSelectionUtil(getActivity());
+			userSelectionUtil.updateUserSelectionSharedPrefs();
 			return true;
 		default:
 			return super.onContextItemSelected(item);

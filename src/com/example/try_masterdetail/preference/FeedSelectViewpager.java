@@ -16,7 +16,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.try_masterdetail.R;
-import com.example.try_masterdetail.homescreen.adapter.CellListObjects;
+import com.example.try_masterdetail.util.CellListUtil;
+import com.example.try_masterdetail.util.UserSelectionUtil;
 
 public class FeedSelectViewpager extends ActionBarActivity implements FeedSelectFragment.FeedSelectCallback {
 
@@ -69,12 +70,12 @@ public class FeedSelectViewpager extends ActionBarActivity implements FeedSelect
 		onBackPressed();
 
 		// Update feedPrefs
-		FeedPrefObject feedPrefObject = new FeedPrefObject(this);
-		feedPrefObject.saveFeedPrefs(mChildCheckStates);
+		UserSelectionUtil userSelectionUtil = new UserSelectionUtil(this);
+		userSelectionUtil.saveUserSelectionSharedPrefs(mChildCheckStates);
 
 		// Update cellList
-		CellListObjects cellListObject = new CellListObjects(this);
-		cellListObject.updateCellListByFeedPrefs();
+		CellListUtil cellListObject = new CellListUtil(this);
+		cellListObject.updateCellListByUserSelection();
 
 	}
 
