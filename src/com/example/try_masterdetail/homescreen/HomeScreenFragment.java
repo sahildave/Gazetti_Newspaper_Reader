@@ -1,8 +1,5 @@
 package com.example.try_masterdetail.homescreen;
 
-import java.util.List;
-import java.util.Random;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,34 +11,27 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.ContextMenu;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.try_masterdetail.R;
-import com.example.try_masterdetail.homescreen.adapter.*;
+import com.example.try_masterdetail.homescreen.adapter.CellModel;
+import com.example.try_masterdetail.homescreen.adapter.ImageAdapter;
+import com.example.try_masterdetail.homescreen.adapter.NewsCatModel;
+import com.example.try_masterdetail.news_activities.WebsiteListActivity;
 import com.example.try_masterdetail.util.CellListUtil;
 import com.example.try_masterdetail.util.CsvFileUtil;
-import com.example.try_masterdetail.news_activities.WebsiteListActivity;
 import com.example.try_masterdetail.util.UserSelectionUtil;
 import com.flaviofaria.kenburnsview.KenBurnsView;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.nineoldandroids.view.ViewHelper;
+
+import java.util.List;
+import java.util.Random;
 
 public class HomeScreenFragment extends Fragment {
 	private Callbacks activityCallback;

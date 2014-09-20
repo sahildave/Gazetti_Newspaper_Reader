@@ -1,11 +1,6 @@
 package com.example.try_masterdetail.news_activities;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,15 +16,18 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.news_activities.adapter.CustomAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.ScaleInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class WebsiteListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener,
 		ListView.OnScrollListener {
