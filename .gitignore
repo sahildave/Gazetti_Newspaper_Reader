@@ -17,7 +17,6 @@ local.properties
 /*.iml
 /*.eml
 
-
 # External tool builders
 .externalToolBuilders/
 
