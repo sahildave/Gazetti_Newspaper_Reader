@@ -2,12 +2,13 @@
 <classpath>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/Android API 20 Platform"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="lib" path="libs/jsoup-1.7.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/Parse_library_1.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/KenBurnsView-1.0.1.jar" sourcepath="E:/Dev/Android Resources/KenBurnsView-1.0.1-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/E:/Dev/Android Resources/KenBurnsView-1.0.1-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file://E:/Dev/Android Resources/KenBurnsView-1.0.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="libs/com.haarman.listviewanimations-2.6.0.jar"/>

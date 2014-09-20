@@ -11,6 +11,13 @@ local.properties
 .settings/
 .loadpath
 
+# Idea Files
+/.idea
+/out
+/*.iml
+/*.eml
+
+
 # External tool builders
 .externalToolBuilders/
 
@@ -55,3 +62,6 @@ proguard/
 
 # Log Files
 *.log
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
