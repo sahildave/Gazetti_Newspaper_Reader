@@ -85,30 +85,20 @@ public class HomeScreenFragment extends Fragment {
 		SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
 		int newfeedVersion = sharedPref.getInt("feedVersion", 0);
 
-		Log.d(TAG, "HomeScreenFragment in onResume: firstRun - " + firstRun + ", newfeedVerision - " + newfeedVersion
+		Log.d(TAG, "HomeScreenFragment in onResume: firstRun - " + firstRun
+                + ", newfeedVerision - " + newfeedVersion
 				+ ", feedVersion - " + feedVersion);
-//		if (!firstRun && (newfeedVersion > feedVersion)) {
 		if ((newfeedVersion > feedVersion)) {
 			
 			// TODO
 			Log.d(TAG, "RELOADING - " + cellList.size());
 			feedVersion = newfeedVersion;
-			CellListUtil cellListObject = new CellListUtil(getActivity());
-			// cellListObject.saveCellListToSharedPrefs(cellList);
 			cellList.clear();
-			cellList = cellListObject.getCellListFromSharedPrefs();
+			cellList = CellListUtil.getCellListFromSharedPrefs();
 
-			if (cellList.size() > 0) {
-				CellModel modelObject = cellList.get(cellList.size() - 1);
-				if (!modelObject.getNewspaperImage().equals("add_new")) {
-					cellList.add(new CellModel("add_new", "Add New"));
-				}
-			} else {
-				cellList.add(new CellModel("add_new", "Add New"));
-			}
+            putAddNewCellInList();
 
-			adapter = new ImageAdapter(getActivity(), cellList);
-			// adapter.notifyDataSetChanged();
+            adapter = new ImageAdapter(getActivity(), cellList);
 
 			animAdapter = new SwingBottomInAnimationAdapter(adapter);
 			animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
@@ -167,20 +157,10 @@ public class HomeScreenFragment extends Fragment {
 
 		}
 
-		CellListUtil cellListObject = new CellListUtil(getActivity());
-		cellList = cellListObject.getCellListFromSharedPrefs();
+		cellList = CellListUtil.getCellListFromSharedPrefs();
+        putAddNewCellInList();
 
-		if (cellList.size() > 0) {
-			CellModel modelObject = cellList.get(cellList.size() - 1);
-			if (!modelObject.getNewspaperImage().equals("add_new")) {
-				cellList.add(new CellModel("add_new", "Add New"));
-			}
-		} else {
-			cellList.add(new CellModel("add_new", "Add New"));
-		}
-
-		adapter = new ImageAdapter(getActivity(), cellList);
-
+        adapter = new ImageAdapter(getActivity(), cellList);
 		animAdapter = new SwingBottomInAnimationAdapter(adapter);
 		animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
 		animAdapterMultiple.setAbsListView(gridview);
@@ -198,8 +178,8 @@ public class HomeScreenFragment extends Fragment {
 					String npImage = clickedObject.getNewspaperImage();
 					String catName = clickedObject.getTitleCategory();
 
-					CsvFileUtil readCsvNpImage = new CsvFileUtil(getActivity());
-					NewsCatModel csvObject = readCsvNpImage.getObjectByNPImage(npImage, catName);
+					CsvFileUtil csvFile = new CsvFileUtil(getActivity());
+					NewsCatModel csvObject = csvFile.getObjectByNPImage(npImage, catName);
 
 					String npId = csvObject.getNpId();
 					String catId = csvObject.getCatId();
@@ -215,7 +195,7 @@ public class HomeScreenFragment extends Fragment {
 					headlinesIntent.putExtra("catName", catName);
 					startActivity(headlinesIntent);
 
-					readCsvNpImage.closeUtilObject();
+					csvFile.closeUtilObject();
 				}
 
 			}
@@ -251,7 +231,18 @@ public class HomeScreenFragment extends Fragment {
 
 	}
 
-	private void loadPhoneBackground() {
+    private void putAddNewCellInList() {
+        if (cellList.size() > 0) {
+            CellModel modelObject = cellList.get(cellList.size() - 1);
+            if (!modelObject.getNewspaperImage().equals("add_new")) {
+                cellList.add(new CellModel("add_new", "Add New"));
+            }
+        } else {
+            cellList.add(new CellModel("add_new", "Add New"));
+        }
+    }
+
+    private void loadPhoneBackground() {
 		// get a random image, if null then get image_0
 		Random rand = new Random();
 		int n = rand.nextInt(4) + 1;

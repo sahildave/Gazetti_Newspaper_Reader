@@ -125,7 +125,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 		this.adapter = adapter;
 
         //Remove "custom" tag if on newspaper page
-		if (newspaper.length() > 7 && newspaper.substring(newspaper.length() - 7).equals("_custom")) {
+		if (newspaper.contains("_custom")) {
 			newspaper = newspaper.substring(0, newspaper.length() - 7);
 		}
 		int newspaperId = cellList.get(position).getDefaultNewspaperId(newspaper);
