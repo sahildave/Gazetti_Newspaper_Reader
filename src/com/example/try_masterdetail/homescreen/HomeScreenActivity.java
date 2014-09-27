@@ -143,9 +143,13 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 			CsvFileUtil csvFile = new CsvFileUtil(this);
 			NewsCatModel csvObject = csvFile.getObjectByNPName(npName, cat);
 
-			CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
-			cellList.set(editPosition, newCell);
-			adapter.notifyDataSetChanged();
+            if(!isCellPresent(csvObject)){
+                CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
+                cellList.set(editPosition, newCell);
+                adapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(this, "Category Already Present.", Toast.LENGTH_LONG).show();
+            }
 
 			csvFile.closeUtilObject();
 
@@ -161,9 +165,11 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 		CsvFileUtil csvFile = new CsvFileUtil(this);
 		NewsCatModel csvObject = csvFile.getObjectByNPName(npName, cat);
 
-		CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
-		cellList.add(cellList.size() - 1, newCell);
-		adapter.notifyDataSetChanged();
+        if(!isCellPresent(csvObject)){
+            CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
+            cellList.add(cellList.size() - 1, newCell);
+            adapter.notifyDataSetChanged();
+        }
 
 		csvFile.closeUtilObject();
 
@@ -171,5 +177,18 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 		userSelectionUtil.updateUserSelectionSharedPrefs();
 
 	}
+
+    private boolean isCellPresent(NewsCatModel csvObject) {
+        boolean isCellPresent = false;
+        for(CellModel cellObj: cellList){
+            boolean catMatch = (cellObj.getTitleCategory().equalsIgnoreCase(csvObject.getCatName()));
+            boolean npMatch = (cellObj.getNewspaperImage().equalsIgnoreCase(csvObject.getNpImage()));
+            if((catMatch && npMatch)){
+                isCellPresent = true;
+                break;
+            }
+        }
+        return isCellPresent;
+    }
 
 }

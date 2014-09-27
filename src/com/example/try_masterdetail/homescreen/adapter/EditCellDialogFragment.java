@@ -70,11 +70,11 @@ public class EditCellDialogFragment extends DialogFragment implements OnItemSele
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle("Edit Shortcut");
 		builder.setView(v);
-		builder.setPositiveButton(R.string.add_cell_dialog_add, new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.edit_cell_dialog_ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 
-				String np = spinner_newspaper.getSelectedItem().toString();
-				String cat = spinner_category.getSelectedItem().toString();
+				String np = (String) spinner_newspaper.getSelectedItem();
+				String cat = (String) spinner_category.getSelectedItem();
 				EditCellDialogListener activity = (EditCellDialogListener) getActivity();
 				activity.onFinishEditingListener(editPosition, np, cat, true);
 			}
@@ -87,8 +87,7 @@ public class EditCellDialogFragment extends DialogFragment implements OnItemSele
 			}
 		});
 
-		AlertDialog dialog = builder.create();
-		return dialog;
+		return builder.create();
 	}
 
 	@Override

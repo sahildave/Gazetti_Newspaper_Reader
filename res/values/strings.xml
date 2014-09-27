@@ -10,6 +10,7 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="edit_cell_dialog_ok">OK</string>
     <string name="add_cell_dialog_add">Add</string>
     <string name="add_cell_dialog_cancel">Cancel</string>
     <string name="first_message">Now you can read The Times of India too.\n\nEnjoy!</string>
