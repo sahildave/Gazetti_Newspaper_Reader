@@ -69,3 +69,7 @@ crashlytics.properties
 
 #SKIP THE CONSTANTS FILE
 Constants.java
+
+#CLOUD CODE FILES
+global.json
+*.js~
