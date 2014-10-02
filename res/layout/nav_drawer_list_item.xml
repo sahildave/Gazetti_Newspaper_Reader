@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/navdrawer_list_selector" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/navdrawer_list_selector">
 
     <TextView
-        android:id="@+id/nav_list_item_title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:paddingBottom="4dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="4dp"
-        android:textAppearance="@android:style/TextAppearance.Medium"
-        android:textColor="@color/nav_list_item_title" />
+            android:id="@+id/nav_list_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="4dp"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:textColor="@color/nav_list_item_title"/>
 
 </RelativeLayout>

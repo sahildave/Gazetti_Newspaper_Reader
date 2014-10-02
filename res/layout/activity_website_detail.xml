@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/website_detail_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context="com.example.try_masterdetail.news_activities.WebsiteDetailActivity"
-    tools:ignore="MergeRootFrame" />
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/website_detail_container"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@android:color/white"
+             tools:context="in.sahildave.gazetti.news_activities.WebsiteDetailActivity"
+             tools:ignore="MergeRootFrame"/>
 
