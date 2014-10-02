@@ -2,10 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.try_masterdetail"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="0.1.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-sdk
@@ -34,7 +33,7 @@
         <activity
             android:name="com.example.try_masterdetail.news_activities.WebsiteListActivity"
             android:label="@string/title_app"
-            android:parentActivityName="com.example.try_masterdetail.homescreen.MainActivity"
+            android:parentActivityName="com.example.try_masterdetail.homescreen.HomeScreenActivity"
             android:theme="@style/WithoutBackgroundTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

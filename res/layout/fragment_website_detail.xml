@@ -46,7 +46,6 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:background="?attr/selectableItemBackground"
-                        android:onClick="viewInBrowser"
                         android:scaleType="center"
                         android:src="@drawable/ic_hindu" />
 
@@ -79,7 +78,6 @@
                         android:drawablePadding="4dp"
                         android:gravity="center_vertical|right"
                         android:lines="2"
-                        android:onClick="viewInBrowser"
                         android:text="View in \nBrowser" />
             </RelativeLayout>
 
