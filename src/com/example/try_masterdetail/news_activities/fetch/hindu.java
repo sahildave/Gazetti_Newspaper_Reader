@@ -60,6 +60,7 @@ public class hindu {
             e.printStackTrace();
         } catch (NullPointerException npe){
             npe.printStackTrace();
+            bodyText = null;
         } catch (Exception e){
             e.printStackTrace();
         }
