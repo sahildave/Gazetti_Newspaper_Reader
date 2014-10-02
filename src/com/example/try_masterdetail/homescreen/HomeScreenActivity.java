@@ -15,16 +15,16 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
-import com.example.try_masterdetail.util.CellListUtil;
-import com.example.try_masterdetail.util.Constants;
 import com.example.try_masterdetail.R;
 import com.example.try_masterdetail.homescreen.adapter.*;
 import com.example.try_masterdetail.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
 import com.example.try_masterdetail.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
-import com.example.try_masterdetail.util.UserSelectionUtil;
 import com.example.try_masterdetail.preference.SettingsActivity;
-import com.example.try_masterdetail.util.CsvFileUtil;
+import com.example.try_masterdetail.util.*;
 import com.example.try_masterdetail.welcomescreen.WelcomeScreenViewPagerActivity;
+import com.parse.ConfigCallback;
+import com.parse.ParseConfig;
+import com.parse.ParseException;
 
 import java.util.List;
 
@@ -67,6 +67,8 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 			return; // add this to prevent from doing unnecessary stuffs
 		}
 
+        checkCurrentConfig();
+
 		fragmentManager = getSupportFragmentManager();
 		homeScreenFragment = fragmentManager.findFragmentByTag("homeScreen");
 
@@ -87,6 +89,23 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         initUtils();
 
 	}
+
+    private void checkCurrentConfig() {
+        Log.d("TAG", "Getting the latest config...");
+        ParseConfig.getInBackground(new ConfigCallback() {
+            @Override
+            public void done(ParseConfig config, ParseException e) {
+                if (e == null) {
+                    Log.d(TAG, "Yay! Config was fetched from the server. - version "+config.getNumber("version"));
+                } else {
+                    Log.e(TAG, "Failed to fetch. Using Cached Config.");
+                    config = ParseConfig.getCurrentConfig();
+                }
+
+                new ConfigService();
+            }
+        });
+    }
 
     private void initUtils() {
         cellListUtil = new CellListUtil(this);

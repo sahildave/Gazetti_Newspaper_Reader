@@ -1,17 +1,16 @@
 package com.example.try_masterdetail.news_activities.fetch;
 
-import java.io.IOException;
-
+import com.example.try_masterdetail.util.ConfigService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
+import java.io.IOException;
 
 public class hindu {
 
-	String mArticleURL;
+    String mArticleURL;
 	String titleText;
 	String mImageURL = null;
 	String bodyText = "";
@@ -20,7 +19,6 @@ public class hindu {
 	public hindu(String mArticleURL, String mArticlePubDate) {
 		this.mArticleURL = mArticleURL;
 		this.mArticlePubDate = mArticlePubDate;
-		Log.d("ASYNC", "JSoup hindu " + mArticleURL);
 	}
 
 	public String[] getHinduArticle() {
@@ -31,73 +29,54 @@ public class hindu {
 
 		try {
 
-			long connecting = System.currentTimeMillis();
 			doc = Jsoup.connect(url) //
 					.userAgent("Mozilla") //
 					.timeout(10 * 1000) //
 					.get(); //
-			long connected = System.currentTimeMillis();
 
-			// NEW!
 			// get Body
 			Element bodyElement = doc.body();
-			Log.d("ASYNC", "Jsoup Body - " + (bodyElement == null));
 
 			// get Title
-			String HinduTitleXPath = "h1"; // ("//*[@id="left-column"]/h1")
+			String HinduTitleXPath = ConfigService.getTheHinduHead();
 			Elements titleElements = bodyElement.select(HinduTitleXPath);
 			titleText = titleElements.first().text();
-			Log.d("ASYNC", "Jsoup title - " + titleText);
 
 			// get HeaderImageUrl
 			mImageURL = getImageURL(bodyElement);
-			Log.d("ASYNC", "Jsoup imageURL - " + mImageURL);
 
-			// get p elements with class = body
-			String HinduArticleXPath = "p.body"; // (//*[@id="article-block"]/div/p[1])
+			String HinduArticleXPath = ConfigService.getTheHinduBody();
 			Elements bodyArticleElements = bodyElement.select(HinduArticleXPath);
 			for (Element textArticleElement : bodyArticleElements) {
 				bodyText += textArticleElement.text() + "\n\n";
 			}
-			Log.d("ASYNC", "Jsoup body " + bodyText);
 
-			long done = System.currentTimeMillis();
-			Log.d("ASYNC", "Connected IN  - " + (connected - connecting));
-			Log.d("ASYNC", "DONE IN  - " + (done - connected));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		result[0] = titleText;
-		result[1] = mImageURL;
-		result[2] = bodyText;
-		result[3] = mArticlePubDate;
+            result[0] = titleText;
+            result[1] = mImageURL;
+            result[2] = bodyText;
+            result[3] = mArticlePubDate;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException npe){
+            npe.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
 		return result;
 
 	}
 
 	private String getImageURL(Element bodyElement) {
-		if (bodyElement.select("img.main-image").size() != 0) {
+        Elements mainImageElement = bodyElement.select(ConfigService.getTheHinduImageFirst());
+        Elements carouselElements = bodyElement.select(ConfigService.getTheHinduImageSecond());
 
-			// get image elements with class = main-image
-			// Log.d(TAG, "in main-image");
-			// (//*[@id="hcenter"]/img)
-			Elements mainImageElement = bodyElement.select("img.main-image");
+        if (mainImageElement.size() != 0) {
 			mImageURL = mainImageElement.first().attr("src");
-			// Log.d(TAG, "ImageUrl - " + mImageURL);
-		} else if (bodyElement.select("div#contartcarousel").size() != 0) {
-
-			// get image elements with carousel
-			// Log.d(TAG, "in contartcarousel ");
-			Elements carouselElements = bodyElement.select("div#contartcarousel");
+		} else if (carouselElements.size() != 0) {
 			Elements carouselImage = carouselElements.select("div#pic").first().select("img");
 			mImageURL = carouselImage.attr("src");
-			// Log.d(TAG, mImageURL);
-		} else {
-
-			// Log.d(TAG, "IMAGE NOT FOUND!");
-
 		}
 
 		return mImageURL;
