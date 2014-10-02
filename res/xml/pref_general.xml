@@ -8,8 +8,8 @@
         android:key="licensePref"
         android:summary="Version: 1.0.0"
         android:title="Open Source Licenses" />
-    <Preference
-        android:key="aboutPref"
-        android:title="About" />
+    <!--<Preference-->
+        <!--android:key="aboutPref"-->
+        <!--android:title="About" />-->
 
 </PreferenceScreen>

@@ -98,13 +98,16 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		listViewHeaderColor = getArguments().getInt("color");
 		mCallbacks = (Callbacks) activity;
 
-		if (npIdString.equals("2") || npIdString.equals("3")) {
-			dbToSearch = "temp_class";
-		} else {
-			dbToSearch = "freshNewsArticle";
-		}
-
-	}
+        if(npIdString.equalsIgnoreCase("1")){
+            dbToSearch = "hindu_data";
+        } else if(npIdString.equalsIgnoreCase("2")){
+            dbToSearch = "toi_data";
+        } else if(npIdString.equalsIgnoreCase("3")){
+            dbToSearch = "fp_data";
+        } else if(npIdString.equalsIgnoreCase("4")){
+            dbToSearch = "tie_data";
+        }
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -137,9 +140,9 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		mListView.setOnScrollListener(this);
 
-		headerOnList = (View) getActivity().getLayoutInflater().inflate(R.layout.header_view, null);
+		headerOnList = getActivity().getLayoutInflater().inflate(R.layout.header_view, null);
 		headerOnList.setBackgroundColor(listViewHeaderColor);
-		footerOnList = (View) getActivity().getLayoutInflater().inflate(R.layout.footer_view, null);
+		footerOnList = getActivity().getLayoutInflater().inflate(R.layout.footer_view, null);
 		mListView.addHeaderView(headerOnList);
 
 		customAdapter = new CustomAdapter(getActivity(), retainedList);
@@ -159,7 +162,6 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		Log.d(TAG, "ListFragment in onActivityCreated ");
 
 		context = getActivity();
-		Log.d(TAG, "NULL ? " + (context == null));
 
 		if (mTwoPane && !firstRun) {
 			// Log.d(TAG, "Reseting activatedPostion");
@@ -176,34 +178,10 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		if (networkInfo != null && networkInfo.isConnected()) {
 			if (firstRun) {
 				getNewListItems();
-
 			}
-			// } else {
-			// Toast.makeText(context, "No network connection available.",
-			// Toast.LENGTH_LONG).show();
-			//
-			// ParseQuery<ParseObject> query =
-			// ParseQuery.getQuery(dbToSearch);
-			// query.whereEqualTo("newspaper_id", npIdString);
-			// query.whereEqualTo("cat_id", catIdString);
-			// query.orderByDescending("createdAt");
-			// query.fromLocalDatastore();
-			//
-			// query.findInBackground(new FindCallback<ParseObject>() {
-			// @Override
-			// public void done(final List<ParseObject> articleObjectList,
-			// ParseException arg1) {
-			// // Log.d(TAG, " articleObjectList " +
-			// // articleObjectList.size());
-			// retainedList.clear();
-			// retainedList.addAll(0, articleObjectList);
-			// mListView.setAdapter(customAdapter);
-			// customAdapter.notifyDataSetChanged();
-			// ((TextView) headerOnList).setText("Data from Local Storage");
-			// }
-			//
-			// });
-		}
+		} else {
+            ((TextView) headerOnList).setText("No Internet Connection");
+        }
 
 	}
 
@@ -232,9 +210,6 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
 				customAdapter.notifyDataSetChanged();
 
-				// Log.d(TAG, "articleObjectList Retained " +
-				// retainedList.size());
-
 				dateLastUpdatedString = "Last Updated: "
 						+ (DateUtils.formatDateTime(context, System.currentTimeMillis(), //
 								DateUtils.FORMAT_SHOW_TIME //
@@ -245,8 +220,6 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 										| DateUtils.FORMAT_NO_MIDNIGHT)); //
 				((TextView) headerOnList).setText(dateLastUpdatedString);
 				mListViewContainer.setRefreshing(false);
-
-//				ParseObject.pinAllInBackground(articleObjectList);
 
 				if (mTwoPane) {
 					mListView.performItemClick(customAdapter.getView(mActivatedPosition - 1, null, null),

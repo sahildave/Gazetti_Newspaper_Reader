@@ -67,19 +67,19 @@ public class SettingsActivity extends PreferenceActivity {
 			}
 		});
 
-		// About Me
-		Preference aboutPref = (Preference) findPreference("aboutPref");
-		aboutPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			public boolean onPreferenceClick(Preference preference) {
-
-				Intent aboutMeIntent = new Intent(SettingsActivity.this, AboutMeActivity.class);
-				if (ActionBarColorId != -1) {
-					aboutMeIntent.putExtra("ActionBarColor", ActionBarColorId);
-				}
-				startActivity(aboutMeIntent);
-				return false;
-			}
-		});
+//		// About Me
+//		Preference aboutPref = (Preference) findPreference("aboutPref");
+//		aboutPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+//			public boolean onPreferenceClick(Preference preference) {
+//
+//				Intent aboutMeIntent = new Intent(SettingsActivity.this, AboutMeActivity.class);
+//				if (ActionBarColorId != -1) {
+//					aboutMeIntent.putExtra("ActionBarColor", ActionBarColorId);
+//				}
+//				startActivity(aboutMeIntent);
+//				return false;
+//			}
+//		});
 	}
 
 	@Override
