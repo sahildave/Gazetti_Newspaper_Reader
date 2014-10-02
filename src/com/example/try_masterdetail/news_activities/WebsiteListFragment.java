@@ -98,13 +98,19 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 		listViewHeaderColor = getArguments().getInt("color");
 		mCallbacks = (Callbacks) activity;
 
-		if (npIdString.equals("2") || npIdString.equals("3")) {
-			dbToSearch = "temp_class";
-		} else {
-			dbToSearch = "freshNewsArticle";
-		}
+        if(npIdString.equalsIgnoreCase("1")){
+            dbToSearch = "hindu_data";
+        } else if(npIdString.equalsIgnoreCase("2")){
+            dbToSearch = "toi_data";
+        } else if(npIdString.equalsIgnoreCase("3")){
+            dbToSearch = "fp_data";
+        } else if(npIdString.equalsIgnoreCase("4")){
+            dbToSearch = "tie_data";
+        }
 
-	}
+        Log.d("HELLO", "catIdString - "+npIdString+", dbtoSearch "+dbToSearch);
+
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
