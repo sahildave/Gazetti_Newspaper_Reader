@@ -2,34 +2,34 @@
              xmlns:app="http://schemas.android.com/apk/res-auto"
              android:id="@+id/detailFrameLayout"
              android:layout_width="match_parent"
-             android:layout_height="match_parent" >
+             android:layout_height="match_parent">
 
     <ScrollView
             android:id="@+id/scroller"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
-            android:scrollbars="none" >
+            android:scrollbars="none">
 
         <LinearLayout
                 android:id="@+id/scrollingLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
             <ViewStub
                     android:id="@+id/article_header_stub_import"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inflatedId="@+id/article_header_stub"
-                    android:layout="@layout/article_header" />
+                    android:layout="@layout/article_header"/>
 
             <ViewStub
                     android:id="@+id/article_title_stub_import"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inflatedId="@+id/article_title_stub"
-                    android:layout="@layout/article_title" />
+                    android:layout="@layout/article_title"/>
 
             <RelativeLayout
                     android:id="@+id/subtitleLayout"
@@ -37,7 +37,7 @@
                     android:layout_height="48dp"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:visibility="invisible" >
+                    android:visibility="invisible">
 
                 <ImageButton
                         android:id="@+id/newspaperTile"
@@ -47,7 +47,7 @@
                         android:layout_alignParentTop="true"
                         android:background="?attr/selectableItemBackground"
                         android:scaleType="center"
-                        android:src="@drawable/ic_hindu" />
+                        android:src="@drawable/ic_hindu"/>
 
                 <TextView
                         android:id="@+id/pubDateView"
@@ -56,7 +56,7 @@
                         android:layout_toRightOf="@id/newspaperTile"
                         android:gravity="left|bottom"
                         android:paddingLeft="8dp"
-                        android:text="Date" />
+                        android:text="Date"/>
 
                 <TextView
                         android:id="@+id/category"
@@ -65,7 +65,7 @@
                         android:layout_below="@id/pubDateView"
                         android:layout_toRightOf="@id/newspaperTile"
                         android:gravity="left|top"
-                        android:paddingLeft="8dp" />
+                        android:paddingLeft="8dp"/>
 
                 <TextView
                         android:id="@+id/viewInBrowser"
@@ -78,7 +78,7 @@
                         android:drawablePadding="4dp"
                         android:gravity="center_vertical|right"
                         android:lines="2"
-                        android:text="View in \nBrowser" />
+                        android:text="View in \nBrowser"/>
             </RelativeLayout>
 
             <TextView
@@ -89,7 +89,7 @@
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:paddingTop="@dimen/activity_vertical_margin"
                     android:textStyle="normal"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"/>
         </LinearLayout>
     </ScrollView>
 
@@ -111,7 +111,7 @@
             app:spb_sections_count="3"
             app:spb_speed="0.75"
             app:spb_stroke_separator_length="4dp"
-            app:spb_stroke_width="4dp" />
+            app:spb_stroke_width="4dp"/>
 
     <LinearLayout
             android:id="@+id/scrollToReadLayout"
@@ -120,7 +120,7 @@
             android:animateLayoutChanges="true"
             android:gravity="bottom|center_horizontal"
             android:orientation="horizontal"
-            android:visibility="invisible" >
+            android:visibility="invisible">
 
         <TextView
                 android:id="@+id/scrollToReadText"
@@ -135,7 +135,7 @@
                 android:paddingTop="65dp"
                 android:text="Scroll To Read"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
     </LinearLayout>
 
 </FrameLayout>

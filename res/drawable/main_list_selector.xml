@@ -2,7 +2,8 @@
 
     <!-- <item android:drawable="@drawable/checked" android:state_selected="true"/> -->
     <item android:drawable="@drawable/checked_arrow" android:state_activated="true"/>
-    <item android:drawable="@drawable/checked_arrow" android:state_pressed="true" android:color="@color/main_list_item_title_selected"/>
+    <item android:drawable="@drawable/checked_arrow" android:state_pressed="true"
+          android:color="@color/main_list_item_title_selected"/>
     <item android:drawable="@drawable/unchecked"/>
 
 </selector>
