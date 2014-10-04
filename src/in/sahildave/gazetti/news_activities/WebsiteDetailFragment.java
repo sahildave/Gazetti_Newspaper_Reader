@@ -35,7 +35,7 @@ public class WebsiteDetailFragment extends Fragment {
     private String headlineClicked = "";
     String[] articleContent;
 
-    private TaskCallbacks mCallbacks;
+    private LoadArticleCallback mCallbacks;
 
     private LinearLayout mScrollToReadLayout;
 
@@ -43,14 +43,14 @@ public class WebsiteDetailFragment extends Fragment {
     private Animation slide_down;
 
     private String npNameString;
-    private MyAsyncTask mTask;
+    private ArticleLoadAsyncTask mTask;
 
-    static interface TaskCallbacks {
+    static interface LoadArticleCallback {
         void onPreExecute(View rootView);
 
         void setHeaderStub(View headerStub);
 
-        void onPostExecute(String[] result);
+        void onPostExecute(String[] result, String mArticlePubDate);
     }
 
     public WebsiteDetailFragment() {
@@ -60,12 +60,12 @@ public class WebsiteDetailFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (!(activity instanceof TaskCallbacks)) {
-            throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
+        if (!(activity instanceof LoadArticleCallback)) {
+            throw new IllegalStateException("Activity must implement the LoadArticleCallback interface.");
         }
 //        Log.d(TAG, "DetailFragment onAttach");
 
-        mCallbacks = (TaskCallbacks) activity;
+        mCallbacks = (LoadArticleCallback) activity;
 
     }
 
@@ -110,7 +110,7 @@ public class WebsiteDetailFragment extends Fragment {
         mScrollToReadLayout.setVisibility(View.INVISIBLE);
 
         Log.d(TAG, "Async called");
-        mTask = new MyAsyncTask(rootView);
+        mTask = new ArticleLoadAsyncTask(rootView);
         mTask.execute();
 
         ScrollView mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
@@ -150,11 +150,11 @@ public class WebsiteDetailFragment extends Fragment {
         }
     };
 
-    public class MyAsyncTask extends AsyncTask<Void, String, String[]> {
+    public class ArticleLoadAsyncTask extends AsyncTask<Void, String, String[]> {
 
         View rootView;
 
-        public MyAsyncTask(View rootView) {
+        public ArticleLoadAsyncTask(View rootView) {
             Log.d(TAG_ASYNC, "Async Constructor");
             this.rootView = rootView;
         }
@@ -213,7 +213,7 @@ public class WebsiteDetailFragment extends Fragment {
                     headerStub = ((ViewStub) rootView.findViewById(R.id.article_header_stub_import)).inflate();
                 }
                 mCallbacks.setHeaderStub(headerStub);
-                mCallbacks.onPostExecute(result);
+                mCallbacks.onPostExecute(result, mArticlePubDate);
             }
         }
     }

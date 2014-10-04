@@ -3,32 +3,29 @@ package in.sahildave.gazetti.news_activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.*;
 import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.R;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import in.sahildave.gazetti.news_activities.WebsiteDetailFragment.LoadArticleCallback;
+import in.sahildave.gazetti.news_activities.WebsiteListFragment.ItemSelectedCallback;
 import in.sahildave.gazetti.news_activities.adapter.CustomAdapter;
 import in.sahildave.gazetti.news_activities.adapter.NavDrawerListAdapter;
 import in.sahildave.gazetti.preference.SettingsActivity;
 
 @SuppressLint("NewApi")
 // TODO: Check this
-public class WebsiteListActivity extends ActionBarActivity implements WebsiteListFragment.Callbacks,
-        WebsiteDetailFragment.TaskCallbacks {
+public class WebsiteListActivity extends ActionBarActivity implements ItemSelectedCallback,
+        LoadArticleCallback {
 
     private static final String TAG = "MasterDetail";
     private static final String TAG_ASYNC = "ASYNC";
@@ -43,53 +40,19 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
 
-    private NavDrawerListAdapter navAdapter;
     private LinearLayout mLeftDrawer;
     private String[] mDrawerItems;
     private int[] mActionBarColors;
     private int currentColor;
 
-    private LinearLayout navBarSettingsView;
-    private LinearLayout navBarHelpView;
-    private LinearLayout navBarSendFeedbackView;
-    private TextView navBarHeaderView;
-
     WebsiteListFragment mlistFragment;
-
-    // CallBack views for handling asynctask for twoPane mode
-
-    // ScrollView from DetailFragment
-    View rootView;
-    View headerStub;
-
-    // Header
-    ProgressBar detailViewProgress;
-    TextView mTitleTextView;
-    ImageView mMainImageView;
-    String mImageURL;
-    String mArticleURL;
-    String titleText = "";
-
-    // Subtitle
-    RelativeLayout mSubtitleLayout;
-    TextView mArticlePubDateView;
-    String mArticlePubDate;
-
-    // Body
-    TextView mArticleTextView;
-    String bodyText = "";
-    ScrollView mScrollView;
-
-    // Scroll To Read Bubble
-    LinearLayout mScrollToReadLayout;
-    private boolean displayScrollToRead = false;
-    private Animation slide_up;
 
     // Intent variables from Home Screen
     String npId = "1";
     String catId = "1";
     String npName = "";
     String catName = "";
+    private ArticleLoadingCallback articleLoadingCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +112,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
         }
 
-        slide_up = AnimationUtils.loadAnimation(this, R.animator.slide_up);
+        articleLoadingCallback = new ArticleLoadingCallback(this);
 
         // Make Navigation Drawer
         makeNavDrawer();
@@ -190,7 +153,6 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
         }
     }
-
     /****************************/
     /***** CALLBACK METHODS *****/
     /**
@@ -199,148 +161,19 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
     @Override
     public void onPreExecute(View rootView) {
-
-        this.rootView = rootView;
-
-        // initialize article views
-        mArticleTextView = (TextView) rootView.findViewById(R.id.article_body);
-        mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
-        mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
-        mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
-        mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
-
-        // Progress Bar
-        detailViewProgress = (ProgressBar) rootView.findViewById(R.id.detailViewProgressBar);
-        detailViewProgress.setVisibility(View.VISIBLE);
+        articleLoadingCallback.onPreExecute(rootView);
     }
 
     @Override
     public void setHeaderStub(View headerStub) {
-        this.headerStub = headerStub;
+        articleLoadingCallback.setHeaderStub(headerStub);
     }
 
     @Override
-    public void onPostExecute(String[] result) {
-        Log.d(TAG_ASYNC, "Activity onPostExecute");
-
-        titleText = result[0];
-        mImageURL = result[1];
-        bodyText = result[2];
-        mArticlePubDate = result[3];
-
-        mSubtitleLayout.setVisibility(View.VISIBLE);
-        mArticlePubDateView.setText(mArticlePubDate);
-        mArticleTextView.setVisibility(View.VISIBLE);
-        mArticleTextView.setText(bodyText);
-
-        if (mImageURL == null) {
-            // Log.d(TAG, "Image not, Title : " + titleText);
-
-            mTitleTextView = (TextView) headerStub.findViewById(R.id.article_title);
-            mTitleTextView.setText(titleText);
-            detailViewProgress.setVisibility(View.GONE);
-        } else {
-            // Log.d(TAG, "Loading Image...");
-
-            mTitleTextView = (TextView) headerStub.findViewById(R.id.article_header_title);
-            mTitleTextView.setText(titleText);
-
-            mMainImageView = (ImageView) headerStub.findViewById(R.id.article_header_image);
-            Picasso picassoInstance = Picasso.with(this);
-            // picassoInstance.setDebugging(true); //TODO:Turn on for debugging
-            picassoInstance.load(mImageURL).into(mMainImageView, new Callback() {
-
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG_ASYNC, "Image Loaded");
-
-                    mMainImageView.getViewTreeObserver().addOnGlobalLayoutListener(
-                            new ViewTreeObserver.OnGlobalLayoutListener() {
-
-                                @SuppressWarnings("deprecation")
-                                @SuppressLint("NewApi")
-                                @Override
-                                public void onGlobalLayout() {
-
-                                    // Get Display metrics according to the SDK
-                                    Display display = getWindowManager().getDefaultDisplay();
-                                    Point screen = new Point();
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-                                        display.getSize(screen);
-                                    } else {
-                                        screen.x = display.getWidth();
-                                        screen.y = display.getHeight();
-                                    }
-
-                                    // StatusBar Height
-                                    int statusBarHeight = 0;
-                                    int resId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-                                    if (resId > 0) {
-                                        statusBarHeight = getResources().getDimensionPixelSize(resId);
-                                    }
-
-                                    // ActionBar Height
-                                    TypedValue tv = new TypedValue();
-                                    int actionBarHeight = 0;
-                                    if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-                                        actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
-                                                getResources().getDisplayMetrics());
-                                    }
-
-                                    // Check
-                                    // Log.d(TAG_ASYNC, "mSubtitleLayout " +
-                                    // mSubtitleLayout.getHeight());
-                                    // Log.d(TAG_ASYNC, "mMainImageView " +
-                                    // mMainImageView.getHeight());
-                                    // Log.d(TAG_ASYNC, "mArticleTextView " +
-                                    // mArticleTextView.getTop());
-                                    // Log.d(TAG_ASYNC, "total height " +
-                                    // screen.y);
-                                    // Log.d(TAG_ASYNC, "status bar " +
-                                    // statusBarHeight);
-                                    // Log.d(TAG_ASYNC, "action bar " +
-                                    // actionBarHeight);
-
-                                    // Boolean to check if image+subtitle is
-                                    // large enough.
-                                    // If yes, then display "Scroll To Read"
-                                    displayScrollToRead = (screen.y - statusBarHeight - actionBarHeight) < (mArticleTextView
-                                            .getTop()) * 1.08;
-                                    Log.d(TAG_ASYNC, "displayScrollToRead " + displayScrollToRead);
-
-                                    if (displayScrollToRead) {
-                                        mScrollToReadLayout.startAnimation(slide_up);
-                                        mScrollToReadLayout.setVisibility(View.VISIBLE);
-                                        Log.d(TAG_ASYNC, "Visiblity - " + mScrollToReadLayout.getVisibility());
-                                    }
-
-                                    // remove GlobalLayoutListener according to
-                                    // SDK
-                                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                                        mMainImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                                    } else {
-                                        mMainImageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                                    }
-
-                                }
-
-                            });
-                    detailViewProgress.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onError() {
-
-                    Log.d(TAG_ASYNC, "IMAGE WAS NOT LOADED!!!");
-
-                }
-            });
-        }
-
-        bodyText = null;
-        titleText = null;
-        mImageURL = null;
+    public void onPostExecute(String[] result, String mArticlePubDate) {
+        articleLoadingCallback.onPostExecute(result, mArticlePubDate);
     }
+
 
     /**
      * **************************************
@@ -398,7 +231,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
         // set a custom shadow that overlays the main content when the drawer
         // opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        navAdapter = new NavDrawerListAdapter(this, mDrawerItems);
+        NavDrawerListAdapter navAdapter = new NavDrawerListAdapter(this, mDrawerItems);
         mDrawerList.setAdapter(navAdapter);
 
         // New NavBar _ OVER
@@ -436,7 +269,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 		 */
 
         // Nav Drawer Home Button listener
-        navBarHeaderView = (TextView) findViewById(R.id.nav_bar_header);
+        TextView navBarHeaderView = (TextView) findViewById(R.id.nav_bar_header);
         navBarHeaderView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -481,9 +314,9 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
         });
 
         // Nav List Footer options listeners
-        navBarSettingsView = (LinearLayout) findViewById(R.id.settings);
-        navBarHelpView = (LinearLayout) findViewById(R.id.help);
-        navBarSendFeedbackView = (LinearLayout) findViewById(R.id.send_feedback);
+        LinearLayout navBarSettingsView = (LinearLayout) findViewById(R.id.settings);
+        LinearLayout navBarHelpView = (LinearLayout) findViewById(R.id.help);
+        LinearLayout navBarSendFeedbackView = (LinearLayout) findViewById(R.id.send_feedback);
 
         navBarSettingsView.setOnClickListener(new View.OnClickListener() {
             @Override

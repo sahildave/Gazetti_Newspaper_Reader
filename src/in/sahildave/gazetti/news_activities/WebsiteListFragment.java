@@ -34,7 +34,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
     // Tags
     private static final String TAG = "MasterDetail";
-    private Callbacks mCallbacks = sDummyCallbacks;
+    private ItemSelectedCallback mItemSelectedCallback = sDummyItemSelectedCallback;
     private static final String PREFS_NAME = "QueryPrefs";
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
@@ -68,11 +68,11 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     private NetworkInfo networkInfo;
     private Context context;
 
-    public interface Callbacks {
+    public interface ItemSelectedCallback {
         public void onItemSelected(String headlineText, CustomAdapter customAdapter);
     }
 
-    private static Callbacks sDummyCallbacks = new Callbacks() {
+    private static ItemSelectedCallback sDummyItemSelectedCallback = new ItemSelectedCallback() {
         @Override
         public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
         }
@@ -87,7 +87,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         // Log.d(TAG, "ListFragment in onAttach ");
 
         // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
+        if (!(activity instanceof ItemSelectedCallback)) {
             throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
 
@@ -96,7 +96,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         npNameString = getArguments().getString("npName");
         catIdString = getArguments().getString("catId");
         listViewHeaderColor = getArguments().getInt("color");
-        mCallbacks = (Callbacks) activity;
+        mItemSelectedCallback = (ItemSelectedCallback) activity;
 
         if (npIdString.equalsIgnoreCase("1")) {
             dbToSearch = "hindu_data";
@@ -311,7 +311,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         Log.d(TAG, "Fragment in onDetach");
 
         // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks; // TODO: Check with mCallbacks = null;
+        mItemSelectedCallback = sDummyItemSelectedCallback; // TODO: Check with mItemSelectedCallback = null;
     }
 
     @Override
@@ -334,7 +334,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         // Log.d(TAG, "onListItemClick view - " + headlineText);
         // view.setActivated(true);
         setActivatedPosition(position);
-        mCallbacks.onItemSelected(headlineText, customAdapter);
+        mItemSelectedCallback.onItemSelected(headlineText, customAdapter);
     }
 
     private void setActivatedPosition(int position) {

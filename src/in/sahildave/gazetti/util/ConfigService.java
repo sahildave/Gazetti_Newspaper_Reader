@@ -155,24 +155,18 @@ public class ConfigService {
     private void setIndianExpressElementsFromConstants() {
         setIndianExpressBody(Constants.tie_body);
         setIndianExpressHead(Constants.tie_head);
-        setIndianExpressImageFirst(Constants.tie_image_1);
-        setIndianExpressImageSecond(Constants.tie_image_2);
-        setIndianExpressSkipBodyElement(Constants.tie_skip);
+        setIndianExpressImage(Constants.tie_image);
     }
 
     private void setIndianExpressElementsFromConfig(ParseConfig config) {
         setIndianExpressBody(config.getString("tie_body"));
         setIndianExpressHead(config.getString("tie_head"));
-        setIndianExpressImageFirst(config.getString("tie_image_1"));
-        setIndianExpressImageSecond(config.getString("tie_image_2"));
-        setIndianExpressSkipBodyElement(config.getString("tie_skip"));
+        setIndianExpressImage(config.getString("tie_image"));
     }
 
     private static String tieBody;
     private static String tieHead;
-    private static String tieImageFirst;
-    private static String tieImageSecond;
-    private static String tieSkipBodyElement;
+    private static String tieImage;
 
     public static String getIndianExpressBody() {
         return tieBody;
@@ -190,28 +184,12 @@ public class ConfigService {
         ConfigService.tieHead = tieHead;
     }
 
-    public static String getIndianExpressImageFirst() {
-        return tieImageFirst;
+    public static String getIndianExpressImage() {
+        return tieImage;
     }
 
-    public static void setIndianExpressImageFirst(String tieImageFirst) {
-        ConfigService.tieImageFirst = tieImageFirst;
-    }
-
-    public static String getIndianExpressImageSecond() {
-        return tieImageSecond;
-    }
-
-    public static void setIndianExpressImageSecond(String tieImageSecond) {
-        ConfigService.tieImageSecond = tieImageSecond;
-    }
-
-    public static String getIndianExpressSkipBodyElement() {
-        return tieSkipBodyElement;
-    }
-
-    public static void setIndianExpressSkipBodyElement(String tieSkipBodyElement) {
-        ConfigService.tieSkipBodyElement = tieSkipBodyElement;
+    public static void setIndianExpressImage(String tieImage) {
+        ConfigService.tieImage = tieImage;
     }
 
     /*

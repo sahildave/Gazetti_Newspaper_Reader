@@ -13,7 +13,7 @@ public class indianExpress {
     String mArticleURL;
     String titleText;
     String mImageURL = null;
-    String bodyText = "";
+    String articleText = "";
 
     public indianExpress(String mArticleURL) {
         this.mArticleURL = mArticleURL;
@@ -41,17 +41,25 @@ public class indianExpress {
             // get HeaderImageUrl
             mImageURL = getImageURL(bodyElement);
 
-            bodyText = getBody(bodyElement);
+            String TIEArticleXPath = ConfigService.getIndianExpressBody();
+            Elements articleElements = doc.select(TIEArticleXPath);
+
+            for(Element el: articleElements){
+                String temp = el.text();
+                if(temp.length()>0){
+                    articleText = articleText + temp + "\n\n";
+                }
+            }
 
             result[0] = titleText;
             result[1] = mImageURL;
-            result[2] = bodyText;
+            result[2] = articleText;
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException npe) {
             npe.printStackTrace();
-            bodyText = null;
+            articleText = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,35 +69,11 @@ public class indianExpress {
 
     private String getImageURL(Element bodyElement) {
 
-        Elements mainImageElement = bodyElement.select(ConfigService.getIndianExpressImageFirst());
-        Elements carouselElements = bodyElement.select(ConfigService.getIndianExpressImageSecond());
-
+        Elements mainImageElement = bodyElement.select(ConfigService.getIndianExpressImage());
         if (mainImageElement.size() != 0) {
             mImageURL = mainImageElement.first().attr("src");
-        } else if (carouselElements.size() != 0) {
-            Element carouselImage = bodyElement.select(".main-gallery img").first();
-            mImageURL = carouselImage.attr("src");
         }
-
         return mImageURL;
 
-    }
-
-    private String getBody(Element bodyElement) {
-
-        String tempHtml = "";
-        Elements styTxtToSkip = bodyElement.select(ConfigService.getIndianExpressSkipBodyElement());
-        Elements articleElements = bodyElement.select(ConfigService.getIndianExpressBody());
-
-        if (articleElements.size() != 0) {
-
-            for (Element replaceElement : styTxtToSkip) {
-                replaceElement.remove();
-            }
-
-            Element bodyArticleElements = articleElements.first();
-            tempHtml = bodyArticleElements.html();
-        }
-        return tempHtml;
     }
 }
