@@ -54,14 +54,20 @@ public class firstPost {
                     articleText = articleText + temp + "\n\n";
                 }
             }
+
+            result[0] = titleText;
+            result[1] = mImageURL;
+            result[2] = articleText;
+            result[3] = mArticlePubDate;
+
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
+            articleText = null;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        result[0] = titleText;
-        result[1] = mImageURL;
-        result[2] = articleText;
-        result[3] = mArticlePubDate;
-
         return result;
 
     }

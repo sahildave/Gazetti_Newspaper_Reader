@@ -15,10 +15,12 @@ public class ConfigService {
             setTheHinduElementsFromConfig(config);
             setTOIElementsFromConfig(config);
             setIndianExpressElementsFromConfig(config);
+            setFirstPostElementsFromConfig(config);
         } else {
             setTheHinduElementsFromConstants();
             setTOIElementsFromConstants();
             setIndianExpressElementsFromConstants();
+            setFirstPostElementsFromConstants();
         }
     }
 

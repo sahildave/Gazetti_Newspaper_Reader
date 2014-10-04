@@ -71,11 +71,6 @@ public class WelcomeScreenFragmentExpList extends Fragment {
         expListAdapter.setExpList(expListView);
         expListView.setAdapter(expListAdapter);
 
-        System.out.println("expListAdapter - " + (null == expListAdapter));
-        System.out.println("expListView - " + (null == expListView));
-        System.out.println("listDataHeader - " + (listDataHeader.size()));
-        System.out.println("listDataChild - " + (listDataHeader.size()));
-
         Button done_button = (Button) rootView.findViewById(R.id.welcome_feed_select_explist_done_button);
         done_button.setOnClickListener(new OnClickListener() {
             public void onClick(View next) {

@@ -15,6 +15,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import in.sahildave.gazetti.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -34,7 +35,7 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
     View headerStub;
 
     // Header
-    ProgressBar detailViewProgress;
+    SmoothProgressBar detailViewProgress;
     TextView mTitleTextView;
     ImageView mMainImageView;
     String mImageURL;
@@ -130,8 +131,9 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
         mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
 
         // Progress Bar
-        detailViewProgress = (ProgressBar) rootView.findViewById(R.id.detailViewProgressBar);
+        detailViewProgress = (SmoothProgressBar) rootView.findViewById(R.id.detailViewProgressBar);
         detailViewProgress.setVisibility(View.VISIBLE);
+        detailViewProgress.progressiveStart();
     }
 
     @Override
@@ -158,6 +160,7 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 
             mTitleTextView = (TextView) headerStub.findViewById(R.id.article_title);
             mTitleTextView.setText(titleText);
+            detailViewProgress.progressiveStop();
             detailViewProgress.setVisibility(View.GONE);
         } else {
             Log.d(TAG, "Loading Image...");
@@ -246,6 +249,7 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 
                             });
 
+                    detailViewProgress.progressiveStop();
                     detailViewProgress.setVisibility(View.GONE);
 
                 }
