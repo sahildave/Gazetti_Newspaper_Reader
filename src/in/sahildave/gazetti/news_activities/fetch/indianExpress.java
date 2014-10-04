@@ -14,17 +14,15 @@ public class indianExpress {
     String titleText;
     String mImageURL = null;
     String bodyText = "";
-    String mArticlePubDate;
 
-    public indianExpress(String mArticleURL, String mArticlePubDate) {
+    public indianExpress(String mArticleURL) {
         this.mArticleURL = mArticleURL;
-        this.mArticlePubDate = mArticlePubDate;
     }
 
-    public String[] getTIEArticle() {
+    public String[] getTIEArticleContent() {
 
         Document doc;
-        String[] result = new String[4];
+        String[] result = new String[3];
         String url = mArticleURL;
 
         try {
@@ -48,7 +46,6 @@ public class indianExpress {
             result[0] = titleText;
             result[1] = mImageURL;
             result[2] = bodyText;
-            result[3] = mArticlePubDate;
 
         } catch (IOException e) {
             e.printStackTrace();

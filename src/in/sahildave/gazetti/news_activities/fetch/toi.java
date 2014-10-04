@@ -15,17 +15,15 @@ public class toi {
     String titleText;
     String mImageURL = null;
     String bodyText = "";
-    String mArticlePubDate;
 
-    public toi(String mArticleURL, String mArticlePubDate) {
+    public toi(String mArticleURL) {
         this.mArticleURL = mArticleURL;
-        this.mArticlePubDate = mArticlePubDate;
     }
 
-    public String[] getToiArticle() {
+    public String[] getToiArticleContent() {
 
         Document doc;
-        String[] result = new String[4];
+        String[] result = new String[3];
         String url = mArticleURL;
 
         try {
@@ -50,7 +48,6 @@ public class toi {
             result[0] = titleText;
             result[1] = mImageURL;
             result[2] = bodyText;
-            result[3] = mArticlePubDate;
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -27,37 +27,34 @@ public class WebsiteDetailFragment extends Fragment {
     private static final String TAG = "DFRAGMENT";
     private static final String TAG_ASYNC = "ASYNC";
 
-    public static final String articleLinkKey = "articleLink_key";
+    public static final String HEADLINE_CLICKED = "headlineClicked";
 
-    private ImageButton mNewspaperTile;
-    private TextView mViewInBrowser;
     private String mImageURL;
     private String mArticleURL;
     private String mArticlePubDate;
-    private String titleTextBackup = "";
-    String[] result;
+    private String headlineClicked = "";
+    String[] articleContent;
 
     private TaskCallbacks mCallbacks;
-    private MyAsyncTask mTask;
 
     private LinearLayout mScrollToReadLayout;
 
     private GestureDetectorCompat mDetector;
-    private ScrollView mScrollView;
     private Animation slide_down;
 
     private String npNameString;
+    private MyAsyncTask mTask;
 
     static interface TaskCallbacks {
         void onPreExecute(View rootView);
 
-        void getHeaderStub(View headerStub);
+        void setHeaderStub(View headerStub);
 
         void onPostExecute(String[] result);
     }
 
     public WebsiteDetailFragment() {
-        Log.d(TAG, "DetailFragment constructor");
+//        Log.d(TAG, "DetailFragment constructor");
     }
 
     @Override
@@ -66,7 +63,7 @@ public class WebsiteDetailFragment extends Fragment {
         if (!(activity instanceof TaskCallbacks)) {
             throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
         }
-        Log.d(TAG, "DetailFragment onAttach");
+//        Log.d(TAG, "DetailFragment onAttach");
 
         mCallbacks = (TaskCallbacks) activity;
 
@@ -80,15 +77,12 @@ public class WebsiteDetailFragment extends Fragment {
 
         npNameString = getArguments().getString("npName");
 
-        if (getArguments().containsKey(articleLinkKey)) {
-            mArticleURL = CustomAdapter.linkMap.get(getArguments().getString(articleLinkKey));
-            titleTextBackup = getArguments().getString(articleLinkKey);
-            Log.d("ASYNC", "BACKUP TITLE " + titleTextBackup);
+        if (getArguments().containsKey(HEADLINE_CLICKED)) {
+            headlineClicked = getArguments().getString(HEADLINE_CLICKED);
+            mArticleURL = CustomAdapter.linkMap.get(headlineClicked);
+            mArticlePubDate = CustomAdapter.pubDateMap.get(headlineClicked);
         }
 
-        if (getArguments().containsKey(articleLinkKey)) {
-            mArticlePubDate = CustomAdapter.pubDateMap.get(getArguments().getString(articleLinkKey));
-        }
         mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
         slide_down = AnimationUtils.loadAnimation(getActivity(), R.animator.slide_down);
 
@@ -99,8 +93,8 @@ public class WebsiteDetailFragment extends Fragment {
         Log.d(TAG, "DetailFragment onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
 
-        mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
-        mViewInBrowser = (TextView) rootView.findViewById(R.id.viewInBrowser);
+        ImageButton mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
+        TextView mViewInBrowser = (TextView) rootView.findViewById(R.id.viewInBrowser);
         // TODO: category in subtitle
 
         if (npNameString.equals("The Hindu")) {
@@ -114,13 +108,12 @@ public class WebsiteDetailFragment extends Fragment {
 
         mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
         mScrollToReadLayout.setVisibility(View.INVISIBLE);
-        Log.d(TAG, "Fragment Visiblity - " + mScrollToReadLayout.getVisibility());
 
         Log.d(TAG, "Async called");
         mTask = new MyAsyncTask(rootView);
         mTask.execute();
 
-        mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
+        ScrollView mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
 
         mScrollView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -150,7 +143,6 @@ public class WebsiteDetailFragment extends Fragment {
     }
 
     private OnClickListener webViewCalled = new OnClickListener() {
-
         @Override
         public void onClick(View v) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mArticleURL)));
@@ -181,34 +173,32 @@ public class WebsiteDetailFragment extends Fragment {
         protected String[] doInBackground(Void... params) {
 
             if (npNameString.equalsIgnoreCase("The Hindu")) {
-                hindu hinduObject = new hindu(mArticleURL, mArticlePubDate);
-                result = hinduObject.getHinduArticle();
-                mImageURL = result[1];
+                hindu hinduObject = new hindu(mArticleURL);
+                articleContent = hinduObject.getHinduArticleContent();
+                mImageURL = articleContent[1];
             } else if (npNameString.equalsIgnoreCase("The Times of India")) {
-                toi toiObject = new toi(mArticleURL, mArticlePubDate);
-                result = toiObject.getToiArticle();
-                mImageURL = result[1];
+                toi toiObject = new toi(mArticleURL);
+                articleContent = toiObject.getToiArticleContent();
+                mImageURL = articleContent[1];
             } else if (npNameString.equalsIgnoreCase("First Post")) {
-                firstPost fpObject = new firstPost(mArticleURL, mArticlePubDate);
-                result = fpObject.getFirstPostArticle();
-                mImageURL = result[1];
+                firstPost fpObject = new firstPost(mArticleURL);
+                articleContent = fpObject.getFirstPostArticleContent();
+                mImageURL = articleContent[1];
             } else if (npNameString.equalsIgnoreCase("The Indian Express")) {
-                indianExpress tieObject = new indianExpress(mArticleURL, mArticlePubDate);
-                result = tieObject.getTIEArticle();
-                mImageURL = result[1];
+                indianExpress tieObject = new indianExpress(mArticleURL);
+                articleContent = tieObject.getTIEArticleContent();
+                mImageURL = articleContent[1];
             }
 
-            Log.d(TAG, "result is null ? " + (result == null) + ", for " + npNameString);
-
-            if (result[0] == null || result[0].length() == 0) {
-                result[0] = titleTextBackup;
+            if (articleContent[0] == null || articleContent[0].length() == 0) {
+                articleContent[0] = headlineClicked;
             }
 
-            if (result[2] == null || result[2].length() == 0) {
-                result[2] = "Sorry, this story is not supported for mobile view. Try to read in the browser";
+            if (articleContent[2] == null || articleContent[2].length() == 0) {
+                articleContent[2] = "Sorry, this story is not supported for mobile view. Try to read in the browser";
             }
 
-            return result;
+            return articleContent;
         }
 
         @Override
@@ -222,7 +212,7 @@ public class WebsiteDetailFragment extends Fragment {
                 } else {
                     headerStub = ((ViewStub) rootView.findViewById(R.id.article_header_stub_import)).inflate();
                 }
-                mCallbacks.getHeaderStub(headerStub);
+                mCallbacks.setHeaderStub(headerStub);
                 mCallbacks.onPostExecute(result);
             }
         }

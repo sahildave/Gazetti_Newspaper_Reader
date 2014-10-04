@@ -172,7 +172,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
 
         Bundle arguments = new Bundle();
         arguments.putString("npName", npName);
-        arguments.putString(WebsiteDetailFragment.articleLinkKey, headlineText);
+        arguments.putString(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
         WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
         detailFragment.setArguments(arguments);
 
@@ -183,7 +183,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
         } else {
             Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
             detailIntent.putExtra("npName", npName);
-            detailIntent.putExtra(WebsiteDetailFragment.articleLinkKey, headlineText);
+            detailIntent.putExtra(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
             detailIntent.putExtra("ActionBarColor", currentColor);
             detailIntent.putExtra("ActionBarTitle", npName + " - " + catName);
             startActivity(detailIntent);
@@ -215,7 +215,7 @@ public class WebsiteListActivity extends ActionBarActivity implements WebsiteLis
     }
 
     @Override
-    public void getHeaderStub(View headerStub) {
+    public void setHeaderStub(View headerStub) {
         this.headerStub = headerStub;
     }
 

@@ -1,6 +1,5 @@
 package in.sahildave.gazetti.news_activities.fetch;
 
-import android.util.Log;
 import in.sahildave.gazetti.util.ConfigService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,18 +14,15 @@ public class firstPost {
     String titleText;
     String mImageURL = null;
     String articleText = "";
-    String mArticlePubDate;
 
-    public firstPost(String mArticleURL, String mArticlePubDate) {
+    public firstPost(String mArticleURL) {
         this.mArticleURL = mArticleURL;
-        this.mArticlePubDate = mArticlePubDate;
-        Log.d("Firstpost", "JSoup FirstPost " + mArticleURL);
     }
 
-    public String[] getFirstPostArticle() {
+    public String[] getFirstPostArticleContent() {
 
         Document doc;
-        String[] result = new String[4];
+        String[] result = new String[3];
         String url = mArticleURL;
 
         try {
@@ -58,7 +54,6 @@ public class firstPost {
             result[0] = titleText;
             result[1] = mImageURL;
             result[2] = articleText;
-            result[3] = mArticlePubDate;
 
         } catch (IOException e) {
             e.printStackTrace();

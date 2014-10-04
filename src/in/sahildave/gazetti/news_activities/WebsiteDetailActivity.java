@@ -76,8 +76,8 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
 
             Bundle arguments = new Bundle();
             arguments.putString("npName", getIntent().getStringExtra("npName"));
-            arguments.putString(WebsiteDetailFragment.articleLinkKey,
-                    getIntent().getStringExtra(WebsiteDetailFragment.articleLinkKey));
+            arguments.putString(WebsiteDetailFragment.HEADLINE_CLICKED,
+                    getIntent().getStringExtra(WebsiteDetailFragment.HEADLINE_CLICKED));
             mDetailFragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
@@ -137,7 +137,7 @@ public class WebsiteDetailActivity extends ActionBarActivity implements WebsiteD
     }
 
     @Override
-    public void getHeaderStub(View headerStub) {
+    public void setHeaderStub(View headerStub) {
         this.headerStub = headerStub;
     }
 
