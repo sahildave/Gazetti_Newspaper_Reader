@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.parse.ConfigCallback;
+import com.parse.ParseAnalytics;
 import com.parse.ParseConfig;
 import com.parse.ParseException;
 import in.sahildave.gazetti.R;
@@ -31,14 +32,12 @@ import java.util.List;
 public class HomeScreenActivity extends ActionBarActivity implements HomeScreenFragment.Callbacks,
         AddCellDialogListener, EditCellDialogListener {
 
-    private String TAG = "HomeScreen";
+    private static final String TAG = "HomeScreen";
 
-    private Fragment homeScreenFragment;
     private FragmentManager fragmentManager;
     private List<CellModel> cellList;
     private ImageAdapter adapter;
     private View actionBarCustomView;
-    private ImageButton settingsFromActionbar;
     private UserSelectionUtil userSelectionUtil;
     private CellListUtil cellListUtil;
 
@@ -47,11 +46,12 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         Log.d(TAG, "onCreate - " + (null == savedInstanceState));
         super.onCreate(savedInstanceState);
         Crashlytics.start(this);
+        ParseAnalytics.trackAppOpened(getIntent());
 
         setupCustomActionBar();
 
         setContentView(R.layout.homescreen_activity);
-        settingsFromActionbar = (ImageButton) actionBarCustomView.findViewById(R.id.settingsFromActionBar);
+        ImageButton settingsFromActionbar = (ImageButton) actionBarCustomView.findViewById(R.id.settingsFromActionBar);
         settingsFromActionbar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +70,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         checkCurrentConfig();
 
         fragmentManager = getSupportFragmentManager();
-        homeScreenFragment = fragmentManager.findFragmentByTag("homeScreen");
+        Fragment homeScreenFragment = fragmentManager.findFragmentByTag("homeScreen");
 
         if (homeScreenFragment == null) {
             homeScreenFragment = new HomeScreenFragment();
@@ -78,11 +78,10 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
                     .add(R.id.homescreen_container, homeScreenFragment, "homeScreen").commit();
         }
 
-        //TODO: Move to Application Class.?
         if (isFirstRun()) {
             //Show welcomeActivity if first time user
-            Intent welcomIntent = new Intent(this, WelcomeScreenViewPagerActivity.class);
-            startActivity(welcomIntent);
+            Intent welcomeIntent = new Intent(this, WelcomeScreenViewPagerActivity.class);
+            startActivity(welcomeIntent);
 
         }
 
@@ -95,13 +94,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         ParseConfig.getInBackground(new ConfigCallback() {
             @Override
             public void done(ParseConfig config, ParseException e) {
-                if (e == null) {
-                    Log.d(TAG, "Yay! Config was fetched from the server. - version " + config.getNumber("version"));
-                } else {
-                    Log.e(TAG, "Failed to fetch. Using Cached Config.");
-                    config = ParseConfig.getCurrentConfig();
-                }
-
                 new ConfigService();
             }
         });
@@ -123,8 +115,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 
     private boolean isFirstRun() {
         SharedPreferences preferences = getSharedPreferences(Constants.IS_FIRST_RUN, MODE_PRIVATE);
-        boolean firstRun = preferences.getBoolean(Constants.IS_FIRST_RUN, true);
-        return firstRun;
+        return preferences.getBoolean(Constants.IS_FIRST_RUN, true);
     }
 
     @Override
