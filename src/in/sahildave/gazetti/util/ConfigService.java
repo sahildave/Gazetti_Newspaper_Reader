@@ -212,5 +212,47 @@ public class ConfigService {
         ConfigService.tieSkipBodyElement = tieSkipBodyElement;
     }
 
+    /*
+        FIRSTPOST
+    */
 
+    private void setFirstPostElementsFromConstants() {
+        setFirstPostBody(Constants.fp_body);
+        setFirstPostHead(Constants.fp_head);
+        setFirstPostImage(Constants.fp_image);
+    }
+
+    private void setFirstPostElementsFromConfig(ParseConfig config) {
+        setFirstPostBody(config.getString("fp_body"));
+        setFirstPostHead(config.getString("fp_head"));
+        setFirstPostImage(config.getString("fp_image"));
+    }
+
+    private static String fpBody;
+    private static String fpHead;
+    private static String fpImage;
+
+    public static String getFirstPostBody() {
+        return fpBody;
+    }
+
+    public static void setFirstPostBody(String fpBody) {
+        ConfigService.fpBody = fpBody;
+    }
+
+    public static String getFirstPostHead() {
+        return fpHead;
+    }
+
+    public static void setFirstPostHead(String fpHead) {
+        ConfigService.fpHead = fpHead;
+    }
+
+    public static String getFirstPostImage() {
+        return fpImage;
+    }
+
+    public static void setFirstPostImage(String fpImage) {
+        ConfigService.fpImage = fpImage;
+    }
 }
