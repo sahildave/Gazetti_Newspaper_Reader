@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.nhaarman.listviewanimations.appearance.simple.ScaleInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.parse.FindCallback;
@@ -67,6 +66,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     // Network Info
     private NetworkInfo networkInfo;
     private Context context;
+    private TextView headerTextView;
 
     public interface ItemSelectedCallback {
         public void onItemSelected(String headlineText, CustomAdapter customAdapter);
@@ -141,8 +141,8 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         mListView.setOnScrollListener(this);
 
         headerOnList = getActivity().getLayoutInflater().inflate(R.layout.header_view, null);
+        headerTextView = (TextView) headerOnList.findViewById(R.id.headerTextView);
         headerOnList.setBackgroundColor(listViewHeaderColor);
-        footerOnList = getActivity().getLayoutInflater().inflate(R.layout.footer_view, null);
         mListView.addHeaderView(headerOnList);
 
         customAdapter = new CustomAdapter(getActivity(), retainedList);
@@ -152,6 +152,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
         mListView.setAdapter(animAdapterMultiple);
 
+        footerOnList = getActivity().getLayoutInflater().inflate(R.layout.footer_view, null);
         mListView.addFooterView(footerOnList);
         mListView.removeFooterView(footerOnList);
     }
@@ -205,9 +206,10 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         //TODO: Try-catch with message
         queryGetNewItems.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> articleObjectList, ParseException arg1) {
+            public void done(List<ParseObject> articleObjectList, ParseException exception) {
 
-                if(arg1 == null){
+                if(exception == null){
+
                     retainedList.addAll(0, articleObjectList);
 
                     customAdapter.notifyDataSetChanged();
@@ -220,7 +222,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
                                     | DateUtils.FORMAT_ABBREV_WEEKDAY //
                                     | DateUtils.FORMAT_NO_NOON //
                                     | DateUtils.FORMAT_NO_MIDNIGHT)); //
-                    ((TextView) headerOnList).setText(dateLastUpdatedString);
+                    headerTextView.setText(dateLastUpdatedString);
                     mListViewContainer.setRefreshing(false);
 
                     if (mTwoPane) {
@@ -230,8 +232,9 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
                     }
                     firstRun = false;
                 } else {
-                    Log.e(TAG, "Wrong while fetching - "+arg1.getMessage());
-                    Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+
+                    Log.e(TAG, "Wrong while fetching - " + exception.getMessage());
+                    headerTextView.setText("Something went wrong!");
                 }
             }
 
@@ -249,19 +252,23 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
         queryGetOldItems.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> articleObjectList, ParseException arg1) {
+            public void done(List<ParseObject> articleObjectList, ParseException exception) {
                 // Log.d(TAG, "Old Items articleObjectList " +
                 // articleObjectList.size());
+                if(exception == null){
+                    retainedList.addAll(articleObjectList);
+                    customAdapter.notifyDataSetChanged();
 
-                retainedList.addAll(articleObjectList);
-                customAdapter.notifyDataSetChanged();
+                    // Log.d(TAG, "articleObjectList Retained " +
+                    // retainedList.size());
 
-                // Log.d(TAG, "articleObjectList Retained " +
-                // retainedList.size());
-
-                mListView.removeFooterView(footerOnList);
-                mListViewContainer.setRefreshing(false);
-                flag_loading_old_data = false;
+                    mListView.removeFooterView(footerOnList);
+                    mListViewContainer.setRefreshing(false);
+                    flag_loading_old_data = false;
+                } else {
+                    Log.e(TAG, "Wrong while fetching - " + exception.getMessage());
+                    headerTextView.setText("Something went wrong!");
+                }
             }
 
         });
@@ -271,10 +278,10 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     @Override
     public void onRefresh() {
         if (networkInfo != null && networkInfo.isConnected()) {
-            Toast.makeText(context, "Getting New Headlines", Toast.LENGTH_SHORT).show();
+            headerTextView.setText("Getting New Headlines...");
             getNewListItems();
         } else {
-            Toast.makeText(context, "Cannot Refresh. No Connection", Toast.LENGTH_SHORT).show();
+            headerTextView.setText("Cannot Refresh. No Connection");
             mListViewContainer.setRefreshing(false);
         }
 
@@ -297,7 +304,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
             // Log.d(TAG, visibleItemCount + ", " + totalItemCount);
 
             // So that short lists dont load
-            if (totalItemCount > visibleItemCount && flag_loading_old_data == false) {
+            if (totalItemCount > visibleItemCount && !flag_loading_old_data) {
                 mListView.addFooterView(footerOnList);
                 mListViewContainer.setRefreshing(true);
                 flag_loading_old_data = true;
