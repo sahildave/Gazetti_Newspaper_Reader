@@ -23,7 +23,6 @@ import in.sahildave.gazetti.news_activities.adapter.NavDrawerListAdapter;
 import in.sahildave.gazetti.preference.SettingsActivity;
 
 @SuppressLint("NewApi")
-// TODO: Check this
 public class WebsiteListActivity extends ActionBarActivity implements ItemSelectedCallback,
         LoadArticleCallback {
 
@@ -133,14 +132,13 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
     @Override
     public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
 
-        Bundle arguments = new Bundle();
-        arguments.putString("npName", npName);
-        arguments.putString(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
-        WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
-        detailFragment.setArguments(arguments);
 
         if (mTwoPane) {
-            // Log.d(TAG, "replacing detailFragment");
+            Bundle arguments = new Bundle();
+            arguments.putString("npName", npName);
+            arguments.putString(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
+            WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
+            detailFragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.website_detail_container, detailFragment, "detail").commit();
         } else {
@@ -172,6 +170,15 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
     @Override
     public void onPostExecute(String[] result, String mArticlePubDate) {
         articleLoadingCallback.onPostExecute(result, mArticlePubDate);
+    }
+
+    @Override
+    public void articleNotFound(String mArticleUrl) {
+
+//        WebViewFragment webViewFragment = (WebViewFragment) getSupportFragmentManager().findFragmentByTag("webViewFragment");
+//        if(webViewFragment==null){
+            articleLoadingCallback.articleNotFound(mArticleUrl);
+//        }
     }
 
 

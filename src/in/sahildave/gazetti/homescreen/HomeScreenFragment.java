@@ -90,7 +90,6 @@ public class HomeScreenFragment extends Fragment {
                 + ", feedVersion - " + feedVersion);
         if ((newfeedVersion > feedVersion)) {
 
-            // TODO
             Log.d(TAG, "RELOADING - " + cellList.size());
             feedVersion = newfeedVersion;
             cellList.clear();
@@ -295,8 +294,6 @@ public class HomeScreenFragment extends Fragment {
                 totalPixels /= 2;
             }
         }
-
-        // TODO: Check what is inBitmap
 
         options.inJustDecodeBounds = false;
         Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);

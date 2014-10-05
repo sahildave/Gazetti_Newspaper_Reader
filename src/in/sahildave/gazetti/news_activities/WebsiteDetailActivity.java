@@ -115,4 +115,9 @@ public class WebsiteDetailActivity extends ActionBarActivity implements LoadArti
         articleLoadingCallback.onPostExecute(result, mArticlePubDate);
     }
 
+    @Override
+    public void articleNotFound(String mArticleUrl) {
+        articleLoadingCallback.articleNotFound(mArticleUrl);
+    }
+
 }

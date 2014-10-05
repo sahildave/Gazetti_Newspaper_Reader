@@ -311,7 +311,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         Log.d(TAG, "Fragment in onDetach");
 
         // Reset the active callbacks interface to the dummy implementation.
-        mItemSelectedCallback = sDummyItemSelectedCallback; // TODO: Check with mItemSelectedCallback = null;
+        mItemSelectedCallback = sDummyItemSelectedCallback;
     }
 
     @Override

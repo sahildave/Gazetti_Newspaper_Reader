@@ -4,16 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -54,6 +53,20 @@ public class ArticleLoadingCallback {
         this.activity = activity;
         slide_up = AnimationUtils.loadAnimation(activity, R.animator.slide_up);
     }
+
+    public void articleNotFound(String mArticleUrl) {
+
+        Toast.makeText(activity, "No Reading Mode Available", Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, "Loading Webpage...", Toast.LENGTH_LONG).show();
+
+        WebViewFragment webViewFragment = new WebViewFragment();
+        Bundle bundle  = new Bundle();
+        bundle.putString("URL", mArticleUrl);
+        webViewFragment.setArguments(bundle);
+        ((FragmentActivity)activity).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.website_detail_container, webViewFragment, "webViewFragment").commit();
+    }
+
 
     public void onPreExecute(View rootView) {
         this.rootView = rootView;

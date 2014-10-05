@@ -43,7 +43,6 @@ public class WebsiteDetailFragment extends Fragment {
     private Animation slide_down;
 
     private String npNameString;
-    private ArticleLoadAsyncTask mTask;
 
     static interface LoadArticleCallback {
         void onPreExecute(View rootView);
@@ -51,6 +50,8 @@ public class WebsiteDetailFragment extends Fragment {
         void setHeaderStub(View headerStub);
 
         void onPostExecute(String[] result, String mArticlePubDate);
+
+        void articleNotFound(String mArticleURL);
     }
 
     public WebsiteDetailFragment() {
@@ -110,7 +111,7 @@ public class WebsiteDetailFragment extends Fragment {
         mScrollToReadLayout.setVisibility(View.INVISIBLE);
 
         Log.d(TAG, "Async called");
-        mTask = new ArticleLoadAsyncTask(rootView);
+        ArticleLoadAsyncTask mTask = new ArticleLoadAsyncTask(rootView);
         mTask.execute();
 
         ScrollView mScrollView = (ScrollView) rootView.findViewById(R.id.scroller);
@@ -195,7 +196,8 @@ public class WebsiteDetailFragment extends Fragment {
             }
 
             if (articleContent[2] == null || articleContent[2].length() == 0) {
-                articleContent[2] = "Sorry, this story is not supported for mobile view. Try to read in the browser";
+                //TODO: Add alarm here
+                return null;
             }
 
             return articleContent;
@@ -203,17 +205,20 @@ public class WebsiteDetailFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] result) {
-            Log.d(TAG_ASYNC, "Async onPostExecute");
-
             if (mCallbacks != null) {
-                View headerStub;
-                if (mImageURL == null) {
-                    headerStub = ((ViewStub) rootView.findViewById(R.id.article_title_stub_import)).inflate();
+                Log.d(TAG_ASYNC, "Async onPostExecute");
+                if(result==null){
+                    mCallbacks.articleNotFound(mArticleURL);
                 } else {
-                    headerStub = ((ViewStub) rootView.findViewById(R.id.article_header_stub_import)).inflate();
+                    View headerStub;
+                    if (mImageURL == null) {
+                        headerStub = ((ViewStub) rootView.findViewById(R.id.article_title_stub_import)).inflate();
+                    } else {
+                        headerStub = ((ViewStub) rootView.findViewById(R.id.article_header_stub_import)).inflate();
+                    }
+                    mCallbacks.setHeaderStub(headerStub);
+                    mCallbacks.onPostExecute(result, mArticlePubDate);
                 }
-                mCallbacks.setHeaderStub(headerStub);
-                mCallbacks.onPostExecute(result, mArticlePubDate);
             }
         }
     }
