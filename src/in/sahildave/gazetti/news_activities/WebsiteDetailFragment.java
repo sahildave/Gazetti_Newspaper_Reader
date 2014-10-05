@@ -12,10 +12,7 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.*;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.news_activities.adapter.CustomAdapter;
 import in.sahildave.gazetti.news_activities.fetch.firstPost;
@@ -43,6 +40,7 @@ public class WebsiteDetailFragment extends Fragment {
     private Animation slide_down;
 
     private String npNameString;
+    private String catNameString;
 
     static interface LoadArticleCallback {
         void onPreExecute(View rootView);
@@ -76,12 +74,16 @@ public class WebsiteDetailFragment extends Fragment {
 
         setRetainInstance(true);
 
-        npNameString = getArguments().getString("npName");
+        if(getArguments()!=null){
+            npNameString = getArguments().getString("npName");
+            catNameString = getArguments().getString("catName");
+            Toast.makeText(getActivity(), catNameString, Toast.LENGTH_SHORT).show();
 
-        if (getArguments().containsKey(HEADLINE_CLICKED)) {
-            headlineClicked = getArguments().getString(HEADLINE_CLICKED);
-            mArticleURL = CustomAdapter.linkMap.get(headlineClicked);
-            mArticlePubDate = CustomAdapter.pubDateMap.get(headlineClicked);
+            if (getArguments().containsKey(HEADLINE_CLICKED)) {
+                headlineClicked = getArguments().getString(HEADLINE_CLICKED);
+                mArticleURL = CustomAdapter.linkMap.get(headlineClicked);
+                mArticlePubDate = CustomAdapter.pubDateMap.get(headlineClicked);
+            }
         }
 
         mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
@@ -96,7 +98,10 @@ public class WebsiteDetailFragment extends Fragment {
 
         ImageButton mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
         TextView mViewInBrowser = (TextView) rootView.findViewById(R.id.viewInBrowser);
-        // TODO: category in subtitle
+
+        TextView categoryName = (TextView) rootView.findViewById(R.id.category);
+        categoryName.setText(catNameString);
+        categoryName.setVisibility(View.VISIBLE);
 
         if (npNameString.equals("The Hindu")) {
             mNewspaperTile.setImageResource(R.drawable.ic_hindu);

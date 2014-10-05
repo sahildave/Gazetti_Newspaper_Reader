@@ -34,7 +34,8 @@
             <RelativeLayout
                     android:id="@+id/subtitleLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:visibility="invisible">
@@ -55,8 +56,9 @@
                         android:layout_height="24dp"
                         android:layout_toRightOf="@id/newspaperTile"
                         android:gravity="left|bottom"
-                        android:paddingLeft="8dp"
-                        android:text="Date"/>
+                        android:textSize="12sp"
+                        android:textColor="@android:color/darker_gray"
+                        android:paddingLeft="@dimen/subtitle_left_padding"/>
 
                 <TextView
                         android:id="@+id/category"
@@ -65,12 +67,15 @@
                         android:layout_below="@id/pubDateView"
                         android:layout_toRightOf="@id/newspaperTile"
                         android:gravity="left|top"
-                        android:paddingLeft="8dp"/>
+                        android:textSize="12sp"
+                        android:textColor="@android:color/darker_gray"
+                        android:paddingLeft="@dimen/subtitle_left_padding"/>
 
                 <TextView
                         android:id="@+id/viewInBrowser"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
+                        android:layout_height="48dp"
+                        android:textSize="12sp"
                         android:layout_alignParentRight="true"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
@@ -78,6 +83,7 @@
                         android:drawablePadding="4dp"
                         android:gravity="center_vertical|right"
                         android:lines="2"
+                        android:textColor="@android:color/darker_gray"
                         android:text="View in \nBrowser"/>
             </RelativeLayout>
 
@@ -85,10 +91,11 @@
                     android:id="@+id/article_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/article_left_padding"
                     android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/activity_vertical_margin"
                     android:textStyle="normal"
+                    android:textSize="16sp"
                     android:visibility="invisible"/>
         </LinearLayout>
     </ScrollView>

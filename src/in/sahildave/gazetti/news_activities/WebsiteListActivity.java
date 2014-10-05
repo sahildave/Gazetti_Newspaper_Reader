@@ -47,10 +47,10 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
     WebsiteListFragment mlistFragment;
 
     // Intent variables from Home Screen
-    String npId = "1";
-    String catId = "1";
-    String npName = "";
-    String catName = "";
+    String npId;
+    String catId;
+    String npName;
+    String catName;
     private ArticleLoadingCallback articleLoadingCallback;
 
     @Override
@@ -136,6 +136,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
         if (mTwoPane) {
             Bundle arguments = new Bundle();
             arguments.putString("npName", npName);
+            arguments.putString("catName", catName);
             arguments.putString(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
             WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
             detailFragment.setArguments(arguments);
@@ -144,6 +145,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
         } else {
             Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
             detailIntent.putExtra("npName", npName);
+            detailIntent.putExtra("catName", catName);
             detailIntent.putExtra(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
             detailIntent.putExtra("ActionBarColor", currentColor);
             detailIntent.putExtra("ActionBarTitle", npName + " - " + catName);

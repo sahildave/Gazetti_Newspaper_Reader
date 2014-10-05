@@ -202,31 +202,37 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         if (firstRun) {
             queryGetNewItems.setLimit(15);
         }
+        //TODO: Try-catch with message
         queryGetNewItems.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> articleObjectList, ParseException arg1) {
 
-                retainedList.addAll(0, articleObjectList);
+                if(arg1 == null){
+                    retainedList.addAll(0, articleObjectList);
 
-                customAdapter.notifyDataSetChanged();
+                    customAdapter.notifyDataSetChanged();
 
-                dateLastUpdatedString = "Last Updated: "
-                        + (DateUtils.formatDateTime(context, System.currentTimeMillis(), //
-                        DateUtils.FORMAT_SHOW_TIME //
-                                | DateUtils.FORMAT_SHOW_WEEKDAY //
-                                | DateUtils.FORMAT_SHOW_DATE //
-                                | DateUtils.FORMAT_ABBREV_WEEKDAY //
-                                | DateUtils.FORMAT_NO_NOON //
-                                | DateUtils.FORMAT_NO_MIDNIGHT)); //
-                ((TextView) headerOnList).setText(dateLastUpdatedString);
-                mListViewContainer.setRefreshing(false);
+                    dateLastUpdatedString = "Last Updated: "
+                            + (DateUtils.formatDateTime(context, System.currentTimeMillis(), //
+                            DateUtils.FORMAT_SHOW_TIME //
+                                    | DateUtils.FORMAT_SHOW_WEEKDAY //
+                                    | DateUtils.FORMAT_SHOW_DATE //
+                                    | DateUtils.FORMAT_ABBREV_WEEKDAY //
+                                    | DateUtils.FORMAT_NO_NOON //
+                                    | DateUtils.FORMAT_NO_MIDNIGHT)); //
+                    ((TextView) headerOnList).setText(dateLastUpdatedString);
+                    mListViewContainer.setRefreshing(false);
 
-                if (mTwoPane) {
-                    mListView.performItemClick(customAdapter.getView(mActivatedPosition - 1, null, null),
-                            mActivatedPosition, mActivatedPosition);
+                    if (mTwoPane) {
+                        mListView.performItemClick(customAdapter.getView(mActivatedPosition - 1, null, null),
+                                mActivatedPosition, mActivatedPosition);
 
+                    }
+                    firstRun = false;
+                } else {
+                    Log.e(TAG, "Wrong while fetching - "+arg1.getMessage());
+                    Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
                 }
-                firstRun = false;
             }
 
         });
