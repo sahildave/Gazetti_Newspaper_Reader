@@ -77,7 +77,6 @@ public class WebsiteDetailFragment extends Fragment {
         if(getArguments()!=null){
             npNameString = getArguments().getString("npName");
             catNameString = getArguments().getString("catName");
-            Toast.makeText(getActivity(), catNameString, Toast.LENGTH_SHORT).show();
 
             if (getArguments().containsKey(HEADLINE_CLICKED)) {
                 headlineClicked = getArguments().getString(HEADLINE_CLICKED);
