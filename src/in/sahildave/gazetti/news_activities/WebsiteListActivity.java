@@ -322,7 +322,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
 
         // Nav List Footer options listeners
         LinearLayout navBarSettingsView = (LinearLayout) findViewById(R.id.settings);
-        LinearLayout navBarSendFeedbackView = (LinearLayout) findViewById(R.id.send_feedback);
+//        LinearLayout navBarSendFeedbackView = (LinearLayout) findViewById(R.id.send_feedback);
 
         navBarSettingsView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -334,12 +334,12 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
             }
         });
 
-        navBarSendFeedbackView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mDrawerLayout.closeDrawer(mLeftDrawer);
-            }
-        });
+//        navBarSendFeedbackView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mDrawerLayout.closeDrawer(mLeftDrawer);
+//            }
+//        });
 
     }
 
