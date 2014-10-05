@@ -19,8 +19,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-condensed"
                 android:text="Because Reading News\n  Should Not Be Boring"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"/>
 
@@ -53,6 +54,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="16dp"
                     android:text="@string/app_name"
+                    android:fontFamily="sans-serif-condensed"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@android:color/white">
             </TextView>
@@ -81,7 +83,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:text="SWIPE > "
+                android:text="@string/swipe"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/white">
         </TextView>
