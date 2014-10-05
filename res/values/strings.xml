@@ -76,25 +76,10 @@
     <array name="explist_newspaper_images">
         <item>@drawable/ic_hindu</item>
         <item>@drawable/ic_toi</item>
-        <item>@drawable/ic_whatsapp</item>
-        <item>@drawable/ic_facebook</item>
+        <item>@drawable/ic_fp</item>
+        <item>@drawable/ic_tie</item>
     </array>
 
     <string name="title_activity_welcome_screen_view_pager">Welcome</string>
     <string name="title_activity_licenses">Licenses</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_about_me">About Me</string>
-    <string name="aboutMeSalutation">Hi! I am Sahil,</string>
-    <string name="aboutMeMessage">First of all thanks a lot for downloading this app and I hope you enjoy it.
-        The app currently is in active development. The upcoming features are listed below.
-        I am a solo developer and adding new stuff can take time.
-        This app is aimed at making reading news clutter free and shows you the aricle in minimalist view.
-        If you\'d like to support, please click any of the buttons below.\n\nYou can request a newspaper, category or
-        something else by clicking \"Open Request Page\".
-    </string>
-    <string name="aboutMeUpcomingHeading">Upcoming Features:</string>
-    <string name="aboutMeUpcoming_one">Dark theme\n</string>
-    <string name="aboutMeUpcoming_two">Business newspapers and category\n</string>
-    <string name="aboutMeUpcoming_three">Non-English Language Support\n</string>
-
 </resources>

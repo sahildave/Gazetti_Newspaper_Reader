@@ -9,7 +9,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
-import android.widget.Toast;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.util.CellListUtil;
 import in.sahildave.gazetti.util.UserSelectionUtil;
@@ -64,7 +63,6 @@ public class FeedSelectViewpager extends ActionBarActivity implements FeedSelect
 
     @Override
     public void fsFragDoneButton(HashMap<Integer, boolean[]> mChildCheckStates) {
-        Toast.makeText(this, "DONE!", Toast.LENGTH_SHORT).show();
         backFlag = true;
         onBackPressed();
 

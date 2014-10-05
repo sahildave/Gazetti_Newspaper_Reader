@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 import in.sahildave.gazetti.R;
 
 public class EditCellDialogFragment extends DialogFragment implements OnItemSelectedListener {
@@ -80,7 +79,6 @@ public class EditCellDialogFragment extends DialogFragment implements OnItemSele
         });
         builder.setNegativeButton(R.string.add_cell_dialog_cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(getActivity(), "User clicked Cancel", Toast.LENGTH_SHORT).show();
                 EditCellDialogListener activity = (EditCellDialogListener) getActivity();
                 activity.onFinishEditingListener(editPosition, "-1", "-1", false);
             }

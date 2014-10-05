@@ -55,7 +55,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         settingsFromActionbar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(HomeScreenActivity.this, "Touched Settings", Toast.LENGTH_SHORT).show();
                 Intent settingIntent = new Intent(HomeScreenActivity.this, SettingsActivity.class);
                 startActivity(settingIntent);
             }

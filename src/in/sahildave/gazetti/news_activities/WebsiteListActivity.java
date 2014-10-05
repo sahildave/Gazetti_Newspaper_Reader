@@ -227,8 +227,6 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
     private void makeNavDrawer() {
         /*
 		 * Making NavBar - START
-		 * http://www.androidhive.info/2013/11/android-sliding
-		 * -menu-using-navigation-drawer/
 		 */
 
         mTitle = mDrawerTitle = getTitle();
@@ -324,14 +322,11 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
 
         // Nav List Footer options listeners
         LinearLayout navBarSettingsView = (LinearLayout) findViewById(R.id.settings);
-        LinearLayout navBarHelpView = (LinearLayout) findViewById(R.id.help);
         LinearLayout navBarSendFeedbackView = (LinearLayout) findViewById(R.id.send_feedback);
 
         navBarSettingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "You selected Settings", Toast.LENGTH_SHORT).show();
-
                 Intent settingIntent = new Intent(WebsiteListActivity.this, SettingsActivity.class);
                 settingIntent.putExtra("ActionBarColor", currentColor);
                 startActivity(settingIntent);
@@ -339,18 +334,9 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
             }
         });
 
-        navBarHelpView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "You selected Help", Toast.LENGTH_SHORT).show();
-                mDrawerLayout.closeDrawer(mLeftDrawer);
-            }
-        });
-
         navBarSendFeedbackView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "You selected Send Feedback", Toast.LENGTH_SHORT).show();
                 mDrawerLayout.closeDrawer(mLeftDrawer);
             }
         });

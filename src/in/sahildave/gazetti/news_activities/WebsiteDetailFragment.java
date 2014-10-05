@@ -106,6 +106,10 @@ public class WebsiteDetailFragment extends Fragment {
             mNewspaperTile.setImageResource(R.drawable.ic_hindu);
         } else if (npNameString.equals("The Times of India")) {
             mNewspaperTile.setImageResource(R.drawable.ic_toi);
+        } else if (npNameString.equals("The Indian Express")) {
+            mNewspaperTile.setImageResource(R.drawable.ic_tie);
+        } else if(npNameString.equals("First Post")) {
+            mNewspaperTile.setImageResource(R.drawable.ic_fp);
         }
 
         mNewspaperTile.setOnClickListener(webViewCalled);

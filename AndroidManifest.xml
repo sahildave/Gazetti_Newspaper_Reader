@@ -60,12 +60,6 @@
                 android:label="@string/title_activity_licenses"
                 android:theme="@style/WithBackgroundTheme">
         </activity>
-        <activity
-                android:name=".preference.AboutMeActivity"
-                android:label="@string/title_activity_about_me"
-                android:theme="@style/WithBackgroundTheme">
-        </activity>
-
         <!-- FEED SELECT -->
         <activity
                 android:name=".preference.FeedSelectViewpager"

@@ -99,37 +99,6 @@
                 android:background="@drawable/divider"/>
 
         <LinearLayout
-                android:id="@+id/help"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/nav_list_background_bottom"
-                android:clickable="true"
-                android:orientation="horizontal"
-                android:paddingBottom="6dp"
-                android:paddingTop="6dp">
-
-            <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginLeft="8dp"
-                    android:gravity="center_vertical"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_action_help"/>
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    android:gravity="center_vertical"
-                    android:text="HELP"/>
-        </LinearLayout>
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@drawable/divider"/>
-
-        <LinearLayout
                 android:id="@+id/send_feedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
