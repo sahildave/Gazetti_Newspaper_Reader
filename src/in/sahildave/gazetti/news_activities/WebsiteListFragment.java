@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.crashlytics.android.Crashlytics;
 import com.nhaarman.listviewanimations.appearance.simple.ScaleInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.parse.FindCallback;
@@ -339,15 +340,18 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
+        try {
+            TextView headlineTextView = (TextView) view.findViewById(R.id.headline);
+            Crashlytics.log(Log.ERROR, TAG, "Is headlineTextView null - "+(null==headlineTextView));
 
-        // Log.d(TAG, "onListItemClick position, id +" + position + ", " + id);
-
-        TextView headlineTextView = (TextView) view.findViewById(R.id.headline);
-        String headlineText = (String) headlineTextView.getText();
-        // Log.d(TAG, "onListItemClick view - " + headlineText);
-        // view.setActivated(true);
-        setActivatedPosition(position);
-        mItemSelectedCallback.onItemSelected(headlineText, customAdapter);
+            String headlineText = (String) headlineTextView.getText();
+            Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
+            setActivatedPosition(position);
+            mItemSelectedCallback.onItemSelected(headlineText, customAdapter);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            e.printStackTrace();
+        }
     }
 
     private void setActivatedPosition(int position) {
