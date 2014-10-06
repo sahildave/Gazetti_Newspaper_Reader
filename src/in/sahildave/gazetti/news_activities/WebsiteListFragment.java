@@ -344,10 +344,14 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
             TextView headlineTextView = (TextView) view.findViewById(R.id.headline);
             Crashlytics.log(Log.ERROR, TAG, "Is headlineTextView null - "+(null==headlineTextView));
 
-            String headlineText = (String) headlineTextView.getText();
-            Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
-            setActivatedPosition(position);
-            mItemSelectedCallback.onItemSelected(headlineText, customAdapter);
+            if(headlineTextView!=null){
+                String headlineText = (String) headlineTextView.getText();
+                Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
+
+                setActivatedPosition(position);
+                mItemSelectedCallback.onItemSelected(headlineText, customAdapter);
+            }
+
         } catch (Exception e) {
             Crashlytics.logException(e);
             e.printStackTrace();
