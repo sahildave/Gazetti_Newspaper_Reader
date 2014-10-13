@@ -18,3 +18,26 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-libraryjars libs
+
+-keep class com.parse.** { *; }
+-keep class com.crashlytics.** { *; }
+-keep class com.squareup.** { *; }
+-keep class com.facebook.** { *; }
+
+-dontwarn com.parse.**
+-dontwarn com.squareup.**
+-dontwarn com.facebook.**
+-dontwarn com.squareup.picasso.**
+-dontwarn com.squareup.okhttp.**
+-dontwarn com.squareup.picasso.OkHttpDownloader.**
+-dontwarn org.apache.commons.logging.**
+
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-printseeds seeds.txt
+-printusage unused.txt
+-printmapping mapping.txt
