@@ -44,6 +44,9 @@ public class ArticleLoadingCallback {
     TextView mArticleTextView;
     String bodyText = "";
 
+    // Footer
+    LinearLayout mArticleFooter;
+
     LinearLayout mScrollToReadLayout;
     private boolean displayScrollToRead = false;
     private Animation slide_up;
@@ -51,7 +54,7 @@ public class ArticleLoadingCallback {
 
     public ArticleLoadingCallback(Activity activity){
         this.activity = activity;
-        slide_up = AnimationUtils.loadAnimation(activity, R.animator.slide_up);
+        slide_up = AnimationUtils.loadAnimation(activity, R.anim.slide_up);
     }
 
     public void articleNotFound(String mArticleUrl) {
@@ -76,6 +79,7 @@ public class ArticleLoadingCallback {
         mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
         mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
         mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
+        mArticleFooter = (LinearLayout) rootView.findViewById(R.id.article_footer);
 
         // Progress Bar
         detailViewProgress = (SmoothProgressBar) rootView.findViewById(R.id.detailViewProgressBar);
@@ -94,6 +98,7 @@ public class ArticleLoadingCallback {
         bodyText = result[2];
 
         mSubtitleLayout.setVisibility(View.VISIBLE);
+        mArticleFooter.setVisibility(View.VISIBLE);
         mArticlePubDateView.setText(mArticlePubDate);
         mArticleTextView.setVisibility(View.VISIBLE);
         mArticleTextView.setText(bodyText);

@@ -80,7 +80,7 @@ public class WebsiteDetailActivity extends ActionBarActivity implements LoadArti
                     .add(R.id.website_detail_container, mDetailFragment, "detail").commit();
         }
 
-        slide_up = AnimationUtils.loadAnimation(this, R.animator.slide_up);
+        slide_up = AnimationUtils.loadAnimation(this, R.anim.slide_up);
         articleLoadingCallback = new ArticleLoadingCallback(this);
 
     }

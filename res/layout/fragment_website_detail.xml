@@ -71,20 +71,20 @@
                         android:textColor="@android:color/darker_gray"
                         android:paddingLeft="@dimen/subtitle_left_padding"/>
 
-                <TextView
-                        android:id="@+id/viewInBrowser"
+                <Button
+                        android:id="@+id/read_it_later"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         android:layout_alignParentRight="true"
-                        android:background="?attr/selectableItemBackground"
+                        android:background="@null"
                         android:clickable="true"
-                        android:drawableLeft="@drawable/ic_webview"
-                        android:drawablePadding="4dp"
-                        android:gravity="center_vertical|right"
+                        android:drawableLeft="@drawable/ic_bookmark"
+                        android:drawablePadding="-8dp"
+                        android:gravity="center_vertical|left"
                         android:lines="2"
                         android:textColor="@android:color/darker_gray"
-                        android:text="View in \nBrowser"/>
+                        android:text="READ IT\nLATER"/>
             </RelativeLayout>
 
             <TextView
@@ -97,6 +97,54 @@
                     android:textStyle="normal"
                     android:textSize="16sp"
                     android:visibility="invisible"/>
+
+            <LinearLayout
+                    android:id="@+id/article_footer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:visibility="invisible">
+
+                <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="0dp"/>
+
+                <Button
+                        style="?android:attr/buttonStyle"
+                        android:background="@null"
+                        android:id="@+id/shareContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:drawableLeft="@android:drawable/ic_menu_share"
+                        android:textColor="@android:color/darker_gray"
+                        android:text="Share"/>
+
+                <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="0dp"/>
+
+                <View android:layout_width="1dp" android:layout_height="48dp"
+                      android:background="@android:color/darker_gray"/>
+
+                <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="0dp"/>
+
+                <Button
+                        style="?android:attr/buttonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:id="@+id/viewInBrowser"
+                        android:text="View in\nbrowser"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:drawableLeft="@drawable/ic_webview"/>
+
+                <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="0dp"/>
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -127,7 +175,7 @@
             android:animateLayoutChanges="true"
             android:gravity="bottom|center_horizontal"
             android:orientation="horizontal"
-            android:visibility="invisible">
+            android:visibility="gone">
 
         <TextView
                 android:id="@+id/scrollToReadText"
