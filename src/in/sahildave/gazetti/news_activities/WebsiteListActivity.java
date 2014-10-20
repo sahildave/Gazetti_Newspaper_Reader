@@ -18,7 +18,7 @@ import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.news_activities.WebsiteDetailFragment.LoadArticleCallback;
 import in.sahildave.gazetti.news_activities.WebsiteListFragment.ItemSelectedCallback;
-import in.sahildave.gazetti.news_activities.adapter.CustomAdapter;
+import in.sahildave.gazetti.news_activities.adapter.NewsAdapter;
 import in.sahildave.gazetti.news_activities.adapter.NavDrawerListAdapter;
 import in.sahildave.gazetti.preference.SettingsActivity;
 
@@ -130,7 +130,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
     }
 
     @Override
-    public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
+    public void onItemSelected(String headlineText, NewsAdapter newsAdapter) {
 
 
         if (mTwoPane) {

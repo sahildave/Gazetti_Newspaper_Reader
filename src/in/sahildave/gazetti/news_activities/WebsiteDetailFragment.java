@@ -13,16 +13,17 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
-import com.parse.DeleteCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.SaveCallback;
+import com.crashlytics.android.Crashlytics;
+import com.parse.*;
 import in.sahildave.gazetti.R;
-import in.sahildave.gazetti.news_activities.adapter.CustomAdapter;
+import in.sahildave.gazetti.news_activities.adapter.NewsAdapter;
 import in.sahildave.gazetti.news_activities.fetch.firstPost;
 import in.sahildave.gazetti.news_activities.fetch.hindu;
 import in.sahildave.gazetti.news_activities.fetch.indianExpress;
 import in.sahildave.gazetti.news_activities.fetch.toi;
+import in.sahildave.gazetti.util.Constants;
+
+import java.util.List;
 
 public class WebsiteDetailFragment extends Fragment {
     private static final String TAG = "DFRAGMENT";
@@ -47,6 +48,7 @@ public class WebsiteDetailFragment extends Fragment {
     private String npNameString;
     private String catNameString;
     private Button mReadItLater;
+    private boolean bookmarked = false;
 
     static interface LoadArticleCallback {
         void onPreExecute(View rootView);
@@ -86,8 +88,8 @@ public class WebsiteDetailFragment extends Fragment {
 
             if (getArguments().containsKey(HEADLINE_CLICKED)) {
                 mArticleHeadline = getArguments().getString(HEADLINE_CLICKED);
-                mArticleURL = CustomAdapter.linkMap.get(mArticleHeadline);
-                mArticlePubDate = CustomAdapter.pubDateMap.get(mArticleHeadline);
+                mArticleURL = NewsAdapter.linkMap.get(mArticleHeadline);
+                mArticlePubDate = NewsAdapter.pubDateMap.get(mArticleHeadline);
             }
         }
 
@@ -102,7 +104,7 @@ public class WebsiteDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
 
         ImageButton mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
-        mReadItLater = (Button) rootView.findViewById(R.id.read_it_later);
+        setupReadItLaterButton(rootView);
         Button mShareButton = (Button) rootView.findViewById(R.id.shareContent);
         Button mViewInBrowser = (Button) rootView.findViewById(R.id.viewInBrowser);
 
@@ -153,6 +155,23 @@ public class WebsiteDetailFragment extends Fragment {
         return rootView;
     }
 
+    private void setupReadItLaterButton(View rootView) {
+        mReadItLater = (Button) rootView.findViewById(R.id.read_it_later);
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(Constants.READ_IT_LATER);
+        query.whereEqualTo("link", mArticleURL);
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                Log.d(TAG, "===setupReadItLaterButton "+parseObjects.size());
+                if(e==null && parseObjects.size()>0){
+                    bookmarked=true;
+                    mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
+                }
+            }
+        });
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -182,40 +201,65 @@ public class WebsiteDetailFragment extends Fragment {
     };
 
     private OnClickListener readItLater = new OnClickListener() {
-        private boolean bookmarked = false;
-
         @Override
         public void onClick(View v) {
+            final ParseObject readItLaterObject = createReadItLaterObject();
+            ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.READ_IT_LATER);
+            query.whereEqualTo("objectId", mArticleURL);
+            query.fromLocalDatastore();
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> parseObjects, ParseException e) {
+                    Log.d(TAG, "parseObjects "+parseObjects.size());
 
-            if(bookmarked){
-                ParseObject.unpinAllInBackground(mArticleHeadline, new DeleteCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark, 0, 0, 0);
-                        bookmarked = false;
+                    if (bookmarked) {
+                        ParseObject.unpinAllInBackground(parseObjects, new DeleteCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    Log.d(TAG, "Unpinned");
+                                    mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark, 0, 0, 0);
+                                    bookmarked = false;
+                                } else {
+                                    Log.d(TAG, "Exception in unpinning", e);
+                                }
+                            }
+                        });
+                    } else if (!bookmarked) {
+                        readItLaterObject.unpinInBackground();
+                        readItLaterObject.pinInBackground(Constants.READ_IT_LATER, new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    Log.d(TAG, "Pinned");
+                                    mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
+                                    bookmarked = true;
+                                }
+                            }
+                        });
                     }
-                });
-            }else {
-
-                ParseObject readItLaterObject = new ParseObject(mArticleHeadline);
-                readItLaterObject.put("title", mArticleHeadline);
-                readItLaterObject.put("body", mArticleBody);
-                readItLaterObject.put("pubDate", mArticlePubDate);
-                if (mArticleImageURL != null) {
-                    readItLaterObject.put("image", mArticleImageURL);
                 }
-
-                readItLaterObject.pinInBackground("readitlater", new SaveCallback() {
-
-                    @Override
-                    public void done(ParseException e) {
-                        mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
-                        bookmarked = true;
-                    }
-                });
-            }
+            });
         }
     };
+
+    private ParseObject createReadItLaterObject() {
+        final ParseObject readItLaterObject = new ParseObject(Constants.READ_IT_LATER);
+        try {
+            readItLaterObject.put("title", mArticleHeadline);
+            readItLaterObject.put("body", mArticleBody);
+            readItLaterObject.put("link", mArticleURL);
+            readItLaterObject.put("pubDate", mArticlePubDate);
+            readItLaterObject.put("image", mArticleImageURL);
+            readItLaterObject.put("npName", npNameString);
+            readItLaterObject.put("catName", catNameString);
+            readItLaterObject.setObjectId(mArticleURL);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception while reading bookmarks - " + e.getMessage(), e);
+            Crashlytics.log(Log.ERROR, TAG, "Exception while reading bookmarks - " + e.getMessage());
+        }
+        return readItLaterObject;
+    }
 
     public class ArticleLoadAsyncTask extends AsyncTask<Void, String, String[]> {
 

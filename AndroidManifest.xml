@@ -37,7 +37,7 @@
                 android:theme="@style/WithoutBackgroundTheme">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity"/>
+                    android:value=".homescreen.HomeScreenActivity"/>
         </activity>
         <activity
                 android:name=".news_activities.WebsiteDetailActivity"
@@ -47,6 +47,26 @@
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".news_activities.WebsiteDetailActivity"/>
+        </activity>
+
+        <!-- BOOKMARK ACTIVITY -->
+        <activity
+                android:name=".bookmarks.BookmarkListActivity"
+                android:label="@string/title_app"
+                android:parentActivityName=".homescreen.HomeScreenActivity"
+                android:theme="@style/WithoutBackgroundTheme">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".homescreen.HomeScreenActivity"/>
+        </activity>
+        <activity
+                android:name=".bookmarks.BookmarkDetailActivity"
+                android:label="@string/title_app"
+                android:parentActivityName=".news_activities.WebsiteListActivity"
+                android:theme="@style/WithoutBackgroundTheme">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".bookmarks.BookmarkListActivity"/>
         </activity>
 
         <!-- SETTINGS ACTIVITY -->

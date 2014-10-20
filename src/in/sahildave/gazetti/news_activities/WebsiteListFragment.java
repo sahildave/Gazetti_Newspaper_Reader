@@ -23,7 +23,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import in.sahildave.gazetti.R;
-import in.sahildave.gazetti.news_activities.adapter.CustomAdapter;
+import in.sahildave.gazetti.news_activities.adapter.NewsAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +44,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     // For HeadlinesList
     public String dbToSearch;
     private SwipeRefreshLayout mListViewContainer;
-    private CustomAdapter customAdapter;
+    private NewsAdapter newsAdapter;
     private ListView mListView;
     private View headerOnList;
     private View footerOnList;
@@ -70,12 +70,12 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     private TextView headerTextView;
 
     public interface ItemSelectedCallback {
-        public void onItemSelected(String headlineText, CustomAdapter customAdapter);
+        public void onItemSelected(String headlineText, NewsAdapter newsAdapter);
     }
 
     private static ItemSelectedCallback sDummyItemSelectedCallback = new ItemSelectedCallback() {
         @Override
-        public void onItemSelected(String headlineText, CustomAdapter customAdapter) {
+        public void onItemSelected(String headlineText, NewsAdapter newsAdapter) {
         }
     };
 
@@ -146,8 +146,8 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         headerOnList.setBackgroundColor(listViewHeaderColor);
         mListView.addHeaderView(headerOnList);
 
-        customAdapter = new CustomAdapter(getActivity(), retainedList);
-        SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(customAdapter);
+        newsAdapter = new NewsAdapter(getActivity(), retainedList);
+        SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(newsAdapter);
         ScaleInAnimationAdapter animAdapterMultiple = new ScaleInAnimationAdapter(animAdapter);
         animAdapterMultiple.setAbsListView(mListView);
 
@@ -213,7 +213,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
                     retainedList.addAll(0, articleObjectList);
 
-                    customAdapter.notifyDataSetChanged();
+                    newsAdapter.notifyDataSetChanged();
 
                     dateLastUpdatedString = "Last Updated: "
                             + (DateUtils.formatDateTime(context, System.currentTimeMillis(), //
@@ -227,7 +227,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
                     mListViewContainer.setRefreshing(false);
 
                     if (mTwoPane) {
-                        mListView.performItemClick(customAdapter.getView(mActivatedPosition - 1, null, null),
+                        mListView.performItemClick(newsAdapter.getView(mActivatedPosition - 1, null, null),
                                 mActivatedPosition, mActivatedPosition);
 
                     }
@@ -258,7 +258,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
                 // articleObjectList.size());
                 if(exception == null){
                     retainedList.addAll(articleObjectList);
-                    customAdapter.notifyDataSetChanged();
+                    newsAdapter.notifyDataSetChanged();
 
                     // Log.d(TAG, "articleObjectList Retained " +
                     // retainedList.size());
@@ -340,19 +340,20 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
+        TextView headlineTextView = null;
+        String headlineText = null;
         try {
-            TextView headlineTextView = (TextView) view.findViewById(R.id.headline);
-            Crashlytics.log(Log.ERROR, TAG, "Is headlineTextView null - "+(null==headlineTextView));
-
+            headlineTextView = (TextView) view.findViewById(R.id.headline);
             if(headlineTextView!=null){
-                String headlineText = (String) headlineTextView.getText();
-                Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
-
+                headlineText = (String) headlineTextView.getText();
                 setActivatedPosition(position);
-                mItemSelectedCallback.onItemSelected(headlineText, customAdapter);
+                mItemSelectedCallback.onItemSelected(headlineText, newsAdapter);
             }
 
         } catch (Exception e) {
+            Log.d(TAG, "Exception in onListItemClick ",e);
+            Crashlytics.log(Log.ERROR, TAG, "Is headlineTextView null - "+(null==headlineTextView));
+            Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
             Crashlytics.logException(e);
             e.printStackTrace();
         }

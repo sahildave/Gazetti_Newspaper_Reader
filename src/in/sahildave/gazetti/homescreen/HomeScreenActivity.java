@@ -24,6 +24,7 @@ import com.parse.ParseAnalytics;
 import com.parse.ParseConfig;
 import com.parse.ParseException;
 import in.sahildave.gazetti.R;
+import in.sahildave.gazetti.bookmarks.BookmarkListActivity;
 import in.sahildave.gazetti.homescreen.adapter.*;
 import in.sahildave.gazetti.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
 import in.sahildave.gazetti.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
@@ -170,7 +171,8 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
                     Intent settingIntent = new Intent(HomeScreenActivity.this, SettingsActivity.class);
                     startActivity(settingIntent);
                 } else if (item.equalsIgnoreCase("Bookmarks")){
-
+                    Intent bookmarkIntent = new Intent(HomeScreenActivity.this, BookmarkListActivity.class);
+                    startActivity(bookmarkIntent);
                 }
             }
         });

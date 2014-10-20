@@ -1,4 +1,4 @@
-package in.sahildave.gazetti.news_activities.adapter;
+package in.sahildave.gazetti.bookmarks;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,11 +9,10 @@ import android.widget.TextView;
 import com.parse.ParseObject;
 import in.sahildave.gazetti.R;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class CustomAdapter extends ArrayAdapter<ParseObject> {
+public class BookmarkAdapter extends ArrayAdapter<ParseObject> {
 
     private static final String TAG = "MasterDetail";
     private static final int SECOND_MILLIS = 1000;
@@ -24,11 +23,15 @@ public class CustomAdapter extends ArrayAdapter<ParseObject> {
     private Activity ctx;
 
     public static HashMap<String, String> linkMap = new HashMap<String, String>();
+    public static HashMap<String, String> catNameMap = new HashMap<String, String>();
+    public static HashMap<String, String> npNameMap = new HashMap<String, String>();
+    public static HashMap<String, String> articleImage = new HashMap<String, String>();
+    public static HashMap<String, String> articleBody = new HashMap<String, String>();
     public static HashMap<String, String> pubDateMap = new HashMap<String, String>();
 
     private List<ParseObject> articleObjectList;
 
-    public CustomAdapter(Activity context, List<ParseObject> articleObjectList) {
+    public BookmarkAdapter(Activity context, List<ParseObject> articleObjectList) {
         super(context, R.layout.headline_list_row, articleObjectList);
         ctx = context;
         this.articleObjectList = articleObjectList;
@@ -58,53 +61,14 @@ public class CustomAdapter extends ArrayAdapter<ParseObject> {
         // Add the title view
         holder.textViewItem.setText(object.getString("title"));
 
-        // get PubDate
-        Date createdAtDate = object.getCreatedAt();
-        long createdAtDateInMillis = createdAtDate.getTime();
-        // Log.d(TAG, "createdAtDateInMillis " + createdAtDateInMillis);
-
-        String diff = getTimeAgo(createdAtDateInMillis);
-        // Log.d(TAG, "diff " + diff);
-
-        // Add title, link to Map
+        // Add title, link to a Map
         linkMap.put(object.getString("title"), object.getString("link"));
-        pubDateMap.put(object.getString("title"), diff);
-        // Log.d(TAG, "CustomAdapter " + mMap.size());
-
-        // PubDate
-
+        pubDateMap.put(object.getString("title"), object.getString("pubDate"));
+        catNameMap.put(object.getString("title"), object.getString("catName"));
+        npNameMap.put(object.getString("title"), object.getString("npName"));
+        articleImage.put(object.getString("title"), object.getString("image"));
+        articleBody.put(object.getString("title"), object.getString("body"));
         return convertView;
 
     }
-
-    public static String getTimeAgo(long time) {
-        if (time < 1000000000000L) {
-            // if timestamp given in seconds, convert to millis
-            time *= 1000;
-        }
-
-        long now = System.currentTimeMillis();
-        if (time > now || time <= 0) {
-            return null;
-        }
-
-        // TODO: localize
-        final long diff = now - time;
-        if (diff < MINUTE_MILLIS) {
-            return "Just Now";
-        } else if (diff < 2 * MINUTE_MILLIS) {
-            return "A Minute Ago";
-        } else if (diff < 50 * MINUTE_MILLIS) {
-            return diff / MINUTE_MILLIS + " Minutes Ago";
-        } else if (diff < 120 * MINUTE_MILLIS) {
-            return "An Hour Ago";
-        } else if (diff < 24 * HOUR_MILLIS) {
-            return diff / HOUR_MILLIS + " Hours Ago";
-        } else if (diff < 48 * HOUR_MILLIS) {
-            return "Yesterday";
-        } else {
-            return diff / DAY_MILLIS + " Days Ago";
-        }
-    }
-
 }
