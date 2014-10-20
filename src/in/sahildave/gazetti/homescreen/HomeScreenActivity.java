@@ -2,6 +2,8 @@ package in.sahildave.gazetti.homescreen;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,8 +14,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.view.WindowManager.LayoutParams;
+import android.widget.*;
+import android.widget.AdapterView.OnItemClickListener;
 import com.crashlytics.android.Crashlytics;
 import com.parse.ConfigCallback;
 import com.parse.ParseAnalytics;
@@ -27,6 +31,7 @@ import in.sahildave.gazetti.preference.SettingsActivity;
 import in.sahildave.gazetti.util.*;
 import in.sahildave.gazetti.welcomescreen.WelcomeScreenViewPagerActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeScreenActivity extends ActionBarActivity implements HomeScreenFragment.Callbacks,
@@ -40,6 +45,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     private View actionBarCustomView;
     private UserSelectionUtil userSelectionUtil;
     private CellListUtil cellListUtil;
+    private PopupWindow popupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +57,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         setupCustomActionBar();
 
         setContentView(R.layout.homescreen_activity);
-        ImageButton settingsFromActionbar = (ImageButton) actionBarCustomView.findViewById(R.id.settingsFromActionBar);
-        settingsFromActionbar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent settingIntent = new Intent(HomeScreenActivity.this, SettingsActivity.class);
-                startActivity(settingIntent);
-            }
-        });
 
         // When coming from WelcomeScreen but without completing the task, the intent would have "Exit Me"
         if (getIntent().getBooleanExtra("Exit me", false)) {
@@ -108,9 +106,80 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
                 ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(actionBarCustomView, params);
+
+        setUpPopupWindow();
+        ImageButton overflow = (ImageButton) actionBarCustomView.findViewById(R.id.overflow);
+        overflow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.showAsDropDown(v);
+            }
+        });
     }
+
+    private void setUpPopupWindow() {
+        popupWindow = new PopupWindow(this);
+        // some other visual settings
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
+        popupWindow.setWidth(getPixelForDp(120));
+        popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
+
+        // the drop down list is a list view
+        final ListView dropDownList = new ListView(this);
+        List<String> optionList = new ArrayList<String>();
+        optionList.add(0, "Bookmarks");
+        optionList.add(1, "Edit Feed");
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, optionList){
+
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                // setting the ID and text for every items in the list
+                String text = getItem(position);
+
+                // visual settings for the list item
+                TextView listItem = new TextView(HomeScreenActivity.this);
+
+                listItem.setText(text);
+                listItem.setTag(position);
+                listItem.setTextSize(16);
+                listItem.setPadding(24, 16, 16, 16);
+                listItem.setTextColor(Color.WHITE);
+                listItem.setHeight(getPixelForDp(36));
+                listItem.setGravity(Gravity.CENTER_VERTICAL);
+
+                return listItem;
+            }
+        };
+
+        dropDownList.setAdapter(arrayAdapter);
+        popupWindow.setContentView(dropDownList);
+
+        dropDownList.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = (String) dropDownList.getAdapter().getItem(position);
+                popupWindow.dismiss();
+
+                if(item.equalsIgnoreCase("Edit Feed")){
+                    Intent settingIntent = new Intent(HomeScreenActivity.this, SettingsActivity.class);
+                    startActivity(settingIntent);
+                } else if (item.equalsIgnoreCase("Bookmarks")){
+
+                }
+            }
+        });
+    }
+
+    private int getPixelForDp(int dp) {
+        return (int) (dp * this.getResources().getDisplayMetrics().density);
+    }
+
 
     private boolean isFirstRun() {
         SharedPreferences preferences = getSharedPreferences(Constants.IS_FIRST_RUN, MODE_PRIVATE);
