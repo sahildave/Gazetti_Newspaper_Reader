@@ -14,16 +14,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.crashlytics.android.Crashlytics;
-import com.parse.*;
 import in.sahildave.gazetti.R;
+import in.sahildave.gazetti.bookmarks.sqlite.BookmarkDataSource;
+import in.sahildave.gazetti.bookmarks.sqlite.BookmarkModel;
 import in.sahildave.gazetti.news_activities.adapter.NewsAdapter;
 import in.sahildave.gazetti.news_activities.fetch.firstPost;
 import in.sahildave.gazetti.news_activities.fetch.hindu;
 import in.sahildave.gazetti.news_activities.fetch.indianExpress;
 import in.sahildave.gazetti.news_activities.fetch.toi;
-import in.sahildave.gazetti.util.Constants;
-
-import java.util.List;
 
 public class WebsiteDetailFragment extends Fragment {
     private static final String TAG = "DFRAGMENT";
@@ -49,6 +47,7 @@ public class WebsiteDetailFragment extends Fragment {
     private String catNameString;
     private Button mReadItLater;
     private boolean bookmarked = false;
+    private BookmarkDataSource dataSource;
 
     static interface LoadArticleCallback {
         void onPreExecute(View rootView);
@@ -79,7 +78,8 @@ public class WebsiteDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        dataSource = new BookmarkDataSource(getActivity());
+        dataSource.open();
         setRetainInstance(true);
 
         if(getArguments()!=null){
@@ -104,7 +104,7 @@ public class WebsiteDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
 
         ImageButton mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
-        setupReadItLaterButton(rootView);
+        mReadItLater = (Button) rootView.findViewById(R.id.read_it_later);
         Button mShareButton = (Button) rootView.findViewById(R.id.shareContent);
         Button mViewInBrowser = (Button) rootView.findViewById(R.id.viewInBrowser);
 
@@ -151,25 +151,17 @@ public class WebsiteDetailFragment extends Fragment {
                 return false;
             }
         });
+        setupReadItLaterButton();
         setHasOptionsMenu(true);
         return rootView;
     }
 
-    private void setupReadItLaterButton(View rootView) {
-        mReadItLater = (Button) rootView.findViewById(R.id.read_it_later);
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(Constants.READ_IT_LATER);
-        query.whereEqualTo("link", mArticleURL);
-        query.fromLocalDatastore();
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                Log.d(TAG, "===setupReadItLaterButton "+parseObjects.size());
-                if(e==null && parseObjects.size()>0){
-                    bookmarked=true;
-                    mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
-                }
-            }
-        });
+    private void setupReadItLaterButton() {
+        dataSource.open();
+        if(dataSource.isBookmarked(mArticleURL)){
+            mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
+            bookmarked = true;
+        }
     }
 
     @Override
@@ -201,64 +193,37 @@ public class WebsiteDetailFragment extends Fragment {
     };
 
     private OnClickListener readItLater = new OnClickListener() {
+
         @Override
         public void onClick(View v) {
-            final ParseObject readItLaterObject = createReadItLaterObject();
-            ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.READ_IT_LATER);
-            query.whereEqualTo("objectId", mArticleURL);
-            query.fromLocalDatastore();
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> parseObjects, ParseException e) {
-                    Log.d(TAG, "parseObjects "+parseObjects.size());
-
-                    if (bookmarked) {
-                        ParseObject.unpinAllInBackground(parseObjects, new DeleteCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    Log.d(TAG, "Unpinned");
-                                    mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark, 0, 0, 0);
-                                    bookmarked = false;
-                                } else {
-                                    Log.d(TAG, "Exception in unpinning", e);
-                                }
-                            }
-                        });
-                    } else if (!bookmarked) {
-                        readItLaterObject.unpinInBackground();
-                        readItLaterObject.pinInBackground(Constants.READ_IT_LATER, new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    Log.d(TAG, "Pinned");
-                                    mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
-                                    bookmarked = true;
-                                }
-                            }
-                        });
-                    }
-                }
-            });
+            dataSource.open();
+            if (bookmarked) {
+                dataSource.deleteBookmarkModelEntry(mArticleURL);
+                mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark, 0, 0, 0);
+                bookmarked=false;
+            } else if (!bookmarked) {
+                dataSource.createBookmarkModelEntry(getBookmarkModelObject());
+                mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
+                bookmarked=true;
+            }
         }
     };
 
-    private ParseObject createReadItLaterObject() {
-        final ParseObject readItLaterObject = new ParseObject(Constants.READ_IT_LATER);
+    private BookmarkModel getBookmarkModelObject() {
+        final BookmarkModel bookmarkModel = new BookmarkModel();
         try {
-            readItLaterObject.put("title", mArticleHeadline);
-            readItLaterObject.put("body", mArticleBody);
-            readItLaterObject.put("link", mArticleURL);
-            readItLaterObject.put("pubDate", mArticlePubDate);
-            readItLaterObject.put("image", mArticleImageURL);
-            readItLaterObject.put("npName", npNameString);
-            readItLaterObject.put("catName", catNameString);
-            readItLaterObject.setObjectId(mArticleURL);
+            bookmarkModel.setmArticleHeadline(mArticleHeadline);
+            bookmarkModel.setCategoryName(catNameString);
+            bookmarkModel.setNewspaperName(npNameString);
+            bookmarkModel.setmArticleURL(mArticleURL);
+            bookmarkModel.setmArticleBody(mArticleBody);
+            bookmarkModel.setmArticleImageURL(mArticleImageURL);
+            bookmarkModel.setmArticlePubDate(mArticlePubDate);
         } catch (Exception e) {
-            Log.e(TAG, "Exception while reading bookmarks - " + e.getMessage(), e);
-            Crashlytics.log(Log.ERROR, TAG, "Exception while reading bookmarks - " + e.getMessage());
+            Log.e(TAG, "Exception while creating bookmark object - " + e.getMessage(), e);
+            Crashlytics.log(Log.ERROR, TAG, "Exception while creating bookmark object - " + e.getMessage());
         }
-        return readItLaterObject;
+        return bookmarkModel;
     }
 
     public class ArticleLoadAsyncTask extends AsyncTask<Void, String, String[]> {
@@ -330,6 +295,18 @@ public class WebsiteDetailFragment extends Fragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        dataSource.open();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        dataSource.close();
+        super.onPause();
     }
 
     private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {

@@ -9,18 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.nhaarman.listviewanimations.appearance.simple.ScaleInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import in.sahildave.gazetti.R;
-import in.sahildave.gazetti.util.Constants;
+import in.sahildave.gazetti.bookmarks.sqlite.BookmarkDataSource;
+import in.sahildave.gazetti.bookmarks.sqlite.BookmarkModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BookmarkListFragment extends ListFragment {
@@ -33,16 +28,14 @@ public class BookmarkListFragment extends ListFragment {
     // Retained objects
     private static int mActivatedPosition = 1;
 
-    // For HeadlinesList
-    private BookmarkAdapter bookmarkAdapter;
     private ListView mListView;
-    private List<ParseObject> retainedList = new ArrayList<ParseObject>();
 
     // From Bundle
     private boolean mTwoPane;
 
     // Booleans
     private boolean firstRun = false;
+    private BookmarkDataSource dataSource;
 
     public interface BookmarkSelectedListeners {
         public void onItemSelected(String headlineText);
@@ -86,13 +79,6 @@ public class BookmarkListFragment extends ListFragment {
 
         mListView = getListView();
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        bookmarkAdapter = new BookmarkAdapter(getActivity(), retainedList);
-        SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(bookmarkAdapter);
-        ScaleInAnimationAdapter animAdapterMultiple = new ScaleInAnimationAdapter(animAdapter);
-        animAdapterMultiple.setAbsListView(mListView);
-
-        mListView.setAdapter(animAdapterMultiple);
     }
 
     @Override
@@ -103,32 +89,8 @@ public class BookmarkListFragment extends ListFragment {
         if (mTwoPane && !firstRun) {
             setActivatedPosition(mActivatedPosition);
         }
-
-        getBookmarks();
-
-    }
-
-    private void getBookmarks() {
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(Constants.READ_IT_LATER);
-        query.fromLocalDatastore();
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> bookmarks, ParseException e) {
-                if(e == null) {
-                    Log.d(TAG, "Bookmarks - "+bookmarks.size());
-                    retainedList.addAll(bookmarks);
-                    bookmarkAdapter.notifyDataSetChanged();
-                    if (mTwoPane) {
-                        mListView.performItemClick(bookmarkAdapter.getView(mActivatedPosition - 1, null, null),
-                                mActivatedPosition, mActivatedPosition);
-                    }
-                    firstRun = false;
-                } else {
-                    Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
-                    Crashlytics.log(Log.ERROR, TAG, "Exception while reading bookmarks - "+e.getMessage());
-                }
-            }
-        });
+        dataSource = new BookmarkDataSource(getActivity());
+        dataSource.open();
     }
 
     @Override
@@ -140,9 +102,23 @@ public class BookmarkListFragment extends ListFragment {
 
     @Override
     public void onDestroy() {
+        dataSource.close();
         super.onDestroy();
         Log.d(TAG, "Fragment in onDestroy");
         mActivatedPosition = 1;
+    }
+
+    @Override
+    public void onResume() {
+        dataSource.open();
+        List<BookmarkModel> values = dataSource.getAllBookmarkModels();
+        BookmarkAdapter bookmarkAdapter = new BookmarkAdapter(getActivity(), values);
+        SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(bookmarkAdapter);
+        ScaleInAnimationAdapter animAdapterMultiple = new ScaleInAnimationAdapter(animAdapter);
+        animAdapterMultiple.setAbsListView(mListView);
+
+        mListView.setAdapter(animAdapterMultiple);
+        super.onResume();
     }
 
     @Override

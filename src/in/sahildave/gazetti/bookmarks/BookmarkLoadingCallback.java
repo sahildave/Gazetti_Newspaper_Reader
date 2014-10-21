@@ -89,7 +89,7 @@ public class BookmarkLoadingCallback {
         mArticleTextView.setVisibility(View.VISIBLE);
         mArticleTextView.setText(bodyText);
 
-        if (mImageURL == null) {
+        if (mImageURL == null || mImageURL.equalsIgnoreCase("")) {
             mTitleTextView = (TextView) headerStub.findViewById(R.id.article_title);
             mTitleTextView.setText(titleText);
             detailViewProgress.progressiveStop();

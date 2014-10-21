@@ -14,12 +14,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.crashlytics.android.Crashlytics;
-import com.parse.DeleteCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.SaveCallback;
 import in.sahildave.gazetti.R;
-import in.sahildave.gazetti.util.Constants;
+import in.sahildave.gazetti.bookmarks.sqlite.BookmarkDataSource;
+import in.sahildave.gazetti.bookmarks.sqlite.BookmarkModel;
 
 public class BookmarkDetailFragment extends Fragment {
     private static final String TAG = BookmarkDetailFragment.class.getName();
@@ -43,7 +40,8 @@ public class BookmarkDetailFragment extends Fragment {
     private String npNameString;
     private String catNameString;
     private Button mReadItLater;
-    private boolean bookmarked = false;
+    private boolean bookmarked = true;
+    private BookmarkDataSource dataSource;
 
     static interface BookmarkLoadArticleCallback {
         void onPreExecute(View rootView);
@@ -68,7 +66,8 @@ public class BookmarkDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        dataSource = new BookmarkDataSource(getActivity());
+        dataSource.open();
         setRetainInstance(true);
 
         if(getArguments()!=null){
@@ -83,13 +82,13 @@ public class BookmarkDetailFragment extends Fragment {
                 catNameString = BookmarkAdapter.catNameMap.get(mArticleHeadline);
 
                 Log.d(TAG, "BookmarkDetailFragment - \n"
-                        +mArticleHeadline+"\n"
-                        +mArticleURL+"\n"
-                        +mArticlePubDate+"\n"
-                        +mArticleImageURL+"\n"
-                        +mArticleBody+"\n"
-                        +catNameString+"\n"
-                        +npNameString+"\n");
+                        +"title - :."+mArticleHeadline+"\n"
+                        +"url - :."+mArticleURL+"\n"
+                        +"pubDate - :."+mArticlePubDate+"\n"
+                        +"image - :."+mArticleImageURL+"\n"
+                        +"body - :."+mArticleBody+"\n"
+                        +"catName - :."+catNameString+"\n"
+                        +"npName - :."+npNameString+"\n");
             }
         }
 
@@ -183,43 +182,38 @@ public class BookmarkDetailFragment extends Fragment {
     };
 
     private OnClickListener readItLater = new OnClickListener() {
+
         @Override
         public void onClick(View v) {
-
-            if(bookmarked){
-                ParseObject.unpinAllInBackground(mArticleHeadline, new DeleteCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark, 0, 0, 0);
-                        bookmarked = false;
-                    }
-                });
-            }else {
-                ParseObject readItLaterObject = new ParseObject(Constants.READ_IT_LATER);
-                try {
-                    readItLaterObject.put("title", mArticleHeadline);
-                    readItLaterObject.put("body", mArticleBody);
-                    readItLaterObject.put("pubDate", mArticlePubDate);
-                    readItLaterObject.put("image", mArticleImageURL);
-                    readItLaterObject.put("npName", npNameString);
-                    readItLaterObject.put("catName", catNameString);
-                } catch (Exception e) {
-                    Log.e(TAG, "Exception while reading bookmarks - " + e.getMessage(), e);
-                    Crashlytics.log(Log.ERROR, TAG, "Exception while reading bookmarks - " + e.getMessage());
-                }
-
-
-                readItLaterObject.pinInBackground("readitlater", new SaveCallback() {
-
-                    @Override
-                    public void done(ParseException e) {
-                        mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
-                        bookmarked = true;
-                    }
-                });
+            dataSource.open();
+            if (bookmarked) {
+                dataSource.deleteBookmarkModelEntry(mArticleURL);
+                mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark, 0, 0, 0);
+                bookmarked=false;
+            } else if (!bookmarked) {
+                dataSource.createBookmarkModelEntry(getBookmarkModelObject());
+                mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
+                bookmarked=true;
             }
         }
     };
+
+    private BookmarkModel getBookmarkModelObject() {
+        final BookmarkModel bookmarkModel = new BookmarkModel();
+        try {
+            bookmarkModel.setmArticleHeadline(mArticleHeadline);
+            bookmarkModel.setCategoryName(catNameString);
+            bookmarkModel.setNewspaperName(npNameString);
+            bookmarkModel.setmArticleURL(mArticleURL);
+            bookmarkModel.setmArticleBody(mArticleBody);
+            bookmarkModel.setmArticleImageURL(mArticleImageURL);
+            bookmarkModel.setmArticlePubDate(mArticlePubDate);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception while creating bookmark object - " + e.getMessage(), e);
+            Crashlytics.log(Log.ERROR, TAG, "Exception while creating bookmark object - " + e.getMessage());
+        }
+        return bookmarkModel;
+    }
 
     public class ArticleLoadAsyncTask extends AsyncTask<Void, String, String[]> {
 
@@ -257,7 +251,7 @@ public class BookmarkDetailFragment extends Fragment {
         protected void onPostExecute(String[] result) {
             if (mCallbacks != null) {
                 View headerStub;
-                if (mArticleImageURL == null) {
+                if (mArticleImageURL == null || mArticleImageURL.equals("")) {
                     headerStub = ((ViewStub) rootView.findViewById(R.id.article_title_stub_import)).inflate();
                 } else {
                     headerStub = ((ViewStub) rootView.findViewById(R.id.article_header_stub_import)).inflate();
@@ -266,6 +260,18 @@ public class BookmarkDetailFragment extends Fragment {
                 mCallbacks.onPostExecute(result, mArticlePubDate);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        dataSource.open();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        dataSource.close();
+        super.onPause();
     }
 
     private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {

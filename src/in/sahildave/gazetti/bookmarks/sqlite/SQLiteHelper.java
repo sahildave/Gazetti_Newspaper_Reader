@@ -1,8 +1,9 @@
-package in.sahildave.gazetti.util;
+package in.sahildave.gazetti.bookmarks.sqlite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by sahil on 13/10/14.
@@ -16,26 +17,27 @@ public class SQLiteHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
 
     public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_LINK = "link";
-
-    public static final String COLUMN_NEWSPAPER_ID = "newspaper_id_column";
-    public static final String COLUMN_CATEGORY_ID = "category_id_column";
-    public static final String COLUMN_NEWS_TITLE = "news_title";
-    public static final String COLUMN_NEWS_IMAGE_URL = "news_image_url";
+    public static final String COLUMN_NEWS_HEADLINE = "news_title";
     public static final String COLUMN_NEWS_BODY = "news_body";
+    public static final String COLUMN_NEWS_ARTICLE_URL = "link";
+    public static final String COLUMN_NEWS_PUB_DATE = "pub_date";
+    public static final String COLUMN_NEWS_IMAGE_URL = "news_image_url";
+    public static final String COLUMN_NEWSPAPER_NAME = "newspaper_name_column";
+    public static final String COLUMN_CATEGORY_NAME = "category_name_column";
 
     public static final String TABLE_READ_IT_LATER = "read_it_later";
 
-    //new
     private static final String CREATE_TABLE_RIL =
             "CREATE TABLE " + TABLE_READ_IT_LATER + "("
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + COLUMN_NEWSPAPER_ID + " TEXT NOT NULL, "
-                    + COLUMN_CATEGORY_ID + " TEXT NOT NULL, "
-                    + COLUMN_NEWS_TITLE + " TEXT NOT NULL, "
-                    + COLUMN_NEWS_IMAGE_URL + " TEXT NOT NULL, "
-                    + COLUMN_NEWS_BODY + " TEXT NOT NULL);";
+                    + COLUMN_NEWSPAPER_NAME + " TEXT NOT NULL, "
+                    + COLUMN_CATEGORY_NAME + " TEXT NOT NULL, "
+                    + COLUMN_NEWS_HEADLINE + " TEXT NOT NULL, "
+                    + COLUMN_NEWS_BODY + " TEXT NOT NULL, "
+                    + COLUMN_NEWS_ARTICLE_URL + " TEXT NOT NULL, "
+                    + COLUMN_NEWS_PUB_DATE + " TEXT NOT NULL, "
+                    + COLUMN_NEWS_IMAGE_URL + " TEXT NOT NULL "
+                    + ");";
 
     public static SQLiteHelper getInstance(Context context) {
         if (sInstance == null) {
@@ -55,7 +57,10 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.w(SQLiteHelper.class.getName(),
+                "Upgrading database from version " + oldVersion + " to "
+                        + newVersion + ", which will destroy all old data");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_READ_IT_LATER);
         onCreate(db);
-
     }
 }
