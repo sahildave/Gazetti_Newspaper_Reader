@@ -73,3 +73,6 @@ Constants.java
 #CLOUD CODE FILES
 global.json
 *.js~
+
+#Manifest File
+AndroidManifest.xml
