@@ -12,14 +12,14 @@ import in.sahildave.gazetti.R;
 
 import java.util.List;
 
-public class ImageAdapter extends BaseAdapter {
+public class GridAdapter extends BaseAdapter {
     // private String TAG = "HomeScreen";
     private Context mContext;
     private int cell_dimen;
     private LayoutInflater mInflater;
     List<CellModel> cellList;
 
-    public ImageAdapter(Context c, List<CellModel> cellList) {
+    public GridAdapter(Context c, List<CellModel> cellList) {
         mContext = c;
         this.cell_dimen = (int) c.getResources().getDimension(R.dimen.cell_dimen);
         mInflater = LayoutInflater.from(c);

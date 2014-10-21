@@ -42,8 +42,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 
     private FragmentManager fragmentManager;
     private List<CellModel> cellList;
-    private ImageAdapter adapter;
-    private View actionBarCustomView;
+    private GridAdapter adapter;
     private UserSelectionUtil userSelectionUtil;
     private CellListUtil cellListUtil;
     private PopupWindow popupWindow;
@@ -103,7 +102,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     }
 
     private void setupCustomActionBar() {
-        actionBarCustomView = LayoutInflater.from(this).inflate(R.layout.homescreen_actionbar, null);
+        View actionBarCustomView = LayoutInflater.from(this).inflate(R.layout.homescreen_actionbar, null);
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
                 ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
@@ -189,7 +188,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     }
 
     @Override
-    public void showAddNewCellDialog(List<CellModel> cellList, ImageAdapter adapter) {
+    public void showAddNewCellDialog(List<CellModel> cellList, GridAdapter adapter) {
         this.cellList = cellList;
         this.adapter = adapter;
 
@@ -200,7 +199,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 
     @Override
     public void showEditCellDialog(int position, String newspaper, String category, List<CellModel> cellList,
-                                   ImageAdapter adapter) {
+                                   GridAdapter adapter) {
         this.cellList = cellList;
         this.adapter = adapter;
 

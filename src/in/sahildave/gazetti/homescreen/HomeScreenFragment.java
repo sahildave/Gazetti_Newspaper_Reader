@@ -23,7 +23,7 @@ import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationA
 import com.nineoldandroids.view.ViewHelper;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.adapter.CellModel;
-import in.sahildave.gazetti.homescreen.adapter.ImageAdapter;
+import in.sahildave.gazetti.homescreen.adapter.GridAdapter;
 import in.sahildave.gazetti.homescreen.adapter.NewsCatModel;
 import in.sahildave.gazetti.news_activities.WebsiteListActivity;
 import in.sahildave.gazetti.util.CellListUtil;
@@ -37,7 +37,7 @@ public class HomeScreenFragment extends Fragment {
     private Callbacks activityCallback;
     private GridView gridview;
     private List<CellModel> cellList;
-    private ImageAdapter adapter;
+    private GridAdapter adapter;
     private int feedVersion;
     private SwingBottomInAnimationAdapter animAdapter;
     private AlphaInAnimationAdapter animAdapterMultiple;
@@ -59,10 +59,10 @@ public class HomeScreenFragment extends Fragment {
     }
 
     public interface Callbacks {
-        public void showAddNewCellDialog(List<CellModel> cellList, ImageAdapter adapter);
+        public void showAddNewCellDialog(List<CellModel> cellList, GridAdapter adapter);
 
         public void showEditCellDialog(int position, String newspaper, String category, List<CellModel> cellList,
-                                       ImageAdapter adapter);
+                                       GridAdapter adapter);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class HomeScreenFragment extends Fragment {
 
             putAddNewCellInList();
 
-            adapter = new ImageAdapter(getActivity(), cellList);
+            adapter = new GridAdapter(getActivity(), cellList);
 
             animAdapter = new SwingBottomInAnimationAdapter(adapter);
             animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
@@ -159,7 +159,7 @@ public class HomeScreenFragment extends Fragment {
         cellList = CellListUtil.getCellListFromSharedPrefs();
         putAddNewCellInList();
 
-        adapter = new ImageAdapter(getActivity(), cellList);
+        adapter = new GridAdapter(getActivity(), cellList);
         animAdapter = new SwingBottomInAnimationAdapter(adapter);
         animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
         animAdapterMultiple.setAbsListView(gridview);
