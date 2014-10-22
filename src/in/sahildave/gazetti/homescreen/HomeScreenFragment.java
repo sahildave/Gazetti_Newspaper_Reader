@@ -85,12 +85,8 @@ public class HomeScreenFragment extends Fragment {
         SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
         int newfeedVersion = sharedPref.getInt("feedVersion", 0);
 
-        Log.d(TAG, "HomeScreenFragment in onResume: firstRun - " + firstRun
-                + ", newfeedVerision - " + newfeedVersion
-                + ", feedVersion - " + feedVersion);
         if ((newfeedVersion > feedVersion)) {
 
-            Log.d(TAG, "RELOADING - " + cellList.size());
             feedVersion = newfeedVersion;
             cellList.clear();
             cellList = CellListUtil.getCellListFromSharedPrefs();
@@ -104,9 +100,6 @@ public class HomeScreenFragment extends Fragment {
             animAdapterMultiple.setAbsListView(gridview);
 
             gridview.setAdapter(animAdapterMultiple);
-
-            Log.d(TAG, "LOADED - " + cellList.size());
-
         }
 
     }
@@ -121,7 +114,6 @@ public class HomeScreenFragment extends Fragment {
         feedVersion = sharedPref.getInt("feedVersion", 0);
 
         firstRun = true;
-        Log.d(TAG, "FEEDVERSION onCreate - " + feedVersion);
     }
 
     @Override

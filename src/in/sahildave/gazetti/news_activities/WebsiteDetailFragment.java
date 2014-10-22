@@ -22,6 +22,7 @@ import in.sahildave.gazetti.news_activities.fetch.firstPost;
 import in.sahildave.gazetti.news_activities.fetch.hindu;
 import in.sahildave.gazetti.news_activities.fetch.indianExpress;
 import in.sahildave.gazetti.news_activities.fetch.toi;
+import in.sahildave.gazetti.util.ShareButtonListener;
 
 public class WebsiteDetailFragment extends Fragment {
     private static final String TAG = "DFRAGMENT";
@@ -48,6 +49,7 @@ public class WebsiteDetailFragment extends Fragment {
     private Button mReadItLater;
     private boolean bookmarked = false;
     private BookmarkDataSource dataSource;
+    private Button mViewInBrowser;
 
     static interface LoadArticleCallback {
         void onPreExecute(View rootView);
@@ -106,7 +108,7 @@ public class WebsiteDetailFragment extends Fragment {
         ImageButton mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
         mReadItLater = (Button) rootView.findViewById(R.id.read_it_later);
         Button mShareButton = (Button) rootView.findViewById(R.id.shareContent);
-        Button mViewInBrowser = (Button) rootView.findViewById(R.id.viewInBrowser);
+        mViewInBrowser = (Button) rootView.findViewById(R.id.viewInBrowser);
 
         TextView categoryName = (TextView) rootView.findViewById(R.id.category);
         categoryName.setText(catNameString);
@@ -125,6 +127,12 @@ public class WebsiteDetailFragment extends Fragment {
         mNewspaperTile.setOnClickListener(webViewCalled);
         mViewInBrowser.setOnClickListener(webViewCalled);
         mReadItLater.setOnClickListener(readItLater);
+        mShareButton.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                new ShareButtonListener(getActivity(), mArticleURL, mArticleHeadline);
+            }
+        });
 
         mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
         mScrollToReadLayout.setVisibility(View.INVISIBLE);
@@ -172,9 +180,17 @@ public class WebsiteDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Toast.makeText(getActivity(), "Clicked "+item.getTitle(), Toast.LENGTH_SHORT).show();
+        switch (item.getItemId()){
+            case R.id.action_share:
+                new ShareButtonListener(getActivity(), mArticleURL, mArticleHeadline);
+                return true;
+            case R.id.action_view_in_browser:
+                mViewInBrowser.performClick();
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
+
 
 
     @Override

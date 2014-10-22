@@ -17,6 +17,7 @@ import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.bookmarks.sqlite.BookmarkDataSource;
 import in.sahildave.gazetti.bookmarks.sqlite.BookmarkModel;
+import in.sahildave.gazetti.util.ShareButtonListener;
 
 public class BookmarkDetailFragment extends Fragment {
     private static final String TAG = BookmarkDetailFragment.class.getName();
@@ -42,6 +43,7 @@ public class BookmarkDetailFragment extends Fragment {
     private Button mReadItLater;
     private boolean bookmarked = true;
     private BookmarkDataSource dataSource;
+    private Button mViewInBrowser;
 
     static interface BookmarkLoadArticleCallback {
         void onPreExecute(View rootView);
@@ -106,7 +108,7 @@ public class BookmarkDetailFragment extends Fragment {
         mReadItLater = (Button) rootView.findViewById(R.id.read_it_later);
         mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
         Button mShareButton = (Button) rootView.findViewById(R.id.shareContent);
-        Button mViewInBrowser = (Button) rootView.findViewById(R.id.viewInBrowser);
+        mViewInBrowser = (Button) rootView.findViewById(R.id.viewInBrowser);
 
         TextView categoryName = (TextView) rootView.findViewById(R.id.category);
         categoryName.setText(catNameString);
@@ -125,6 +127,12 @@ public class BookmarkDetailFragment extends Fragment {
         mNewspaperTile.setOnClickListener(webViewCalled);
         mViewInBrowser.setOnClickListener(webViewCalled);
         mReadItLater.setOnClickListener(readItLater);
+        mShareButton.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                new ShareButtonListener(getActivity(), mArticleURL, mArticleHeadline);
+            }
+        });
 
         mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
         mScrollToReadLayout.setVisibility(View.INVISIBLE);
@@ -162,10 +170,17 @@ public class BookmarkDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Toast.makeText(getActivity(), "Clicked "+item.getTitle(), Toast.LENGTH_SHORT).show();
-        return super.onOptionsItemSelected(item);
-    }
 
+        switch (item.getItemId()){
+            case R.id.action_share:
+                new ShareButtonListener(getActivity(), mArticleURL, mArticleHeadline);
+                return true;
+            case R.id.action_view_in_browser:
+                mViewInBrowser.performClick();
+                return true;
+        }
+        return false;
+    }
 
     @Override
     public void onDetach() {
