@@ -152,7 +152,7 @@ public class HomeScreenFragment extends Fragment {
             phoneMode = false;
             kenBurnsView = (KenBurnsView) view.findViewById(R.id.kenBurnsView_Background);
             Log.d(TAG, "loading for tablet");
-            // loadTabletBackground();
+            loadTabletBackground();
 
         }
 
@@ -241,6 +241,21 @@ public class HomeScreenFragment extends Fragment {
         }
     }
 
+    private void loadTabletBackground() {
+        if(kenBurnsView!=null){
+            Random rand = new Random();
+            int n = rand.nextInt(4) + 1;
+            String backgroundImageUri = "land_" + n;
+
+            int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
+            if (resID == 0) {
+                resID = getResources().getIdentifier("land_0", "drawable", getActivity().getPackageName());
+            }
+
+            kenBurnsView.setImageResource(resID);
+        }
+    }
+
     private void loadPhoneBackground() {
         // get a random image, if null then get image_0
         Random rand = new Random();
@@ -252,8 +267,6 @@ public class HomeScreenFragment extends Fragment {
         if (resID == 0) {
             resID = getResources().getIdentifier("port_0", "drawable", getActivity().getPackageName());
         }
-
-        Log.d(TAG, "PHOTO ---- " + n + ", " + resID);
 
         // Bitmap Options
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -298,12 +311,7 @@ public class HomeScreenFragment extends Fragment {
         options.inJustDecodeBounds = false;
         Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);
 
-        Log.d(TAG, "bitmap - " + mBitmap.getHeight());
-
         phoneBackgroundImage.setImageBitmap(mBitmap);
-
-        // gridViewBackground = new BitmapDrawable(getResources(), mBitmap);
-        // gridview.setBackgroundDrawable(gridViewBackground);
     }
 
     @Override
