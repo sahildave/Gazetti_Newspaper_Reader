@@ -1,5 +1,6 @@
 package in.sahildave.gazetti.bookmarks;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -16,8 +17,9 @@ public class BookmarkDetailActivity extends ActionBarActivity implements Bookmar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_website_detail);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionbar_default_color)));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         mDetailFragment = (BookmarkDetailFragment) getSupportFragmentManager().findFragmentByTag("bookmarkDetail");

@@ -1,6 +1,7 @@
 package in.sahildave.gazetti.bookmarks;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -23,6 +24,9 @@ public class BookmarkListActivity extends ActionBarActivity implements BookmarkS
         setContentView(R.layout.activity_website_list);
 
         setTitle("Bookmarks");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionbar_default_color)));
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         if (findViewById(R.id.website_detail_container) != null) {
             mTwoPane = true;

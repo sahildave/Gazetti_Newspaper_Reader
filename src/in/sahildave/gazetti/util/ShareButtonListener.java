@@ -1,6 +1,6 @@
 package in.sahildave.gazetti.util;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,12 +19,12 @@ public class ShareButtonListener {
     private static final int HEADLINE_LENGTH = 120;
     private static final int MESSAGE_LENGTH = 137;
 
-    Context context;
+    Activity activity;
     String mArticleURL;
     String mArticleHeadLine;
-    public ShareButtonListener(Context context, String mArticleURL, String mArticleHeadline) {
+    public ShareButtonListener(Activity activity, final String mArticleURL, String mArticleHeadline) {
         Log.d(ShareButtonListener.class.getName(), "Sharing...");
-        this.context = context;
+        this.activity = activity;
         this.mArticleURL = mArticleURL;
         this.mArticleHeadLine = mArticleHeadline;
 
@@ -32,7 +32,12 @@ public class ShareButtonListener {
                 mArticleHeadLine.substring(0, HEADLINE_LENGTH) :
                 mArticleHeadLine;
 
-        shorten(mArticleURL);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                shorten(mArticleURL);
+            }
+        });
 
     }
 
@@ -75,7 +80,7 @@ public class ShareButtonListener {
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, intentString);
                     sendIntent.setType("text/");
-                    context.startActivity(Intent.createChooser(sendIntent, "Share with"));
+                    activity.startActivity(Intent.createChooser(sendIntent, "Share with"));
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     e.printStackTrace();

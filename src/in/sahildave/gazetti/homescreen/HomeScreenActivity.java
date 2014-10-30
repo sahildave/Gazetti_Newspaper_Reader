@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager.LayoutParams;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import com.crashlytics.android.Crashlytics;
@@ -126,10 +125,10 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         popupWindow.setFocusable(true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
         popupWindow.setWidth(getPixelForDp(120));
-        popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 
         // the drop down list is a list view
-        final ListView dropDownList = new ListView(this);
+        final ListView popUpDropDownList = new ListView(this);
         List<String> optionList = new ArrayList<String>();
         optionList.add(0, "Bookmarks");
         optionList.add(1, "Edit Feed");
@@ -149,27 +148,28 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
                 listItem.setTag(position);
                 listItem.setTextSize(16);
                 listItem.setPadding(24, 16, 16, 16);
-                listItem.setTextColor(Color.WHITE);
-                listItem.setHeight(getPixelForDp(36));
+                listItem.setBackgroundColor(Color.parseColor("#333333"));
+                listItem.setTextColor(Color.parseColor("#FFFFFF"));
+                listItem.setMinHeight(getPixelForDp(36));
                 listItem.setGravity(Gravity.CENTER_VERTICAL);
 
                 return listItem;
             }
         };
 
-        dropDownList.setAdapter(arrayAdapter);
-        popupWindow.setContentView(dropDownList);
+        popUpDropDownList.setAdapter(arrayAdapter);
+        popupWindow.setContentView(popUpDropDownList);
 
-        dropDownList.setOnItemClickListener(new OnItemClickListener() {
+        popUpDropDownList.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = (String) dropDownList.getAdapter().getItem(position);
+                String item = (String) popUpDropDownList.getAdapter().getItem(position);
                 popupWindow.dismiss();
 
-                if(item.equalsIgnoreCase("Edit Feed")){
+                if (item.equalsIgnoreCase("Edit Feed")) {
                     Intent settingIntent = new Intent(HomeScreenActivity.this, SettingsActivity.class);
                     startActivity(settingIntent);
-                } else if (item.equalsIgnoreCase("Bookmarks")){
+                } else if (item.equalsIgnoreCase("Bookmarks")) {
                     Intent bookmarkIntent = new Intent(HomeScreenActivity.this, BookmarkListActivity.class);
                     startActivity(bookmarkIntent);
                 }
