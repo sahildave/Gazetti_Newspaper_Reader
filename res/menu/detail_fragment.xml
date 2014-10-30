@@ -6,12 +6,14 @@
             android:orderInCategory="99"
             android:title="Share"
             android:icon="@android:drawable/ic_menu_share"
-            app:showAsAction="always"/>
+            android:showAsAction="ifRoom"
+            app:showAsAction="ifRoom"/>
 
     <item
             android:id="@+id/action_view_in_browser"
             android:orderInCategory="100"
             android:title="View In Browser"
+            android:showAsAction="never"
             app:showAsAction="never"/>
 
 </menu>

@@ -3,6 +3,7 @@ package in.sahildave.gazetti.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build.VERSION;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -49,17 +50,20 @@ public class ShareButtonListener {
             protected String doInBackground(String... params) {
                 String longUrl = params[0];
 
-                Urlshortener.Builder builder = new Urlshortener.Builder (AndroidHttp.newCompatibleTransport(), AndroidJsonFactory.getDefaultInstance(), null);
-                Urlshortener urlshortener = builder.build();
+                if(VERSION.SDK_INT >= 11 ){
+                    Urlshortener.Builder builder = new Urlshortener.Builder(AndroidHttp.newCompatibleTransport(), AndroidJsonFactory.getDefaultInstance(), null);
+                    Urlshortener urlshortener = builder.build();
 
-                Url url = new Url();
-                url.setLongUrl(longUrl);
-                try {
-                    url = urlshortener.url().insert(url).execute();
-                    return url.getId();
-                } catch (IOException e) {
-                    return null;
+                    Url url = new Url();
+                    url.setLongUrl(longUrl);
+                    try {
+                        url = urlshortener.url().insert(url).execute();
+                        return url.getId();
+                    } catch (IOException e) {
+                        return null;
+                    }
                 }
+                return longUrl;
             }
 
             @Override
@@ -70,16 +74,16 @@ public class ShareButtonListener {
                     mArticleURL = s;
 
                     String intentString = mArticleHeadLine + " - "+mArticleURL;
-                    intentString = intentString.length() > MESSAGE_LENGTH ?
-                            intentString.substring(0, MESSAGE_LENGTH)+"..." :
-                            intentString;
+//                    intentString = intentString.length() > MESSAGE_LENGTH ?
+//                            intentString.substring(0, MESSAGE_LENGTH)+"..." :
+//                            intentString;
 
                     Log.d(ShareButtonListener.class.getName(), "Sharing content - " + intentString);
 
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.setType("text/plain");
                     sendIntent.putExtra(Intent.EXTRA_TEXT, intentString);
-                    sendIntent.setType("text/");
                     activity.startActivity(Intent.createChooser(sendIntent, "Share with"));
                 } catch (Exception e) {
                     Crashlytics.logException(e);
