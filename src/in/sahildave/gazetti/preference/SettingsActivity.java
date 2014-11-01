@@ -2,6 +2,7 @@ package in.sahildave.gazetti.preference;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,11 +10,24 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
+import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.R;
 
 public class SettingsActivity extends PreferenceActivity {
 
     int ActionBarColorId = -1;
+    private String app_ver;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try{
+            app_ver = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+        } catch (NameNotFoundException e) {
+            Crashlytics.logException(e);
+        }
+
+    }
 
     @SuppressLint("NewApi")
     @Override
@@ -54,6 +68,7 @@ public class SettingsActivity extends PreferenceActivity {
 
         // License Section
         Preference licensePref = (Preference) findPreference("licensePref");
+        licensePref.setSummary("Build Version : "+app_ver);
         licensePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
 
