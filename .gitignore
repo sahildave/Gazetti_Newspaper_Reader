@@ -63,16 +63,6 @@ proguard/
 # Log Files
 *.log
 
-# Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-
-#SKIP THE CONSTANTS FILE
-Constants.java
-
 #CLOUD CODE FILES
 global.json
 *.js~
-
-#Manifest File
-AndroidManifest.xml
