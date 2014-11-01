@@ -72,6 +72,7 @@ public class WebsiteDetailActivity extends ActionBarActivity implements LoadArti
             Bundle arguments = new Bundle();
             arguments.putString("npName", getIntent().getStringExtra("npName"));
             arguments.putString("catName", getIntent().getStringExtra("catName"));
+            arguments.putInt("actionBarColor", ActionBarColorId);
             arguments.putString(WebsiteDetailFragment.HEADLINE_CLICKED,
                     getIntent().getStringExtra(WebsiteDetailFragment.HEADLINE_CLICKED));
             mDetailFragment.setArguments(arguments);

@@ -137,6 +137,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
             Bundle arguments = new Bundle();
             arguments.putString("npName", npName);
             arguments.putString("catName", catName);
+            arguments.putInt("actionBarColor", currentColor);
             arguments.putString(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
             WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
             detailFragment.setArguments(arguments);

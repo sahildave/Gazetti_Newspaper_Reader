@@ -2,6 +2,9 @@ package in.sahildave.gazetti.news_activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,6 +53,7 @@ public class WebsiteDetailFragment extends Fragment {
     private boolean bookmarked = false;
     private BookmarkDataSource dataSource;
     private Button mViewInBrowser;
+    private int actionBarColor = Color.DKGRAY;
 
     static interface LoadArticleCallback {
         void onPreExecute(View rootView);
@@ -87,6 +91,7 @@ public class WebsiteDetailFragment extends Fragment {
         if(getArguments()!=null){
             npNameString = getArguments().getString("npName");
             catNameString = getArguments().getString("catName");
+            actionBarColor = getArguments().getInt("actionBarColor");
 
             if (getArguments().containsKey(HEADLINE_CLICKED)) {
                 mArticleHeadline = getArguments().getString(HEADLINE_CLICKED);
@@ -110,9 +115,15 @@ public class WebsiteDetailFragment extends Fragment {
         Button mShareButton = (Button) rootView.findViewById(R.id.shareContent);
         mViewInBrowser = (Button) rootView.findViewById(R.id.viewInBrowser);
 
+        mShareButton.setTextColor(actionBarColor);
+        mViewInBrowser.setTextColor(actionBarColor);
+
         TextView categoryName = (TextView) rootView.findViewById(R.id.category);
         categoryName.setText(catNameString);
         categoryName.setVisibility(View.VISIBLE);
+        categoryName.setTextColor(actionBarColor);
+        TextView mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
+        mArticlePubDateView.setTextColor(actionBarColor);
 
         if (npNameString.equals("The Hindu")) {
             mNewspaperTile.setImageResource(R.drawable.ic_hindu);
@@ -162,6 +173,18 @@ public class WebsiteDetailFragment extends Fragment {
         setupReadItLaterButton();
         setHasOptionsMenu(true);
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        setReadItLaterButtonColor();
+    }
+
+    private void setReadItLaterButtonColor() {
+        PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(actionBarColor, PorterDuff.Mode.SRC_ATOP);
+
+        mReadItLater.getCompoundDrawables()[0].setColorFilter(colorFilter);
+        mReadItLater.setTextColor(actionBarColor);
     }
 
     private void setupReadItLaterButton() {
@@ -216,10 +239,12 @@ public class WebsiteDetailFragment extends Fragment {
             if (bookmarked) {
                 dataSource.deleteBookmarkModelEntry(mArticleURL);
                 mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark, 0, 0, 0);
+                setReadItLaterButtonColor();
                 bookmarked=false;
             } else if (!bookmarked) {
                 dataSource.createBookmarkModelEntry(getBookmarkModelObject());
                 mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
+                setReadItLaterButtonColor();
                 bookmarked=true;
             }
         }
