@@ -125,7 +125,7 @@
                 <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="0dp"/>
 
                 <View android:layout_width="1dp" android:layout_height="48dp"
-                      android:background="@android:color/darker_gray"/>
+                      android:id="@+id/article_footer_divider" android:background="@android:color/darker_gray"/>
 
                 <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="0dp"/>
 

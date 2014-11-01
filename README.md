@@ -5,8 +5,8 @@ Gazetti
 An upcoming blazing fast Android app to make reading newspaper easy and interesting.
 --------------
 
-minSDK - API 10 (2.3.3)   
-Current Release - 0.1.0 APK
+minSDK - API 10 (2.3.3)
+Current Release - 0.2
 
 This app is focused on giving full control to the users for what they want to read, down to the category level. From a Newspapers you'd like to read and select the category. If you don't like *Politics*, don't select it in your feed selector!
 
@@ -20,14 +20,4 @@ Technology used
 - **Jsoup** for parsing articles into "Reading Mode" - The app finds the top heading, top image and the article body from the links. It skips the unnecessary ads if within the body.
 - **Gson** - To parse the user's feed preference into string and save it to sharedPrefs.
 - **Picasso** - To load the images in article asynchronously.
-
-
-Screenshots
---------------------
-
-![](https://raw.githubusercontent.com/sahildave/Gazetti_Newspaper_Reader/master/screens/phone_news.png)
-
-![](https://raw.githubusercontent.com/sahildave/Gazetti_Newspaper_Reader/master/screens/tab_news.png)
-
-![](https://raw.githubusercontent.com/sahildave/Gazetti_Newspaper_Reader/master/screens/phone_home.jpg)
-
+- **Other Libraries Used** - ListViewAnimations, KenBurnsView (in Tablet layout), SmoothProgressBar, JazzyViewPager, TextJustify

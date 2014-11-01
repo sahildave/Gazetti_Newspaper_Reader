@@ -2,6 +2,8 @@ package in.sahildave.gazetti.bookmarks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,6 +46,7 @@ public class BookmarkDetailFragment extends Fragment {
     private boolean bookmarked = true;
     private BookmarkDataSource dataSource;
     private Button mViewInBrowser;
+    private int actionBarColor;
 
     static interface BookmarkLoadArticleCallback {
         void onPreExecute(View rootView);
@@ -82,17 +85,9 @@ public class BookmarkDetailFragment extends Fragment {
                 mArticleImageURL = BookmarkAdapter.articleImage.get(mArticleHeadline);
                 npNameString = BookmarkAdapter.npNameMap.get(mArticleHeadline);
                 catNameString = BookmarkAdapter.catNameMap.get(mArticleHeadline);
-
-                Log.d(TAG, "BookmarkDetailFragment - \n"
-                        +"title - :."+mArticleHeadline+"\n"
-                        +"url - :."+mArticleURL+"\n"
-                        +"pubDate - :."+mArticlePubDate+"\n"
-                        +"image - :."+mArticleImageURL+"\n"
-                        +"body - :."+mArticleBody+"\n"
-                        +"catName - :."+catNameString+"\n"
-                        +"npName - :."+npNameString+"\n");
             }
         }
+        actionBarColor = getResources().getColor(R.color.actionbar_default_color);
 
         mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
         slide_down = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
@@ -109,10 +104,20 @@ public class BookmarkDetailFragment extends Fragment {
         mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
         Button mShareButton = (Button) rootView.findViewById(R.id.shareContent);
         mViewInBrowser = (Button) rootView.findViewById(R.id.viewInBrowser);
+        View footerDivider = rootView.findViewById(R.id.article_footer_divider);
+
+        mShareButton.setTextColor(actionBarColor);
+        mViewInBrowser.setTextColor(actionBarColor);
+        setButtonImageOverlayColor(mShareButton);
+        setButtonImageOverlayColor(mViewInBrowser);
+        footerDivider.setBackgroundColor(actionBarColor);
 
         TextView categoryName = (TextView) rootView.findViewById(R.id.category);
         categoryName.setText(catNameString);
         categoryName.setVisibility(View.VISIBLE);
+        categoryName.setTextColor(actionBarColor);
+        TextView mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
+        mArticlePubDateView.setTextColor(actionBarColor);
 
         if (npNameString.equals("The Hindu")) {
             mNewspaperTile.setImageResource(R.drawable.ic_hindu);
@@ -163,6 +168,18 @@ public class BookmarkDetailFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        setButtonImageOverlayColor(mReadItLater);
+    }
+
+    private void setButtonImageOverlayColor(Button button) {
+        PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(actionBarColor, PorterDuff.Mode.SRC_ATOP);
+        button.getCompoundDrawables()[0].setColorFilter(colorFilter);
+        button.setTextColor(actionBarColor);
+    }
+
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.detail_fragment, menu);
@@ -204,10 +221,12 @@ public class BookmarkDetailFragment extends Fragment {
             if (bookmarked) {
                 dataSource.deleteBookmarkModelEntry(mArticleURL);
                 mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark, 0, 0, 0);
+                setButtonImageOverlayColor(mReadItLater);
                 bookmarked=false;
             } else if (!bookmarked) {
                 dataSource.createBookmarkModelEntry(getBookmarkModelObject());
                 mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
+                setButtonImageOverlayColor(mReadItLater);
                 bookmarked=true;
             }
         }

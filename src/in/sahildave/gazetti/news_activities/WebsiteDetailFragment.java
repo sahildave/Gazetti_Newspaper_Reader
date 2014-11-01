@@ -53,7 +53,7 @@ public class WebsiteDetailFragment extends Fragment {
     private boolean bookmarked = false;
     private BookmarkDataSource dataSource;
     private Button mViewInBrowser;
-    private int actionBarColor = Color.DKGRAY;
+        private int actionBarColor = Color.DKGRAY;
 
     static interface LoadArticleCallback {
         void onPreExecute(View rootView);
@@ -114,9 +114,13 @@ public class WebsiteDetailFragment extends Fragment {
         mReadItLater = (Button) rootView.findViewById(R.id.read_it_later);
         Button mShareButton = (Button) rootView.findViewById(R.id.shareContent);
         mViewInBrowser = (Button) rootView.findViewById(R.id.viewInBrowser);
+        View footerDivider = rootView.findViewById(R.id.article_footer_divider);
 
         mShareButton.setTextColor(actionBarColor);
         mViewInBrowser.setTextColor(actionBarColor);
+        setButtonImageOverlayColor(mShareButton);
+        setButtonImageOverlayColor(mViewInBrowser);
+        footerDivider.setBackgroundColor(actionBarColor);
 
         TextView categoryName = (TextView) rootView.findViewById(R.id.category);
         categoryName.setText(catNameString);
@@ -177,14 +181,13 @@ public class WebsiteDetailFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        setReadItLaterButtonColor();
+        setButtonImageOverlayColor(mReadItLater);
     }
 
-    private void setReadItLaterButtonColor() {
+    private void setButtonImageOverlayColor(Button button) {
         PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(actionBarColor, PorterDuff.Mode.SRC_ATOP);
-
-        mReadItLater.getCompoundDrawables()[0].setColorFilter(colorFilter);
-        mReadItLater.setTextColor(actionBarColor);
+        button.getCompoundDrawables()[0].setColorFilter(colorFilter);
+        button.setTextColor(actionBarColor);
     }
 
     private void setupReadItLaterButton() {
@@ -239,12 +242,12 @@ public class WebsiteDetailFragment extends Fragment {
             if (bookmarked) {
                 dataSource.deleteBookmarkModelEntry(mArticleURL);
                 mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark, 0, 0, 0);
-                setReadItLaterButtonColor();
+                setButtonImageOverlayColor(mReadItLater);
                 bookmarked=false;
             } else if (!bookmarked) {
                 dataSource.createBookmarkModelEntry(getBookmarkModelObject());
                 mReadItLater.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bookmark_done, 0, 0, 0);
-                setReadItLaterButtonColor();
+                setButtonImageOverlayColor(mReadItLater);
                 bookmarked=true;
             }
         }
