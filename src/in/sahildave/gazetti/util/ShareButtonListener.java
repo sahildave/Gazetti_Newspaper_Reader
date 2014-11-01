@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
-import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -18,13 +17,12 @@ import java.io.IOException;
  */
 public class ShareButtonListener {
     private static final int HEADLINE_LENGTH = 120;
-    private static final int MESSAGE_LENGTH = 137;
 
     Activity activity;
     String mArticleURL;
     String mArticleHeadLine;
     public ShareButtonListener(Activity activity, final String mArticleURL, String mArticleHeadline) {
-        Log.d(ShareButtonListener.class.getName(), "Sharing...");
+        //Log.d(ShareButtonListener.class.getName(), "Sharing...");
         this.activity = activity;
         this.mArticleURL = mArticleURL;
         this.mArticleHeadLine = mArticleHeadline;
@@ -78,7 +76,7 @@ public class ShareButtonListener {
 //                            intentString.substring(0, MESSAGE_LENGTH)+"..." :
 //                            intentString;
 
-                    Log.d(ShareButtonListener.class.getName(), "Sharing content - " + intentString);
+                    //Log.d(ShareButtonListener.class.getName(), "Sharing content - " + intentString);
 
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);

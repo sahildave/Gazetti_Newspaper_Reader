@@ -122,8 +122,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Log.d(TAG, "ListFragment in onCreateView ");
-        View rootView = inflater.inflate(R.layout.fragment_website_list, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_website_list, container, false);
     }
 
     @Override
@@ -161,12 +160,12 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "ListFragment in onActivityCreated ");
+        //Log.d(TAG, "ListFragment in onActivityCreated ");
 
         context = getActivity();
 
         if (mTwoPane && !firstRun) {
-            // Log.d(TAG, "Reseting activatedPostion");
+            // //Log.d(TAG, "Reseting activatedPostion");
             setActivatedPosition(mActivatedPosition);
         }
         if (!firstRun) {
@@ -322,7 +321,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d(TAG, "Fragment in onDetach");
+        //Log.d(TAG, "Fragment in onDetach");
 
         // Reset the active callbacks interface to the dummy implementation.
         mItemSelectedCallback = sDummyItemSelectedCallback;
@@ -331,7 +330,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "Fragment in onDestroy");
+        //Log.d(TAG, "Fragment in onDestroy");
         mActivatedPosition = 1;
         dateLastUpdatedString = null;
 
@@ -351,7 +350,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
             }
 
         } catch (Exception e) {
-            Log.d(TAG, "Exception in onListItemClick ",e);
+            //Log.d(TAG, "Exception in onListItemClick ",e);
             Crashlytics.log(Log.ERROR, TAG, "Is headlineTextView null - "+(null==headlineTextView));
             Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
             Crashlytics.logException(e);
@@ -360,7 +359,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     }
 
     private void setActivatedPosition(int position) {
-        // Log.d(TAG, "ListFragment  SETACTIVATED");
+        // //Log.d(TAG, "ListFragment  SETACTIVATED");
         if (position == ListView.INVALID_POSITION) {
             mListView.setItemChecked(mActivatedPosition, false);
         } else {
@@ -372,9 +371,9 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        // Log.d(TAG, "ListFragment onSaveInstanceState ");
+        // //Log.d(TAG, "ListFragment onSaveInstanceState ");
         if (mActivatedPosition != ListView.INVALID_POSITION) {
-            // Log.d(TAG, "LISTFRAGMENT SAVING position " + mActivatedPosition);
+            // //Log.d(TAG, "LISTFRAGMENT SAVING position " + mActivatedPosition);
             outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
         }
         outState.putLong("time", System.currentTimeMillis());

@@ -84,7 +84,7 @@ public class BookmarkListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "ListFragment in onActivityCreated ");
+        //Log.d(TAG, "ListFragment in onActivityCreated ");
 
         if (mTwoPane && !firstRun) {
             setActivatedPosition(mActivatedPosition);
@@ -96,7 +96,7 @@ public class BookmarkListFragment extends ListFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d(TAG, "Fragment in onDetach");
+        //Log.d(TAG, "Fragment in onDetach");
         mBookmarkSelectedListeners = sDummyBookmarkSelectedListeners;
     }
 
@@ -104,7 +104,7 @@ public class BookmarkListFragment extends ListFragment {
     public void onDestroy() {
         dataSource.close();
         super.onDestroy();
-        Log.d(TAG, "Fragment in onDestroy");
+        //Log.d(TAG, "Fragment in onDestroy");
         mActivatedPosition = 1;
     }
 
@@ -135,7 +135,7 @@ public class BookmarkListFragment extends ListFragment {
             }
 
         } catch (Exception e) {
-            Log.d(TAG, "Exception in onListItemClick ",e);
+            //Log.d(TAG, "Exception in onListItemClick ",e);
             Crashlytics.log(Log.ERROR, TAG, "Is headlineTextView null - "+(null==headlineTextView));
             Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
             Crashlytics.logException(e);

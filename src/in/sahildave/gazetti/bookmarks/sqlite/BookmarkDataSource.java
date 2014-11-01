@@ -57,7 +57,7 @@ public class BookmarkDataSource {
         }
         long insertId = database.insert(SQLiteHelper.TABLE_READ_IT_LATER, null,
                 values);
-        Log.d(TAG, "Created entry "+insertId);
+        //Log.d(TAG, "Created entry "+insertId);
 
         Cursor cursor = database.query(SQLiteHelper.TABLE_READ_IT_LATER,
                 allColumns, SQLiteHelper.COLUMN_ID + " = " + insertId, null,
@@ -67,7 +67,7 @@ public class BookmarkDataSource {
     }
 
     public void deleteBookmarkModelEntry(String mArticleURL) {
-        Log.d(TAG, "Deleting "+mArticleURL);
+        //Log.d(TAG, "Deleting "+mArticleURL);
 
         database.delete(
                 SQLiteHelper.TABLE_READ_IT_LATER,
@@ -91,12 +91,12 @@ public class BookmarkDataSource {
         }
         boolean returnBoolean  = cursor.getCount() > 0;
         cursor.close();
-        Log.d(TAG, "Is bookmarked for "+mArticleURL+" -- "+returnBoolean);
+        //Log.d(TAG, "Is bookmarked for "+mArticleURL+" -- "+returnBoolean);
         return returnBoolean;
     }
 
     public List<BookmarkModel> getAllBookmarkModels() {
-        Log.d(TAG, "Getting all Bookmarks");
+        //Log.d(TAG, "Getting all Bookmarks");
         List<BookmarkModel> bookmarkModelList = new ArrayList<BookmarkModel>();
         Cursor cursor = database.query(SQLiteHelper.TABLE_READ_IT_LATER,
                 allColumns, null, null, null, null, null);

@@ -107,7 +107,7 @@ public class HomeScreenFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "HomeScreenFragment in onCreate ");
+        //Log.d(TAG, "HomeScreenFragment in onCreate ");
         setRetainInstance(true);
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);

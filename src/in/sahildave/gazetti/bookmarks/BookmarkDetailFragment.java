@@ -96,7 +96,7 @@ public class BookmarkDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "BookmarkDetailFragment onCreateView");
+        //Log.d(TAG, "BookmarkDetailFragment onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
 
         ImageButton mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
@@ -149,7 +149,7 @@ public class BookmarkDetailFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    Log.d(TAG, "ScrollView ACTION_UP");
+                    //Log.d(TAG, "ScrollView ACTION_UP");
                     if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
                         mScrollToReadLayout.startAnimation(slide_down);
                         mScrollToReadLayout.setVisibility(View.INVISIBLE);

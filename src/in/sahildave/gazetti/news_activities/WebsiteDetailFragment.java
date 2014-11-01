@@ -107,7 +107,7 @@ public class WebsiteDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "DetailFragment onCreateView");
+        //Log.d(TAG, "DetailFragment onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
 
         ImageButton mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
@@ -152,7 +152,7 @@ public class WebsiteDetailFragment extends Fragment {
         mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
         mScrollToReadLayout.setVisibility(View.INVISIBLE);
 
-        Log.d(TAG, "Async called");
+        //Log.d(TAG, "Async called");
         ArticleLoadAsyncTask mTask = new ArticleLoadAsyncTask(rootView);
         mTask.execute();
 
@@ -163,7 +163,7 @@ public class WebsiteDetailFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    Log.d(TAG, "ScrollView ACTION_UP");
+                    //Log.d(TAG, "ScrollView ACTION_UP");
                     if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
                         mScrollToReadLayout.startAnimation(slide_down);
                         mScrollToReadLayout.setVisibility(View.INVISIBLE);
@@ -221,7 +221,7 @@ public class WebsiteDetailFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        Log.d(TAG, "DetailFragment onDetach");
+        //Log.d(TAG, "DetailFragment onDetach");
         super.onDetach();
         mCallbacks = null;
     }
@@ -275,13 +275,13 @@ public class WebsiteDetailFragment extends Fragment {
         View rootView;
 
         public ArticleLoadAsyncTask(View rootView) {
-            Log.d(TAG_ASYNC, "Async Constructor");
+            //Log.d(TAG_ASYNC, "Async Constructor");
             this.rootView = rootView;
         }
 
         @Override
         protected void onPreExecute() {
-            Log.d(TAG_ASYNC, "Async onPreExecute");
+            //Log.d(TAG_ASYNC, "Async onPreExecute");
 
             if (mCallbacks != null) {
                 mCallbacks.onPreExecute(rootView);
@@ -324,7 +324,7 @@ public class WebsiteDetailFragment extends Fragment {
         @Override
         protected void onPostExecute(String[] result) {
             if (mCallbacks != null) {
-                Log.d(TAG_ASYNC, "Async onPostExecute");
+                //Log.d(TAG_ASYNC, "Async onPostExecute");
                 if(result==null){
                     mCallbacks.articleNotFound(mArticleURL);
                 } else {

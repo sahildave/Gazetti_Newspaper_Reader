@@ -9,17 +9,19 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.news_activities.WebsiteDetailFragment.LoadArticleCallback;
 import in.sahildave.gazetti.news_activities.WebsiteListFragment.ItemSelectedCallback;
-import in.sahildave.gazetti.news_activities.adapter.NewsAdapter;
 import in.sahildave.gazetti.news_activities.adapter.NavDrawerListAdapter;
+import in.sahildave.gazetti.news_activities.adapter.NewsAdapter;
 import in.sahildave.gazetti.preference.SettingsActivity;
 
 @SuppressLint("NewApi")
@@ -57,13 +59,13 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Crashlytics.start(this);
-        Log.d(TAG, "Activity onCreate");
+        //Log.d(TAG, "Activity onCreate");
         setContentView(R.layout.activity_website_list);
 
         mActionBarColors = getResources().getIntArray(R.array.action_bar_colors);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            Log.d(TAG, "Activity retaining extras");
+            //Log.d(TAG, "Activity retaining extras");
             npId = extras.getString("npId");
             catId = extras.getString("catId");
             npName = extras.getString("npName");
@@ -73,7 +75,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
         }
 
         if (savedInstanceState != null) {
-            Log.d(TAG, "Activity retaining savedInstanceState");
+            //Log.d(TAG, "Activity retaining savedInstanceState");
             npName = savedInstanceState.getString("npName");
             catId = savedInstanceState.getString("catId");
             currentColor = savedInstanceState.getInt("color");
@@ -121,7 +123,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "Activity saving savedInstanceState");
+        //Log.d(TAG, "Activity saving savedInstanceState");
         outState.putString("npName", npName);
         outState.putString("catId", catId);
         outState.putInt("color", currentColor);
@@ -193,10 +195,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or closeUtilObject the drawer.
         // ActionBarDrawerToggle will take care of this.
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -291,7 +290,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Log.d(TAG, "Drawer onItemClick - " + position + " - " + mDrawerItems[position]);
+                //Log.d(TAG, "Drawer onItemClick - " + position + " - " + mDrawerItems[position]);
 
                 mlistFragment = new WebsiteListFragment();
                 Bundle layoutBundle = new Bundle();
@@ -314,7 +313,7 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
                 setTitle(npName + " - " + mDrawerItems[position]);
                 setColor(mActionBarColors[position]);
 
-                Log.d(TAG, position + " - " + mActionBarColors[position]);
+                //Log.d(TAG, position + " - " + mActionBarColors[position]);
 
                 mDrawerLayout.closeDrawer(mLeftDrawer);
             }

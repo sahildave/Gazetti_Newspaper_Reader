@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +51,7 @@ public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
         }.getType();
 
         mChildCheckStates = gson.fromJson(str, type);
-        Log.d("HomeScreen", "Old Feeds - " + str);
+        //Log.d("HomeScreen", "Old Feeds - " + str);
         System.out.println("listDataHeader adapter - " + (listDataHeader.size()));
         System.out.println("listDataChild adapter - " + (listDataHeader.size()));
         // mChildCheckStates = new HashMap<Integer, boolean[]>();
@@ -203,8 +202,6 @@ public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
         super.onGroupExpanded(groupPosition);
 
     }
-
-    ;
 
     public final class GroupViewHolder {
 

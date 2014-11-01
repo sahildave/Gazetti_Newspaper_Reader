@@ -1,7 +1,6 @@
 package in.sahildave.gazetti.news_activities.adapter;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,15 +61,15 @@ public class NewsAdapter extends ArrayAdapter<ParseObject> {
         // get PubDate
         Date createdAtDate = object.getCreatedAt();
         long createdAtDateInMillis = createdAtDate.getTime();
-        Log.d(TAG, "createdAtDateInMillis " + createdAtDateInMillis);
+        //Log.d(TAG, "createdAtDateInMillis " + createdAtDateInMillis);
 
         String diff = getTimeAgo(createdAtDateInMillis);
-        Log.d(TAG, "diff " + diff);
+        //Log.d(TAG, "diff " + diff);
 
         // Add title, link to Map
         linkMap.put(object.getString("title"), object.getString("link"));
         pubDateMap.put(object.getString("title"), diff);
-        Log.d(TAG, "Added " + pubDateMap.get(object.getString("title")));
+        //Log.d(TAG, "Added " + pubDateMap.get(object.getString("title")));
 
         // PubDate
 

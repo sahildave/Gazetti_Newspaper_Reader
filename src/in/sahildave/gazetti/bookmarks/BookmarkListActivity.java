@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.bookmarks.BookmarkDetailFragment.BookmarkLoadArticleCallback;
@@ -20,7 +19,7 @@ public class BookmarkListActivity extends ActionBarActivity implements BookmarkS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "Activity onCreate");
+        //Log.d(TAG, "Activity onCreate");
         setContentView(R.layout.activity_website_list);
 
         setTitle("Bookmarks");

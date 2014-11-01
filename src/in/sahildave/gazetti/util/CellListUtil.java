@@ -2,7 +2,6 @@ package in.sahildave.gazetti.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import in.sahildave.gazetti.R;
@@ -45,13 +44,13 @@ public class CellListUtil {
                     String npIdString = String.valueOf(npIdint);
                     String catIdString = String.valueOf(catIdint);
 
-                    Log.d(TAG, "Adding ID - " + npIdString + ", " + catIdString);
+                    //Log.d(TAG, "Adding ID - " + npIdString + ", " + catIdString);
 
                     NewsCatModel newsCatObject = csvFile.getObjectByNPId(npIdString, catIdString);
                     String npImageString = newsCatObject.getNpImage();
                     String catNameString = newsCatObject.getCatName();
 
-                    Log.d(TAG, "Adding - " + npImageString + ", " + catNameString);
+                    //Log.d(TAG, "Adding - " + npImageString + ", " + catNameString);
 
                     cellList.add(new CellModel(npImageString, catNameString));
                     csvFile.closeUtilObject();

@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -52,7 +51,7 @@ public class EditCellDialogFragment extends DialogFragment implements OnItemSele
         final int editPosition = getArguments().getInt("EDITCELL");
 
         newspaperArray = getResources().getStringArray(R.array.newspaper_array);
-        Log.d("Fullscreen", newspaperID + ", " + cat);
+        //Log.d("Fullscreen", newspaperID + ", " + cat);
 
         spinner_newspaper = (Spinner) v.findViewById(R.id.add_cell_newpaper_spinner);
         spinner_category = (Spinner) v.findViewById(R.id.add_cell_category_spinner);
