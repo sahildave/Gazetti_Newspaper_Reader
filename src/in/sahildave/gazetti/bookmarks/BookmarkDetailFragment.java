@@ -244,7 +244,7 @@ public class BookmarkDetailFragment extends Fragment {
             bookmarkModel.setmArticlePubDate(mArticlePubDate);
         } catch (Exception e) {
             Log.e(TAG, "Exception while creating bookmark object - " + e.getMessage(), e);
-            Crashlytics.log(Log.ERROR, TAG, "Exception while creating bookmark object - " + e.getMessage());
+            Crashlytics.logException(e);
         }
         return bookmarkModel;
     }
@@ -275,7 +275,7 @@ public class BookmarkDetailFragment extends Fragment {
                 articleContent[2] = mArticleBody;
             } catch (Exception e) {
                 Log.e(TAG, "Exception while reading bookmarks - " + e.getMessage(), e);
-                Crashlytics.log(Log.ERROR, TAG, "Exception while reading bookmarks - " + e.getMessage());
+                Crashlytics.logException(e);
             }
 
             return articleContent;

@@ -16,7 +16,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import com.crashlytics.android.Crashlytics;
 import com.parse.ConfigCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseConfig;
@@ -49,7 +48,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     protected void onCreate(Bundle savedInstanceState) {
         //Log.d(TAG, "onCreate - " + (null == savedInstanceState));
         super.onCreate(savedInstanceState);
-        Crashlytics.start(this);
         ParseAnalytics.trackAppOpened(getIntent());
 
         setupCustomActionBar();

@@ -139,7 +139,6 @@ public class BookmarkListFragment extends ListFragment {
             Crashlytics.log(Log.ERROR, TAG, "Is headlineTextView null - "+(null==headlineTextView));
             Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
             Crashlytics.logException(e);
-            e.printStackTrace();
         }
     }
 

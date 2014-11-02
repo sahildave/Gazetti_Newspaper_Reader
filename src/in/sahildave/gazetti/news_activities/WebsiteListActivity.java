@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.news_activities.WebsiteDetailFragment.LoadArticleCallback;
 import in.sahildave.gazetti.news_activities.WebsiteListFragment.ItemSelectedCallback;
@@ -58,7 +57,6 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Crashlytics.start(this);
         //Log.d(TAG, "Activity onCreate");
         setContentView(R.layout.activity_website_list);
 
