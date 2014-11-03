@@ -77,6 +77,7 @@ public class BookmarkDataSource {
 
     public boolean isBookmarked(String mArticleURL) {
         Cursor cursor = null;
+        boolean returnBoolean = false;
         try {
             cursor = database.query(
                     SQLiteHelper.TABLE_READ_IT_LATER,
@@ -84,12 +85,12 @@ public class BookmarkDataSource {
                     SQLiteHelper.COLUMN_NEWS_ARTICLE_URL+ "=?",
                     new String[]{mArticleURL},
                     null, null, null);
+            returnBoolean  = cursor.getCount() > 0;
         } catch (SQLiteException sqe){
             Log.e(BookmarkDataSource.class.getName(), "SQLITE ERROR "+sqe.getMessage(), sqe);
         } catch (Exception e) {
             Log.e(BookmarkDataSource.class.getName(), "Exception ERROR " + e.getMessage(), e);
         }
-        boolean returnBoolean  = cursor.getCount() > 0;
         cursor.close();
         //Log.d(TAG, "Is bookmarked for "+mArticleURL+" -- "+returnBoolean);
         return returnBoolean;

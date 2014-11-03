@@ -64,5 +64,4 @@ proguard/
 *.log
 
 #CLOUD CODE FILES
-global.json
 *.js~
