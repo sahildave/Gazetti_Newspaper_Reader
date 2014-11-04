@@ -6,5 +6,5 @@
           android:state_focused="true" android:drawable="@drawable/navdrawer_list_item_bg_pressed" />
     <item android:state_enabled="true"
           android:state_selected="true" android:drawable="@drawable/navdrawer_list_item_bg_pressed" />
-    <item android:drawable="@drawable/navdrawer_list_item_bg_normal" />
+    <item android:drawable="@drawable/list_singlepane_shadow" />
 </selector>

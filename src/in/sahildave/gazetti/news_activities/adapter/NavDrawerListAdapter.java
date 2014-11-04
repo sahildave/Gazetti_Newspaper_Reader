@@ -38,7 +38,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.nav_drawer_list_item, null);
+            convertView = mInflater.inflate(R.layout.nav_drawer_list_item, parent, false);
         }
         TextView textTitle = (TextView) convertView.findViewById(R.id.nav_list_item_title);
         textTitle.setText(getItem(position));

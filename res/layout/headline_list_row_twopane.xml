@@ -4,9 +4,9 @@
           android:minHeight="64dp"
           android:layout_height="wrap_content"
           android:gravity="center_vertical"
-          android:background="@drawable/main_list_selector"
+          android:background="@drawable/two_pane_headline_list_selector"
           android:paddingBottom="8dp"
           android:paddingLeft="16dp"
           android:paddingTop="8dp"
           android:textAppearance="?android:attr/textAppearanceMedium"
-          android:textColor="@drawable/main_list_text_selector"/>
+          android:textColor="@drawable/two_pane_headline_list_text_selector"/>
