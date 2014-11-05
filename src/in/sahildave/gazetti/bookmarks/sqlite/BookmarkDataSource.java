@@ -7,7 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class BookmarkDataSource {
             values.put(SQLiteHelper.COLUMN_NEWS_PUB_DATE, bookmarkModel.getmArticlePubDate());
             values.put(SQLiteHelper.COLUMN_NEWS_IMAGE_URL, bookmarkModel.getmArticleImageURL());
         } catch (SQLiteConstraintException sqe){
-            Log.e(TAG, "Exception while creating sqlite entry - "+ sqe.getMessage(), sqe);
+            Crashlytics.log("Exception while creating sqlite entry - " + sqe.getMessage());
         }
         long insertId = database.insert(SQLiteHelper.TABLE_READ_IT_LATER, null,
                 values);
@@ -87,9 +87,9 @@ public class BookmarkDataSource {
                     null, null, null);
             returnBoolean  = cursor.getCount() > 0;
         } catch (SQLiteException sqe){
-            Log.e(BookmarkDataSource.class.getName(), "SQLITE ERROR "+sqe.getMessage(), sqe);
+            Crashlytics.log("SQLITE ERROR "+sqe.getMessage());
         } catch (Exception e) {
-            Log.e(BookmarkDataSource.class.getName(), "Exception ERROR " + e.getMessage(), e);
+           Crashlytics.log("Exception ERROR " + e.getMessage());
         }
         cursor.close();
         //Log.d(TAG, "Is bookmarked for "+mArticleURL+" -- "+returnBoolean);

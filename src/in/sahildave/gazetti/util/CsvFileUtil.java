@@ -2,6 +2,7 @@ package in.sahildave.gazetti.util;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.homescreen.adapter.NewsCatModel;
 
 import java.io.*;
@@ -25,7 +26,7 @@ public class CsvFileUtil {
         try {
             inputStream = assetManager.open("newscat.csv");
         } catch (IOException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         }
 
     }
@@ -43,15 +44,15 @@ public class CsvFileUtil {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Crashlytics.logException(e);
                 }
             }
         }
@@ -71,15 +72,15 @@ public class CsvFileUtil {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Crashlytics.logException(e);
                 }
             }
         }
@@ -101,15 +102,15 @@ public class CsvFileUtil {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Crashlytics.logException(e);
                 }
             }
         }
@@ -122,7 +123,7 @@ public class CsvFileUtil {
             try {
                 br.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Crashlytics.logException(e);
             }
         }
 

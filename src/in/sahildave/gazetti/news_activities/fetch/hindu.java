@@ -1,5 +1,6 @@
 package in.sahildave.gazetti.news_activities.fetch;
 
+import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.util.ConfigService;
 import org.jsoup.Connection;
@@ -34,7 +35,12 @@ public class hindu {
             Connection connection = Jsoup.connect(url).userAgent("Mozilla").timeout(10 * 1000);
             Response response = connection.execute();
 
-            if(response==null || response.statusCode() !=200){
+            if(response==null){
+                Crashlytics.log(Log.ERROR, LOG_TAG, "Is response null ? "+(null==response));
+                return null;
+            } else if(response.statusCode() !=200){
+                Crashlytics.log(Log.INFO, LOG_TAG, "Received response - "+response.statusCode()+" -- "+response.statusMessage());
+                Crashlytics.log(Log.INFO, LOG_TAG, "Received response - "+response.body());
                 return null;
             }
 
@@ -62,10 +68,8 @@ public class hindu {
             result[2] = bodyText;
 
         } catch (IOException e) {
-            e.printStackTrace();
             Crashlytics.logException(e);
         } catch (NullPointerException npe) {
-            npe.printStackTrace();
             bodyText = null;
             Crashlytics.logException(npe);
         } catch (Exception e) {

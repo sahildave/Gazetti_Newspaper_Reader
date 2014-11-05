@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
-import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -243,7 +242,7 @@ public class BookmarkDetailFragment extends Fragment {
             bookmarkModel.setmArticleImageURL(mArticleImageURL);
             bookmarkModel.setmArticlePubDate(mArticlePubDate);
         } catch (Exception e) {
-            Log.e(TAG, "Exception while creating bookmark object - " + e.getMessage(), e);
+            Crashlytics.log("Exception while creating bookmark object - " + e.getMessage());
             Crashlytics.logException(e);
         }
         return bookmarkModel;
@@ -274,7 +273,7 @@ public class BookmarkDetailFragment extends Fragment {
                 articleContent[1] = mArticleImageURL;
                 articleContent[2] = mArticleBody;
             } catch (Exception e) {
-                Log.e(TAG, "Exception while reading bookmarks - " + e.getMessage(), e);
+                Crashlytics.log("Exception while reading bookmarks- " + e.getMessage());
                 Crashlytics.logException(e);
             }
 

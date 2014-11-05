@@ -233,7 +233,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
                     firstRun = false;
                 } else {
 
-                    Log.e(TAG, "Wrong while fetching - " + exception.getMessage());
+                    Crashlytics.log("Wrong while fetching - " + exception.getMessage());
                     headerTextView.setText("Something went wrong!");
                 }
             }
@@ -266,7 +266,7 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
                     mListViewContainer.setRefreshing(false);
                     flag_loading_old_data = false;
                 } else {
-                    Log.e(TAG, "Wrong while fetching - " + exception.getMessage());
+                    Crashlytics.log("Wrong while fetching - " + exception.getMessage());
                     headerTextView.setText("Something went wrong!");
                 }
             }
@@ -354,7 +354,6 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
             Crashlytics.log(Log.ERROR, TAG, "Is headlineTextView null - "+(null==headlineTextView));
             Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
             Crashlytics.logException(e);
-            e.printStackTrace();
         }
     }
 
