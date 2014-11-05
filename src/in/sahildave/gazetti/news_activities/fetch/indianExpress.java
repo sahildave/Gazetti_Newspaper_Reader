@@ -1,6 +1,8 @@
 package in.sahildave.gazetti.news_activities.fetch;
 
 import in.sahildave.gazetti.util.ConfigService;
+import org.jsoup.Connection;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,10 +28,14 @@ public class indianExpress {
         String url = mArticleURL;
 
         try {
-            doc = Jsoup.connect(url) //
-                    .userAgent("Mozilla") //
-                    .timeout(10 * 1000) //
-                    .get(); //
+            Connection connection = Jsoup.connect(url).userAgent("Mozilla").timeout(10 * 1000);
+            Response response = connection.execute();
+
+            if(response==null || response.statusCode() !=200){
+                return null;
+            }
+
+            doc = connection.get();
 
             // get Body
             Element bodyElement = doc.body();

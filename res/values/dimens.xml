@@ -12,5 +12,6 @@
     <dimen name="phone_homescreen_vertical">24dp</dimen>
     <dimen name="welcome_screen_top">32dp</dimen>
     <dimen name="welcome_screen_bottom">24dp</dimen>
+    <dimen name="navigation_drawer_width">240dp</dimen>
 
 </resources>

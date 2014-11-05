@@ -243,7 +243,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 
         if (!isCellPresent(csvObject)) {
             CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
-            cellList.add(cellList.size() - 1, newCell);
+            cellList.add(newCell);
             adapter.notifyDataSetChanged();
         }
 
