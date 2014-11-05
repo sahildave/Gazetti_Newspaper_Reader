@@ -6,5 +6,6 @@
     <dimen name="article_left_padding">88dp</dimen>
     <dimen name="tablet_homescreen_horizontal">32dp</dimen>
     <dimen name="tablet_homescreen_vertical">32dp</dimen>
+    <dimen name="navigation_drawer_width">300dp</dimen>
 
 </resources>

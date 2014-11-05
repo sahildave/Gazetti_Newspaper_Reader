@@ -1,6 +1,9 @@
 package in.sahildave.gazetti.news_activities.fetch;
 
+import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.util.ConfigService;
+import org.jsoup.Connection;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,6 +12,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 public class hindu {
+    final String LOG_TAG = this.getClass().getName();
 
     String mArticleURL;
     String titleText;
@@ -27,10 +31,14 @@ public class hindu {
 
         try {
 
-            doc = Jsoup.connect(url) //
-                    .userAgent("Mozilla") //
-                    .timeout(10 * 1000) //
-                    .get(); //
+            Connection connection = Jsoup.connect(url).userAgent("Mozilla").timeout(10 * 1000);
+            Response response = connection.execute();
+
+            if(response==null || response.statusCode() !=200){
+                return null;
+            }
+
+            doc = connection.get();
 
             // get Body
             Element bodyElement = doc.body();
@@ -55,11 +63,13 @@ public class hindu {
 
         } catch (IOException e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         } catch (NullPointerException npe) {
             npe.printStackTrace();
             bodyText = null;
+            Crashlytics.logException(npe);
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         }
 
         return result;
