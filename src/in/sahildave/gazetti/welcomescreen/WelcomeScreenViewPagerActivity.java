@@ -27,7 +27,6 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
 
     private static final int NUM_ITEMS = 2;
     private JazzyViewPager mPager;
-    private PagerAdapter mPagerAdapter;
     private boolean selected;
 
     @Override
@@ -39,7 +38,7 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
         fragmentList.add(WelcomeScreenFragmentFirst.create(0));
         fragmentList.add(WelcomeScreenFragmentExpList.create(1));
 
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragmentList);
+        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragmentList);
 
         mPager = (JazzyViewPager) findViewById(R.id.welcome_screen_pager);
         mPager.setTransitionEffect(TransitionEffect.Tablet);
@@ -90,12 +89,10 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
         onBackPressed();
 
         // Update feedPrefs
-        UserSelectionUtil userSelectionUtil = new UserSelectionUtil(this);
-        userSelectionUtil.saveUserSelectionSharedPrefs(mChildCheckStates);
+        UserSelectionUtil.saveUserSelectionSharedPrefs(this, mChildCheckStates);
 
         // Update cellList
-        CellListUtil cellListUtil = new CellListUtil(this);
-        cellListUtil.updateCellListByUserSelection();
+        CellListUtil.updateCellListByUserSelection(this);
 
     }
 

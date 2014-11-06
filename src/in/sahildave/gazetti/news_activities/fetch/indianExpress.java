@@ -1,6 +1,5 @@
 package in.sahildave.gazetti.news_activities.fetch;
 
-import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.util.ConfigService;
 import org.jsoup.Connection;
@@ -35,11 +34,11 @@ public class indianExpress {
             Response response = connection.execute();
 
             if(response==null){
-                Crashlytics.log(Log.ERROR, LOG_TAG, "Is response null ? "+(null==response));
+                Crashlytics.log("Is response null ? "+(null==response));
                 return null;
             } else if(response.statusCode() !=200){
-                Crashlytics.log(Log.INFO, LOG_TAG, "Received response - "+response.statusCode()+" -- "+response.statusMessage());
-                Crashlytics.log(Log.INFO, LOG_TAG, "Received response - "+response.body());
+                Crashlytics.log("Received response - "+response.statusCode()+" -- "+response.statusMessage());
+                Crashlytics.log("Received response - "+response.body());
                 return null;
             }
 
@@ -71,12 +70,14 @@ public class indianExpress {
 
         } catch (IOException e) {
             Crashlytics.logException(e);
+            return null;
         } catch (NullPointerException npe) {
-            npe.printStackTrace();
             articleText = null;
             Crashlytics.logException(npe);
+            return null;
         } catch (Exception e) {
             Crashlytics.logException(e);
+            return null;
         }
 
         return result;

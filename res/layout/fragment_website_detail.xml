@@ -47,8 +47,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:background="?attr/selectableItemBackground"
-                        android:scaleType="center"
-                        android:src="@drawable/ic_hindu"/>
+                        android:scaleType="center"/>
 
                 <TextView
                         android:id="@+id/pubDateView"

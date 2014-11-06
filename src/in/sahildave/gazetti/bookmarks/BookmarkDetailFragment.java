@@ -74,9 +74,8 @@ public class BookmarkDetailFragment extends Fragment {
         dataSource.open();
         setRetainInstance(true);
 
-        if(getArguments()!=null){
-
-            if (getArguments().containsKey(HEADLINE_CLICKED)) {
+        try {
+            if(getArguments()!=null && (getArguments().containsKey(HEADLINE_CLICKED))) {
                 mArticleHeadline = getArguments().getString(HEADLINE_CLICKED);
                 mArticleURL = BookmarkAdapter.linkMap.get(mArticleHeadline);
                 mArticlePubDate = BookmarkAdapter.pubDateMap.get(mArticleHeadline);
@@ -85,6 +84,18 @@ public class BookmarkDetailFragment extends Fragment {
                 npNameString = BookmarkAdapter.npNameMap.get(mArticleHeadline);
                 catNameString = BookmarkAdapter.catNameMap.get(mArticleHeadline);
             }
+        } catch (Exception e) {
+            Crashlytics.log("Get Arguments is null -- "+(null==getArguments()));
+            Crashlytics.log("Argument contains key -- "+HEADLINE_CLICKED+"--"+(getArguments().containsKey(HEADLINE_CLICKED)));
+            Crashlytics.log("Null -- "
+                    +(mArticleHeadline==null)
+                    +(mArticleURL==null)
+                    +(mArticlePubDate==null)
+                    +(mArticleBody==null)
+                    +(npNameString==null)
+                    +(catNameString==null)
+                    +(mArticleImageURL==null)
+            );
         }
         actionBarColor = getResources().getColor(R.color.actionbar_default_color);
 
@@ -118,14 +129,18 @@ public class BookmarkDetailFragment extends Fragment {
         TextView mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
         mArticlePubDateView.setTextColor(actionBarColor);
 
-        if (npNameString.equals("The Hindu")) {
-            mNewspaperTile.setImageResource(R.drawable.ic_hindu);
-        } else if (npNameString.equals("The Times of India")) {
-            mNewspaperTile.setImageResource(R.drawable.ic_toi);
-        } else if (npNameString.equals("The Indian Express")) {
-            mNewspaperTile.setImageResource(R.drawable.ic_tie);
-        } else if(npNameString.equals("First Post")) {
-            mNewspaperTile.setImageResource(R.drawable.ic_fp);
+        try {
+            if (npNameString.equals("The Hindu")) {
+                mNewspaperTile.setImageResource(R.drawable.ic_hindu);
+            } else if (npNameString.equals("The Times of India")) {
+                mNewspaperTile.setImageResource(R.drawable.ic_toi);
+            } else if (npNameString.equals("The Indian Express")) {
+                mNewspaperTile.setImageResource(R.drawable.ic_tie);
+            } else if(npNameString.equals("First Post")) {
+                mNewspaperTile.setImageResource(R.drawable.ic_fp);
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
 
         mNewspaperTile.setOnClickListener(webViewCalled);
@@ -282,15 +297,19 @@ public class BookmarkDetailFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] result) {
-            if (mCallbacks != null) {
-                View headerStub;
-                if (mArticleImageURL == null || mArticleImageURL.equals("")) {
-                    headerStub = ((ViewStub) rootView.findViewById(R.id.article_title_stub_import)).inflate();
-                } else {
-                    headerStub = ((ViewStub) rootView.findViewById(R.id.article_header_stub_import)).inflate();
+            try {
+                if (mCallbacks != null) {
+                    View headerStub;
+                    if (mArticleImageURL == null || mArticleImageURL.equals("")) {
+                        headerStub = ((ViewStub) rootView.findViewById(R.id.article_title_stub_import)).inflate();
+                    } else {
+                        headerStub = ((ViewStub) rootView.findViewById(R.id.article_header_stub_import)).inflate();
+                    }
+                    mCallbacks.setHeaderStub(headerStub);
+                    mCallbacks.onPostExecute(result, mArticlePubDate);
                 }
-                mCallbacks.setHeaderStub(headerStub);
-                mCallbacks.onPostExecute(result, mArticlePubDate);
+            } catch (Exception e) {
+                Crashlytics.logException(e);
             }
         }
     }

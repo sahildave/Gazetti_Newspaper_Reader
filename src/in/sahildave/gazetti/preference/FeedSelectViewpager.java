@@ -22,8 +22,6 @@ public class FeedSelectViewpager extends ActionBarActivity implements FeedSelect
     private static final String TAG = "FEED";
 
     private static final int NUM_ITEMS = 1;
-    private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
     private boolean backFlag = false;
 
     @Override
@@ -35,8 +33,8 @@ public class FeedSelectViewpager extends ActionBarActivity implements FeedSelect
         fragmentList.add(FeedSelectFragment.create(0));
 
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.feedSelectPager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragmentList);
+        ViewPager mPager = (ViewPager) findViewById(R.id.feedSelectPager);
+        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragmentList);
         mPager.setAdapter(mPagerAdapter);
 
         int ActionBarColorId = getIntent().getIntExtra("ActionBarColor", -1);
@@ -67,12 +65,10 @@ public class FeedSelectViewpager extends ActionBarActivity implements FeedSelect
         onBackPressed();
 
         // Update feedPrefs
-        UserSelectionUtil userSelectionUtil = new UserSelectionUtil(this);
-        userSelectionUtil.saveUserSelectionSharedPrefs(mChildCheckStates);
+        UserSelectionUtil.saveUserSelectionSharedPrefs(this, mChildCheckStates);
 
         // Update cellList
-        CellListUtil cellListObject = new CellListUtil(this);
-        cellListObject.updateCellListByUserSelection();
+        CellListUtil.updateCellListByUserSelection(this);
 
     }
 

@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.bookmarks.BookmarkDetailFragment.BookmarkLoadArticleCallback;
 import in.sahildave.gazetti.bookmarks.BookmarkListFragment.BookmarkSelectedListeners;
@@ -46,17 +47,25 @@ public class BookmarkListActivity extends ActionBarActivity implements BookmarkS
 
     @Override
     public void onItemSelected(String headlineText) {
-        if (mTwoPane) {
-            Bundle arguments = new Bundle();
-            arguments.putString(BookmarkDetailFragment.HEADLINE_CLICKED, headlineText);
-            BookmarkDetailFragment detailFragment = new BookmarkDetailFragment();
-            detailFragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.website_detail_container, detailFragment, "bookmarkDetail").commit();
-        } else {
-            Intent detailIntent = new Intent(this, BookmarkDetailActivity.class);
-            detailIntent.putExtra(BookmarkDetailFragment.HEADLINE_CLICKED, headlineText);
-            startActivity(detailIntent);
+        try {
+            if(headlineText!=null){
+                if (mTwoPane) {
+                    Bundle arguments = new Bundle();
+                    arguments.putString(BookmarkDetailFragment.HEADLINE_CLICKED, headlineText);
+                    BookmarkDetailFragment detailFragment = new BookmarkDetailFragment();
+                    detailFragment.setArguments(arguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.website_detail_container, detailFragment, "bookmarkDetail").commit();
+                } else {
+                    Intent detailIntent = new Intent(this, BookmarkDetailActivity.class);
+                    detailIntent.putExtra(BookmarkDetailFragment.HEADLINE_CLICKED, headlineText);
+                    startActivity(detailIntent);
+                }
+            } else {
+                Crashlytics.log("Headline clicked is null ? "+(null==headlineText));
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
     }
     /****************************/

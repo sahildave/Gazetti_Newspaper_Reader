@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -351,8 +350,9 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
 
         } catch (Exception e) {
             //Log.d(TAG, "Exception in onListItemClick ",e);
-            Crashlytics.log(Log.ERROR, TAG, "Is headlineTextView null - "+(null==headlineTextView));
-            Crashlytics.log(Log.ERROR, TAG, "Is headlineText null - "+(null==headlineText));
+            Crashlytics.log("Is headlineTextView null - "+(null==headlineTextView));
+            Crashlytics.log("Is headlineText null - "+(null==headlineText));
+            Crashlytics.log("Clicked on - "+headlineTextView.getText().toString());
             Crashlytics.logException(e);
         }
     }

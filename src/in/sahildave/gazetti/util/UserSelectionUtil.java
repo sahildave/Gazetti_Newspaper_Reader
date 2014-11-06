@@ -13,17 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class UserSelectionUtil {
-    private String TAG = "HomeScreen";
+    private String LOG_TAG = UserSelectionUtil.class.getName();
 
-    private static Context context;
+    public static void updateUserSelectionSharedPrefs(Context context) {
 
-    public UserSelectionUtil(Context context) {
-        this.context = context;
-    }
-
-    public void updateUserSelectionSharedPrefs() {
-
-        List<CellModel> cellListFromPrefs = CellListUtil.getCellListFromSharedPrefs();
+        List<CellModel> cellListFromPrefs = CellListUtil.getCellListFromSharedPrefs(context);
         HashMap<Integer, boolean[]> mChildCheckStates = new HashMap<Integer, boolean[]>();
 
         for (CellModel objects : cellListFromPrefs) {
@@ -49,13 +43,13 @@ public class UserSelectionUtil {
                     mChildCheckStates.get(npIdint)[catIdint] = true;
                 }
                 readCsv.closeUtilObject();
-                saveUserSelectionSharedPrefs(mChildCheckStates);
+                saveUserSelectionSharedPrefs(context, mChildCheckStates);
             }
         }
 
     }
 
-    public void saveUserSelectionSharedPrefs(HashMap<Integer, boolean[]> mChildCheckStates) {
+    public static void saveUserSelectionSharedPrefs(Context context, HashMap<Integer, boolean[]> mChildCheckStates) {
 
         Gson gson = new Gson();
         String feedsChecked = gson.toJson(mChildCheckStates);
@@ -65,7 +59,7 @@ public class UserSelectionUtil {
         prefEditor.commit();
     }
 
-    public static HashMap<Integer, boolean[]> getUserFeedSelection() {
+    public static HashMap<Integer, boolean[]> getUserFeedSelection(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("UserFeedSelection", Context.MODE_PRIVATE);
         String defValue = context.getResources().getString(R.string.pref_feeds_selected_defvalue);
         String feedList = sharedPref.getString("userFeedSelection", defValue);

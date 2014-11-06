@@ -86,12 +86,12 @@ public class BookmarkDataSource {
                     new String[]{mArticleURL},
                     null, null, null);
             returnBoolean  = cursor.getCount() > 0;
+            cursor.close();
         } catch (SQLiteException sqe){
             Crashlytics.log("SQLITE ERROR "+sqe.getMessage());
         } catch (Exception e) {
-           Crashlytics.log("Exception ERROR " + e.getMessage());
+            Crashlytics.log("Exception ERROR " + e.getMessage());
         }
-        cursor.close();
         //Log.d(TAG, "Is bookmarked for "+mArticleURL+" -- "+returnBoolean);
         return returnBoolean;
     }
