@@ -3,8 +3,8 @@
 
     <color name="nav_list_item_title">#000000</color>
     <color name="nav_list_background_main">#ffffff</color>
-    <color name="nav_list_background_bottom">#F7F7F7</color>
-    <color name="nav_list_background_pressed">#F7F7F7</color>
+    <color name="nav_list_background_bottom">#EEEEEE</color>
+    <color name="nav_list_background_pressed">#EEEEEE</color>
     <color name="nav_list_divider">#ffffff</color>
     <color name="nav_list_end_divider">#000000</color>
     <color name="main_list_background">#DCDCDC</color>
