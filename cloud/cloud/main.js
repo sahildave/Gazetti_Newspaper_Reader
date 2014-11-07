@@ -2,7 +2,6 @@ var xmlreader = require('cloud/xmlreader.js');
 var Buffer = require('buffer').Buffer;
  
 var HinduNat = Parse.Object.extend("HinduNat");
-var toi_data = Parse.Object.extend("toi_data");
 var NewsArticle = Parse.Object.extend("newsArticle");
 var DoubleObjects = Parse.Object.extend("DoubleObjects");
 var FreshNewsArticle = Parse.Object.extend("freshNewsArticle");
@@ -14,6 +13,7 @@ var toi_data = Parse.Object.extend("toi_data");
 var hindu_data= Parse.Object.extend("hindu_data");
 var tie_data = Parse.Object.extend("tie_data");
 var fp_data = Parse.Object.extend("fp_data");
+var fp_second_data = Parse.Object.extend("fp_second_data");
 
 /////////////////////////// All Newspapers  ///////////////////////////////////////
 
@@ -102,19 +102,18 @@ Parse.Cloud.beforeSave("freshNewsArticle", function(request, response) {
      
     var linkText = request.object.get("link")
     var titleText = request.object.get("title");
- 
+    var catId = request.object.get("cat_id");
+
     var query = new Parse.Query(FreshNewsArticle);
     query.equalTo("title", titleText);
+    query.equalTo("cat_id", catId);
+
     query.limit(1000);
     query.first({
         success: function(object) {
-            // console.log("in query");
             if (object) {
-                // console.log("found");
-                response.error();
-                 
+                response.error("Object present");
             } else {
-                // console.log("not found");
                 response.success();
             }
         },
@@ -204,28 +203,6 @@ function processDataForHindu(httpResponse, newspaperId, catId){
         return Parse.Promise.when(promises);        
     });
 }
-  
-Parse.Cloud.beforeSave("hindu_data", function(request, response) {
-     
-    var linkText = request.object.get("link")
-    var titleText = request.object.get("title");
- 
-    var query = new Parse.Query(hindu_data);
-    query.equalTo("title", titleText);
-    query.limit(1000);
-    query.first({
-        success: function(object) {
-            if (object) {
-                response.error();
-            } else {
-                response.success();
-            }
-        },
-        error: function(error) {
-        response.error();
-      }
-    });
-});
  
   ///////////////////////////////// Hindu SECOND JOB /////////////////////////
 
@@ -303,6 +280,32 @@ Parse.Cloud.beforeSave("hindu_data", function(request, response) {
       });
   }
 
+
+Parse.Cloud.beforeSave("hindu_data", function(request, response) {
+
+    var linkText = request.object.get("link")
+    var titleText = request.object.get("title");
+    var catId = request.object.get("cat_id");
+
+    var query = new Parse.Query(hindu_data);
+    query.equalTo("title", titleText);
+    query.equalTo("cat_id", catId);
+
+    query.limit(1000);
+    query.first({
+        success: function(object) {
+            if (object) {
+                response.error("Object present");
+            } else {
+                response.success();
+            }
+        },
+        error: function(error) {
+        response.error();
+      }
+    });
+});
+
 /////////////////////////////////// toi ////////////////////////////////
  
  
@@ -378,33 +381,6 @@ function processDataForToi(httpResponse, newspaperId, catId){
         return Parse.Promise.when(promises);        
     });
 }
-  
-Parse.Cloud.beforeSave("toi_data", function(request, response) {
-     
-    var linkText = request.object.get("link")
-    var titleText = request.object.get("title");
- 
-    var query = new Parse.Query(toi_data);
-    query.equalTo("title", titleText);
-    query.limit(200);
-    query.first({
-        success: function(object) {
-            //console.log("in query");
-            if (object) {
-                //console.log("found");
-                response.error();
-            } else {
-                //console.log("not found");
-                response.success();
-            }
-        },
-        error: function(error) {
-            alert("Before Save Error: " + error.code + " " + error.message+" for "+linkText+" -- title -- "+titleText);
-            response.error();
-        }
-    });
-});
-
 
 ///////////////////////////////// TOI SECOND JOB /////////////////////////
 
@@ -481,6 +457,34 @@ function processDataForToiSecond(httpResponse, newspaperId, catId){
         return Parse.Promise.when(promises);
     });
 }
+
+
+Parse.Cloud.beforeSave("toi_data", function(request, response) {
+
+    var linkText = request.object.get("link")
+    var titleText = request.object.get("title");
+    var catId = request.object.get("cat_id");
+
+    var query = new Parse.Query(toi_data);
+    query.equalTo("title", titleText);
+    query.equalTo("cat_id", catId);
+
+    query.limit(200);
+    query.first({
+        success: function(object) {
+            if (object) {
+                response.error("Object present");
+            } else {
+                response.success();
+            }
+        },
+        error: function(error) {
+            alert("Before Save Error: " + error.code + " " + error.message+" for "+linkText+" -- title -- "+titleText);
+            response.error();
+        }
+    });
+});
+
  
 /////////////////////////////////// Firspost ////////////////////////////////
  
@@ -561,29 +565,7 @@ function processDataForFp(httpResponse, newspaperId, catId){
         return Parse.Promise.when(promises);        
     });
 }
-  
-Parse.Cloud.beforeSave("fp_data", function(request, response) {
-     
-    var linkText = request.object.get("link")
-    var titleText = request.object.get("title");
- 
-    var query = new Parse.Query(fp_data);
-    query.equalTo("title", titleText);
-    query.limit(1000);
-    query.first({
-        success: function(object) {
-            if (object) {
-                response.error();
-            } else {
-                response.success();
-            }
-        },
-        error: function(error) {
-        response.error();
-      }
-    });
-});
- 
+
  ///////////////////////////////// FP SECOND JOB /////////////////////////
 
  Parse.Cloud.job("job_data_fp_second", function (request, response) {     // 1 API REQUEST
@@ -604,7 +586,7 @@ Parse.Cloud.beforeSave("fp_data", function(request, response) {
              response.success("Saving completed successfully.");
          },function(error) {
              alert("Top Level Error: " + error.code + " " + error.message);
-             response.error("Uh oh, something went wrong. "+error.message);
+             response.error("Something went wrong. "+error.message);
          }
      );
  });
@@ -660,6 +642,31 @@ Parse.Cloud.beforeSave("fp_data", function(request, response) {
      });
  }
 
+Parse.Cloud.beforeSave("fp_data", function(request, response) {
+
+    var linkText = request.object.get("link")
+    var titleText = request.object.get("title");
+    var catId = request.object.get("cat_id");
+
+    var query = new Parse.Query(fp_data);
+    query.equalTo("title", titleText);
+    query.equalTo("cat_id", catId);
+
+    query.limit(100);
+    query.first({
+        success: function(object) {
+            if (object) {
+                response.error("Object present");
+            } else {
+                response.success();
+            }
+        },
+        error: function(error) {
+            alert("Before Save Error: " + error.code + " " + error.message+" for "+linkText+" -- title -- "+titleText);
+            response.error();
+        }
+    });
+});
 
 /////////////////////////////////// The Indian Express ////////////////////////////////
  
@@ -740,29 +747,6 @@ function processDataForTie(httpResponse, newspaperId, catId){
         return Parse.Promise.when(promises);        
     });
 }
-  
-Parse.Cloud.beforeSave("tie_data", function(request, response) {
-     
-    var linkText = request.object.get("link")
-    var titleText = request.object.get("title");
- 
-    var query = new Parse.Query(tie_data);
-    query.equalTo("title", titleText);
-    query.limit(1000);
-    query.first({
-        success: function(object) {
-            if (object) {
-                response.error();
-            } else {
-                response.success();
-            }
-        },
-        error: function(error) {
-        response.error();
-      }
-    });
-});
-
 
  ///////////////////////////////// TIE SECOND JOB /////////////////////////
 
@@ -839,6 +823,33 @@ Parse.Cloud.beforeSave("tie_data", function(request, response) {
          return Parse.Promise.when(promises);
      });
  }
+
+
+Parse.Cloud.beforeSave("tie_data", function(request, response) {
+
+    var linkText = request.object.get("link")
+    var titleText = request.object.get("title");
+    var catId = request.object.get("cat_id");
+
+    var query = new Parse.Query(tie_data);
+    query.equalTo("title", titleText);
+    query.equalTo("cat_id", catId);
+
+    query.limit(1000);
+    query.first({
+        success: function(object) {
+            if (object) {
+                response.error("Object present");
+            } else {
+                response.success();
+            }
+        },
+        error: function(error) {
+        response.error();
+      }
+    });
+});
+
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -957,22 +968,22 @@ Parse.Cloud.job("job_single_trial", function (request, response) {
 ////////////////////////////////////////////////
 
 
-Parse.Cloud.beforeSave("ToiSecond", function(request, response) {                            //Change 4
+Parse.Cloud.beforeSave("fp_second_data", function(request, response) {                            //Change 4
 
     var linkText = request.object.get("link")
     var titleText = request.object.get("title");
+    var catId = request.object.get("cat_id");
 
-    var query = new Parse.Query(ToiSecond);
+    var query = new Parse.Query(fp_second_data);
     query.equalTo("title", titleText);
+    query.equalTo("cat_id", catId);
+
     query.limit(200);
     query.first({
         success: function(object) {
-            //console.log("in query");
             if (object) {
-                //console.log("found");
-                response.error();
+                response.error("Object present");
             } else {
-                //console.log("not found");
                 response.success();
             }
         },
