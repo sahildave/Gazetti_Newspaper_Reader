@@ -11,7 +11,7 @@ public class StarterApplication extends Application {
         super.onCreate();
         Parse.initialize(this, Constants.PARSE_APP_ID, Constants.PARSE_CLIENT_KEY);
         Parse.enableLocalDatastore(this);
-//        Crashlytics.getInstance().setDebugMode(true);
-        Crashlytics.start(this);
+        Crashlytics.getInstance().setDebugMode(true);
+//        Crashlytics.start(this);
     }
 }

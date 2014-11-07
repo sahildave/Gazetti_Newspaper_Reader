@@ -52,9 +52,6 @@ public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
 
         mChildCheckStates = gson.fromJson(str, type);
         //Log.d("HomeScreen", "Old Feeds - " + str);
-        System.out.println("listDataHeader adapter - " + (listDataHeader.size()));
-        System.out.println("listDataChild adapter - " + (listDataHeader.size()));
-        // mChildCheckStates = new HashMap<Integer, boolean[]>();
 
         explist_np_images = mContext.getResources().obtainTypedArray(R.array.explist_newspaper_images);
     }
@@ -86,7 +83,6 @@ public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
         Drawable image = mContext.getResources().getDrawable(imageResId);
         image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
         groupViewHolder.mGroupText.setCompoundDrawables(null, null, image, null);
-        System.out.println(imageResId + ", " + image.hashCode());
         return convertView;
     }
 

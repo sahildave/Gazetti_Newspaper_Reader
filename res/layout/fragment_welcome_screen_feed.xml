@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
                 android:background="@color/green_welcome">
 
     <LinearLayout
@@ -63,10 +64,10 @@
 
         <ExpandableListView
                 android:id="@+id/welcome_feed_select_expandable_list"
-                style="@style/ExpListDarkTheme"
                 android:layout_width="300dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                style="@style/ExpandableListLight"
                 android:cacheColorHint="@android:color/transparent"
                 android:fadingEdgeLength="1dp"
                 android:scrollbars="none"/>

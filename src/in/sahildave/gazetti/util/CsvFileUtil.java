@@ -95,7 +95,6 @@ public class CsvFileUtil {
             while ((line = br.readLine()) != null) {
                 String[] np = line.split(csvSplitBy);
 
-                System.out.println("getObjectByNPId == " + np[0] + " - " + npId + ", " + np[2] + " - " + catId);
                 if (np[0].equals(npId) && np[2].equals(catId)) {
                     setupReturnObject(np);
                     break;
@@ -137,6 +136,5 @@ public class CsvFileUtil {
         object.setCatName(np[3]);
         object.setNpImage(np[4]);
         object.setCatImage(np[5]);
-        System.out.println("Object - " + object.toString());
     }
 }

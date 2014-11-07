@@ -16,6 +16,6 @@
         <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
     </style>
 
-    <style name="ExpListDarkTheme" parent="android:Widget.Holo.ExpandableListView"></style>
+    <style name="ExpandableListLight" parent="android:Widget.Holo.ExpandableListView"/>
 
 </resources>

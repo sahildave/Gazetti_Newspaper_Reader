@@ -49,7 +49,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
 
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.welcome_feed_select_explist_group, null);
+            convertView = inflater.inflate(R.layout.welcome_feed_select_explist_group, parent, false);
 
             // Initialize the GroupViewHolder defined at the bottom of this
             // document
@@ -68,7 +68,6 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         Drawable image = mContext.getResources().getDrawable(imageResId);
         image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
         groupViewHolder.mGroupText.setCompoundDrawables(null, null, image, null);
-        System.out.println(imageResId + ", " + image.hashCode());
         return convertView;
     }
 
@@ -84,7 +83,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         ChildViewHolder childViewHolder;
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.welcome_feed_select_explist_rowdetail, null);
+            convertView = inflater.inflate(R.layout.welcome_feed_select_explist_rowdetail,  parent, false);
 
             childViewHolder = new ChildViewHolder();
 
@@ -189,8 +188,8 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
     }
 
     public final class GroupViewHolder {
-
         TextView mGroupText;
+        ImageView mGroupIcon;
     }
 
     public final class ChildViewHolder {

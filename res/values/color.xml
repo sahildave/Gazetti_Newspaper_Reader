@@ -7,6 +7,8 @@
     <color name="nav_list_background_pressed">#EEEEEE</color>
     <color name="nav_list_divider">#ffffff</color>
     <color name="nav_list_end_divider">#000000</color>
+    <color name="exp_list_group_divider">#aaffffff</color>
+    <color name="exp_list_child_divider">#aaffffff</color>
     <color name="main_list_background">#DCDCDC</color>
     <color name="main_list_item_title">#000000</color>
     <color name="main_list_item_title_selected">#006B99</color>
