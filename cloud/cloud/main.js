@@ -13,7 +13,7 @@ var toi_data = Parse.Object.extend("toi_data");
 var hindu_data= Parse.Object.extend("hindu_data");
 var tie_data = Parse.Object.extend("tie_data");
 var fp_data = Parse.Object.extend("fp_data");
-var fp_second_data = Parse.Object.extend("fp_second_data");
+var toi_second_data = Parse.Object.extend("toi_second_data");
 
 /////////////////////////// All Newspapers  ///////////////////////////////////////
 
@@ -357,7 +357,7 @@ function processDataForToi(httpResponse, newspaperId, catId){
         var listArray = [];
         res.rss.channel.item.each(function (i, item){
             var newsArt = new toi_data();
-            newsArt.set("link", item.link.text());
+            newsArt.set("link", item.guid.text());
             newsArt.set("title", item.title.text());
             newsArt.set("pubDate", item.pubDate.text());
             newsArt.set("newspaper_id",newspaperId);
@@ -435,7 +435,7 @@ function processDataForToiSecond(httpResponse, newspaperId, catId){
         var listArray = [];
         res.rss.channel.item.each(function (i, item){
             var newsArt = new toi_data();                                          //Change 3
-            newsArt.set("link", item.link.text());
+            newsArt.set("link", item.guid.text());
             newsArt.set("title", item.title.text());
             newsArt.set("pubDate", item.pubDate.text());
             newsArt.set("newspaper_id",newspaperId);
@@ -927,7 +927,7 @@ Parse.Cloud.job("findAll", function(request, status) {
 
 Parse.Cloud.job("job_single_trial", function (request, response) {
     return Parse.Cloud.httpRequest({
-        url: 'http://timesofindia.feedsportal.com/c/33039/f/533923/index.rss'
+        url: 'http://timesofindia.feedsportal.com/c/33039/f/533916/index.rss'
     }).then(function(httpResponse) {
         var someXml = httpResponse.text;
         xmlreader.read(someXml, function (err, res){
@@ -938,10 +938,10 @@ Parse.Cloud.job("job_single_trial", function (request, response) {
 
             var listArray = [];
             res.rss.channel.item.each(function (i, item){
-                var hinduNat = new toi_data();
-                hinduNat.set("link", item.link.text());
+                var hinduNat = new toi_second_data();
                 hinduNat.set("title", item.title.text());
                 hinduNat.set("pubDate", item.pubDate.text());
+                hinduNat.set("link", item.guid.text());
                 listArray.push(hinduNat);
             });
 
@@ -968,13 +968,13 @@ Parse.Cloud.job("job_single_trial", function (request, response) {
 ////////////////////////////////////////////////
 
 
-Parse.Cloud.beforeSave("fp_second_data", function(request, response) {                            //Change 4
+Parse.Cloud.beforeSave("toi_second_data", function(request, response) {                            //Change 4
 
     var linkText = request.object.get("link")
     var titleText = request.object.get("title");
     var catId = request.object.get("cat_id");
 
-    var query = new Parse.Query(fp_second_data);
+    var query = new Parse.Query(toi_second_data);
     query.equalTo("title", titleText);
     query.equalTo("cat_id", catId);
 
