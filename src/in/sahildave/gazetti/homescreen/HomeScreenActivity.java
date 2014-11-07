@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
+import com.crashlytics.android.Crashlytics;
 import com.parse.ConfigCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseConfig;
@@ -40,8 +42,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     private FragmentManager fragmentManager;
     private List<CellModel> cellList;
     private GridAdapter adapter;
-    private UserSelectionUtil userSelectionUtil;
-    private CellListUtil cellListUtil;
     private PopupWindow popupWindow;
 
     @Override
@@ -77,9 +77,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             startActivity(welcomeIntent);
 
         }
-
-        initUtils();
-
     }
 
     private void checkCurrentConfig() {
@@ -90,11 +87,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
                 new ConfigService();
             }
         });
-    }
-
-    private void initUtils() {
-        cellListUtil = new CellListUtil(this);
-        userSelectionUtil = new UserSelectionUtil(this);
     }
 
     private void setupCustomActionBar() {
@@ -229,8 +221,8 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 
             csvFile.closeUtilObject();
 
-            cellListUtil.saveCellListToSharedPrefs(cellList);
-            userSelectionUtil.updateUserSelectionSharedPrefs();
+            CellListUtil.saveCellListToSharedPrefs(this, cellList);
+            UserSelectionUtil.updateUserSelectionSharedPrefs(this);
         }
 
     }
@@ -238,19 +230,25 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     @Override
     public void onFinishAddingListener(String npName, String cat) {
 
-        CsvFileUtil csvFile = new CsvFileUtil(this);
-        NewsCatModel csvObject = csvFile.getObjectByNPName(npName, cat);
+        try {
+            CsvFileUtil csvFile = new CsvFileUtil(this);
+            NewsCatModel csvObject = csvFile.getObjectByNPName(npName, cat);
 
-        if (!isCellPresent(csvObject)) {
-            CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
-            cellList.add(newCell);
-            adapter.notifyDataSetChanged();
+            if (!isCellPresent(csvObject)) {
+                CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
+                cellList.add(cellList.size()-1, newCell);
+                adapter.notifyDataSetChanged();
+            }
+
+            csvFile.closeUtilObject();
+
+            CellListUtil.saveCellListToSharedPrefs(this, cellList);
+            UserSelectionUtil.updateUserSelectionSharedPrefs(this);
+        } catch (Exception e) {
+            Crashlytics.log(npName + ", " + cat);
+            Crashlytics.log(cellList.toString());
+            Crashlytics.logException(e);
         }
-
-        csvFile.closeUtilObject();
-
-        cellListUtil.saveCellListToSharedPrefs(cellList);
-        userSelectionUtil.updateUserSelectionSharedPrefs();
 
     }
 

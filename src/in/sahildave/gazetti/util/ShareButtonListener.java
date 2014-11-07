@@ -72,9 +72,6 @@ public class ShareButtonListener {
                     mArticleURL = s;
 
                     String intentString = mArticleHeadLine + " - "+mArticleURL;
-//                    intentString = intentString.length() > MESSAGE_LENGTH ?
-//                            intentString.substring(0, MESSAGE_LENGTH)+"..." :
-//                            intentString;
 
                     //Log.d(ShareButtonListener.class.getName(), "Sharing content - " + intentString);
 
@@ -85,7 +82,6 @@ public class ShareButtonListener {
                     activity.startActivity(Intent.createChooser(sendIntent, "Share with"));
                 } catch (Exception e) {
                     Crashlytics.logException(e);
-                    e.printStackTrace();
                 }
             }
         }.execute(longUrl);

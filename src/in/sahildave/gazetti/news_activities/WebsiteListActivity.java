@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.news_activities.WebsiteDetailFragment.LoadArticleCallback;
 import in.sahildave.gazetti.news_activities.WebsiteListFragment.ItemSelectedCallback;
@@ -61,15 +62,20 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
         setContentView(R.layout.activity_website_list);
 
         mActionBarColors = getResources().getIntArray(R.array.action_bar_colors);
+        currentColor = getResources().getColor(R.color.actionbar_default_color);
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            //Log.d(TAG, "Activity retaining extras");
-            npId = extras.getString("npId");
-            catId = extras.getString("catId");
-            npName = extras.getString("npName");
-            catName = extras.getString("catName");
+        try {
+            if (extras != null) {
+                //Log.d(TAG, "Activity retaining extras");
+                npId = extras.getString("npId");
+                catId = extras.getString("catId");
+                npName = extras.getString("npName");
+                catName = extras.getString("catName");
 
-            currentColor = mActionBarColors[Integer.parseInt(catId) - 1];
+                currentColor = mActionBarColors[Integer.parseInt(catId) - 1];
+            }
+        } catch (NumberFormatException e) {
+            Crashlytics.logException(e);
         }
 
         if (savedInstanceState != null) {
@@ -131,27 +137,32 @@ public class WebsiteListActivity extends ActionBarActivity implements ItemSelect
 
     @Override
     public void onItemSelected(String headlineText, NewsAdapter newsAdapter) {
-
-
-        if (mTwoPane) {
-            Bundle arguments = new Bundle();
-            arguments.putString("npName", npName);
-            arguments.putString("catName", catName);
-            arguments.putInt("actionBarColor", currentColor);
-            arguments.putString(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
-            WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
-            detailFragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.website_detail_container, detailFragment, "detail").commit();
-        } else {
-            Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
-            detailIntent.putExtra("npName", npName);
-            detailIntent.putExtra("catName", catName);
-            detailIntent.putExtra(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
-            detailIntent.putExtra("ActionBarColor", currentColor);
-            detailIntent.putExtra("ActionBarTitle", npName + " - " + catName);
-            startActivity(detailIntent);
-
+        try {
+            if(headlineText!=null){
+                if (mTwoPane) {
+                    Bundle arguments = new Bundle();
+                    arguments.putString("npName", npName);
+                    arguments.putString("catName", catName);
+                    arguments.putInt("actionBarColor", currentColor);
+                    arguments.putString(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
+                    WebsiteDetailFragment detailFragment = new WebsiteDetailFragment();
+                    detailFragment.setArguments(arguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.website_detail_container, detailFragment, "detail").commit();
+                } else {
+                    Intent detailIntent = new Intent(this, WebsiteDetailActivity.class);
+                    detailIntent.putExtra("npName", npName);
+                    detailIntent.putExtra("catName", catName);
+                    detailIntent.putExtra(WebsiteDetailFragment.HEADLINE_CLICKED, headlineText);
+                    detailIntent.putExtra("ActionBarColor", currentColor);
+                    detailIntent.putExtra("ActionBarTitle", npName + " - " + catName);
+                    startActivity(detailIntent);
+                }
+            } else {
+                Crashlytics.log("Headline clicked is null ? " + (null == headlineText));
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
     }
     /****************************/

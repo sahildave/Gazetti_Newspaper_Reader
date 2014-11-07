@@ -14,17 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CellListUtil {
-    private String TAG = "HomeScreen";
-    private static Context context;
-    List<CellModel> cellList;
+    private String LOG_TAG = CellListUtil.class.getName();
+    static List<CellModel> cellList;
 
-    public CellListUtil(Context context) {
-        this.context = context;
-    }
+    public static void updateCellListByUserSelection(Context context) {
 
-    public void updateCellListByUserSelection() {
-
-        HashMap<Integer, boolean[]> cellListFromUserSelection = UserSelectionUtil.getUserFeedSelection();
+        HashMap<Integer, boolean[]> cellListFromUserSelection = UserSelectionUtil.getUserFeedSelection(context);
 
         if (cellList == null) {
             cellList = new ArrayList<CellModel>();
@@ -60,11 +55,11 @@ public class CellListUtil {
 
         }
 
-        saveCellListToSharedPrefs(cellList);
+        CellListUtil.saveCellListToSharedPrefs(context, cellList);
 
     }
 
-    public void saveCellListToSharedPrefs(List<CellModel> cellList) {
+    public static void saveCellListToSharedPrefs(Context context, List<CellModel> cellList) {
         SharedPreferences cellListPrefs = context.getSharedPreferences("CellList", Context.MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = cellListPrefs.edit();
 
@@ -77,7 +72,7 @@ public class CellListUtil {
         prefEditor.commit();
     }
 
-    public static List<CellModel> getCellListFromSharedPrefs() {
+    public static List<CellModel> getCellListFromSharedPrefs(Context context) {
 
         SharedPreferences sharedPref = context.getSharedPreferences("CellList", Context.MODE_PRIVATE);
         String defValueCellList = context.getResources().getString(R.string.cell_list_defvalue);

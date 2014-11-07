@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
-import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -28,8 +27,7 @@ import in.sahildave.gazetti.news_activities.fetch.toi;
 import in.sahildave.gazetti.util.ShareButtonListener;
 
 public class WebsiteDetailFragment extends Fragment {
-    private static final String TAG = "DFRAGMENT";
-    private static final String TAG_ASYNC = "ASYNC";
+    private static final String LOG_TAG = WebsiteDetailFragment.class.getName();
 
     public static final String HEADLINE_CLICKED = "mArticleHeadline";
 
@@ -66,7 +64,7 @@ public class WebsiteDetailFragment extends Fragment {
     }
 
     public WebsiteDetailFragment() {
-//        Log.d(TAG, "DetailFragment constructor");
+//        Log.d(LOG_TAG, "DetailFragment constructor");
     }
 
     @Override
@@ -75,7 +73,7 @@ public class WebsiteDetailFragment extends Fragment {
         if (!(activity instanceof LoadArticleCallback)) {
             throw new IllegalStateException("Activity must implement the LoadArticleCallback interface.");
         }
-//        Log.d(TAG, "DetailFragment onAttach");
+//        Log.d(LOG_TAG, "DetailFragment onAttach");
 
         mCallbacks = (LoadArticleCallback) activity;
 
@@ -107,7 +105,7 @@ public class WebsiteDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //Log.d(TAG, "DetailFragment onCreateView");
+        //Log.d(LOG_TAG, "DetailFragment onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_website_detail, container, false);
 
         ImageButton mNewspaperTile = (ImageButton) rootView.findViewById(R.id.newspaperTile);
@@ -152,7 +150,7 @@ public class WebsiteDetailFragment extends Fragment {
         mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
         mScrollToReadLayout.setVisibility(View.INVISIBLE);
 
-        //Log.d(TAG, "Async called");
+        //Log.d(LOG_TAG, "Async called");
         ArticleLoadAsyncTask mTask = new ArticleLoadAsyncTask(rootView);
         mTask.execute();
 
@@ -163,7 +161,7 @@ public class WebsiteDetailFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    //Log.d(TAG, "ScrollView ACTION_UP");
+                    //Log.d(LOG_TAG, "ScrollView ACTION_UP");
                     if (mScrollToReadLayout.getVisibility() == View.VISIBLE) {
                         mScrollToReadLayout.startAnimation(slide_down);
                         mScrollToReadLayout.setVisibility(View.INVISIBLE);
@@ -221,7 +219,7 @@ public class WebsiteDetailFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        //Log.d(TAG, "DetailFragment onDetach");
+        //Log.d(LOG_TAG, "DetailFragment onDetach");
         super.onDetach();
         mCallbacks = null;
     }
@@ -264,7 +262,7 @@ public class WebsiteDetailFragment extends Fragment {
             bookmarkModel.setmArticleImageURL(mArticleImageURL);
             bookmarkModel.setmArticlePubDate(mArticlePubDate);
         } catch (Exception e) {
-            Log.e(TAG, "Exception while creating bookmark object - " + e.getMessage(), e);
+            Crashlytics.log("Exception while creating bookmark object - " + e.getMessage());
             Crashlytics.logException(e);
         }
         return bookmarkModel;
@@ -304,6 +302,11 @@ public class WebsiteDetailFragment extends Fragment {
             } else if (npNameString.equalsIgnoreCase("The Indian Express")) {
                 indianExpress tieObject = new indianExpress(mArticleURL);
                 articleContent = tieObject.getTIEArticleContent();
+            }
+
+            if(articleContent == null){
+                Crashlytics.log(npNameString+", "+catNameString+" - "+mArticleHeadline);
+                return null;
             }
 
             if (articleContent[0] == null || articleContent[0].length() == 0) {
@@ -357,13 +360,13 @@ public class WebsiteDetailFragment extends Fragment {
 
         @Override
         public boolean onDown(MotionEvent event) {
-            // Log.d(TAG, "ONDOWN");
+            // Log.d(LOG_TAG, "ONDOWN");
             return true;
         }
 
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-            // Log.d(TAG, "ONFLING");
+            // Log.d(LOG_TAG, "ONFLING");
             return super.onFling(event1, event2, velocityX, velocityY);
         }
     }

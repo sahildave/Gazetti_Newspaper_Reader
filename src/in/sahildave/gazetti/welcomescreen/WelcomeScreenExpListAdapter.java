@@ -24,11 +24,6 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
     private HashMap<String, List<String>> mListDataChild;
     public static HashMap<Integer, boolean[]> mChildCheckStates;
 
-    private ChildViewHolder childViewHolder;
-    private GroupViewHolder groupViewHolder;
-
-    private String groupText;
-    private String childText;
     private int lastExpandedGroupPosition = -1;
 
     public static ExpandableListView expandableList;
@@ -40,7 +35,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         this.mListDataHeader = listDataHeader;
         this.mListDataChild = listChildData;
 
-        mChildCheckStates = UserSelectionUtil.getUserFeedSelection();
+        mChildCheckStates = UserSelectionUtil.getUserFeedSelection(context);
 
         explist_np_images = mContext.getResources().obtainTypedArray(R.array.explist_newspaper_images);
     }
@@ -48,8 +43,9 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
-        groupText = getGroup(groupPosition).toString();
+        String groupText = getGroup(groupPosition).toString();
 
+        GroupViewHolder groupViewHolder;
         if (convertView == null) {
 
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -62,7 +58,6 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
                     .findViewById(R.id.welcome_feed_select_explist_group_textview);
             convertView.setTag(groupViewHolder);
         } else {
-
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
 
@@ -84,8 +79,9 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         final int mGroupPosition = groupPosition;
         final int mChildPosition = childPosition;
 
-        childText = (String) getChild(groupPosition, childPosition);
+        String childText = (String) getChild(groupPosition, childPosition);
 
+        ChildViewHolder childViewHolder;
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.welcome_feed_select_explist_rowdetail, null);
@@ -191,8 +187,6 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         super.onGroupExpanded(groupPosition);
 
     }
-
-    ;
 
     public final class GroupViewHolder {
 

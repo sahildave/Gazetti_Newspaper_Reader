@@ -227,7 +227,82 @@ Parse.Cloud.beforeSave("hindu_data", function(request, response) {
     });
 });
  
- 
+  ///////////////////////////////// Hindu SECOND JOB /////////////////////////
+
+  Parse.Cloud.job("job_data_hindu_second", function (request, response) {     // 1 API REQUEST
+      var newsCatList = Parse.Object.extend("hindu_second");                                                     //Change 1
+      var query = new Parse.Query(newsCatList);
+      query.descending("parse_id")
+      query.find().then(function(list){                                                                       // 1 API REQUEST
+          console.log("Added " + list.length+" urls for checking");
+          //create array and use Promise.when to wait till it is filled
+          var promisesGetNP = [];
+          for (var i = 0; i < list.length; i++) {
+              promisesGetNP.push(getDataForHinduSecond(list[i].get("newspaper_id_column"), list[i].get("category_id_column"), list[i].get("url_column")));
+          }
+          return Parse.Promise.when(promisesGetNP);
+
+      }).then (function(result) {
+              console.log("done hindu job full result "+result);
+              response.success("Saving completed successfully.");
+          },function(error) {
+              alert("Top Level Error: " + error.code + " " + error.message);
+              response.error("Uh oh, something went wrong. "+error.message);
+          }
+      );
+  });
+
+  //get httpResponse from a url
+  function getDataForHinduSecond(newspaperId, catId , feedUrl){
+      //create array and use Promise.when to wait till it is filled
+      console.log("Pushing for "+newspaperId+", "+catId+", "+feedUrl);
+
+      var promisesGetData = [];
+      return Parse.Cloud.httpRequest({
+          url: feedUrl
+      }).then(function(httpResponse){
+          promisesGetData.push(processDataForHinduSecond(httpResponse, newspaperId, catId));
+          return Parse.Promise.when(promisesGetData);
+
+      }).then(function() {
+          return Parse.Promise.as("Got hindu Second Data");              //Change 2
+      });
+  }
+
+  function processDataForHinduSecond(httpResponse, newspaperId, catId){
+      someXml = httpResponse.text
+      xmlreader.read(someXml, function (err, res){
+          if(err) {
+              alert("XML Read Error: " + err.code + " " + err.message);
+              return console.log(err);
+          }
+
+          var listArray = [];
+          res.rss.channel.item.each(function (i, item){
+              var newsArt = new hindu_data();                                          //Change 3
+              newsArt.set("link", item.link.text());
+              newsArt.set("title", item.title.text());
+              newsArt.set("pubDate", item.pubDate.text());
+              newsArt.set("newspaper_id",newspaperId);
+              newsArt.set("cat_id",catId);
+
+              listArray.push(newsArt);
+          });
+
+          //create a new promises array
+          var promises = new Array();
+          Parse.Object.saveAll(listArray, {                                                                   // 1 API REQUEST
+                  success: function(objs) {
+                      promises.push(objs);
+                  },
+                  error: function(error) {
+                      alert("Save All Error: " + error.code + " " + error.message+ " -- "+newspaperId+", "+catId);
+                  }
+              });
+          return Parse.Promise.when(promises);
+      });
+  }
+
 /////////////////////////////////// toi ////////////////////////////////
  
  
@@ -331,6 +406,7 @@ Parse.Cloud.beforeSave("toi_data", function(request, response) {
 });
 
 
+///////////////////////////////// TOI SECOND JOB /////////////////////////
 
 Parse.Cloud.job("job_data_toi_second", function (request, response) {     // 1 API REQUEST
     var newsCatList = Parse.Object.extend("toi_second");                                                     //Change 1
@@ -508,7 +584,83 @@ Parse.Cloud.beforeSave("fp_data", function(request, response) {
     });
 });
  
- 
+ ///////////////////////////////// FP SECOND JOB /////////////////////////
+
+ Parse.Cloud.job("job_data_fp_second", function (request, response) {     // 1 API REQUEST
+     var newsCatList = Parse.Object.extend("fp_second");                                                     //Change 1
+     var query = new Parse.Query(newsCatList);
+     query.descending("parse_id")
+     query.find().then(function(list){                                                                       // 1 API REQUEST
+         console.log("Added " + list.length+" urls for checking");
+         //create array and use Promise.when to wait till it is filled
+         var promisesGetNP = [];
+         for (var i = 0; i < list.length; i++) {
+             promisesGetNP.push(getDataForFpSecond(list[i].get("newspaper_id_column"), list[i].get("category_id_column"), list[i].get("url_column")));
+         }
+         return Parse.Promise.when(promisesGetNP);
+
+     }).then (function(result) {
+             console.log("done fp job full result "+result);
+             response.success("Saving completed successfully.");
+         },function(error) {
+             alert("Top Level Error: " + error.code + " " + error.message);
+             response.error("Uh oh, something went wrong. "+error.message);
+         }
+     );
+ });
+
+ //get httpResponse from a url
+ function getDataForFpSecond(newspaperId, catId , feedUrl){
+     //create array and use Promise.when to wait till it is filled
+     console.log("Pushing for "+newspaperId+", "+catId+", "+feedUrl);
+
+     var promisesGetData = [];
+     return Parse.Cloud.httpRequest({
+         url: feedUrl
+     }).then(function(httpResponse){
+         promisesGetData.push(processDataForFpSecond(httpResponse, newspaperId, catId));
+         return Parse.Promise.when(promisesGetData);
+
+     }).then(function() {
+         return Parse.Promise.as("Got fp Second Data");              //Change 2
+     });
+ }
+
+ function processDataForFpSecond(httpResponse, newspaperId, catId){
+     someXml = httpResponse.text
+     xmlreader.read(someXml, function (err, res){
+         if(err) {
+             alert("XML Read Error: " + err.code + " " + err.message);
+             return console.log(err);
+         }
+
+         var listArray = [];
+         res.rss.channel.item.each(function (i, item){
+             var newsArt = new fp_data();                                          //Change 3
+             newsArt.set("link", item.link.text());
+             newsArt.set("title", item.title.text());
+             newsArt.set("pubDate", item.pubDate.text());
+             newsArt.set("newspaper_id",newspaperId);
+             newsArt.set("cat_id",catId);
+
+             listArray.push(newsArt);
+         });
+
+         //create a new promises array
+         var promises = new Array();
+         Parse.Object.saveAll(listArray, {                                                                   // 1 API REQUEST
+                 success: function(objs) {
+                     promises.push(objs);
+                 },
+                 error: function(error) {
+                     alert("Save All Error: " + error.code + " " + error.message+ " -- "+newspaperId+", "+catId);
+                 }
+             });
+         return Parse.Promise.when(promises);
+     });
+ }
+
+
 /////////////////////////////////// The Indian Express ////////////////////////////////
  
  
@@ -610,6 +762,84 @@ Parse.Cloud.beforeSave("tie_data", function(request, response) {
       }
     });
 });
+
+
+ ///////////////////////////////// TIE SECOND JOB /////////////////////////
+
+ Parse.Cloud.job("job_data_tie_second", function (request, response) {     // 1 API REQUEST
+     var newsCatList = Parse.Object.extend("tie_second");                                                     //Change 1
+     var query = new Parse.Query(newsCatList);
+     query.descending("parse_id")
+     query.find().then(function(list){                                                                       // 1 API REQUEST
+         console.log("Added " + list.length+" urls for checking");
+         //create array and use Promise.when to wait till it is filled
+         var promisesGetNP = [];
+         for (var i = 0; i < list.length; i++) {
+             promisesGetNP.push(getDataForTieSecond(list[i].get("newspaper_id_column"), list[i].get("category_id_column"), list[i].get("url_column")));
+         }
+         return Parse.Promise.when(promisesGetNP);
+
+     }).then (function(result) {
+             console.log("done tie job full result "+result);
+             response.success("Saving completed successfully.");
+         },function(error) {
+             alert("Top Level Error: " + error.code + " " + error.message);
+             response.error("Uh oh, something went wrong. "+error.message);
+         }
+     );
+ });
+
+ //get httpResponse from a url
+ function getDataForTieSecond(newspaperId, catId , feedUrl){
+     //create array and use Promise.when to wait till it is filled
+     console.log("Pushing for "+newspaperId+", "+catId+", "+feedUrl);
+
+     var promisesGetData = [];
+     return Parse.Cloud.httpRequest({
+         url: feedUrl
+     }).then(function(httpResponse){
+         promisesGetData.push(processDataForTieSecond(httpResponse, newspaperId, catId));
+         return Parse.Promise.when(promisesGetData);
+
+     }).then(function() {
+         return Parse.Promise.as("Got tie Second Data");              //Change 2
+     });
+ }
+
+ function processDataForTieSecond(httpResponse, newspaperId, catId){
+     someXml = httpResponse.text
+     xmlreader.read(someXml, function (err, res){
+         if(err) {
+             alert("XML Read Error: " + err.code + " " + err.message);
+             return console.log(err);
+         }
+
+         var listArray = [];
+         res.rss.channel.item.each(function (i, item){
+             var newsArt = new tie_data();                                          //Change 3
+             newsArt.set("link", item.link.text());
+             newsArt.set("title", item.title.text());
+             newsArt.set("pubDate", item.pubDate.text());
+             newsArt.set("newspaper_id",newspaperId);
+             newsArt.set("cat_id",catId);
+
+             listArray.push(newsArt);
+         });
+
+         //create a new promises array
+         var promises = new Array();
+         Parse.Object.saveAll(listArray, {                                                                   // 1 API REQUEST
+                 success: function(objs) {
+                     promises.push(objs);
+                 },
+                 error: function(error) {
+                     alert("Save All Error: " + error.code + " " + error.message+ " -- "+newspaperId+", "+catId);
+                 }
+             });
+         return Parse.Promise.when(promises);
+     });
+ }
+
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -1,5 +1,6 @@
 package in.sahildave.gazetti.news_activities.fetch;
 
+import com.crashlytics.android.Crashlytics;
 import in.sahildave.gazetti.util.ConfigService;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
@@ -11,6 +12,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 public class firstPost {
+    final String LOG_TAG = this.getClass().getName();
 
     String mArticleURL;
     String titleText;
@@ -31,7 +33,12 @@ public class firstPost {
             Connection connection = Jsoup.connect(url).userAgent("Mozilla").timeout(10 * 1000);
             Response response = connection.execute();
 
-            if(response==null || response.statusCode() !=200){
+            if(response==null){
+                Crashlytics.log("Is response null ? "+(null==response));
+                return null;
+            } else if(response.statusCode() !=200){
+                Crashlytics.log("Received response - "+response.statusCode()+" -- "+response.statusMessage());
+                Crashlytics.log("Received response - "+response.body());
                 return null;
             }
 
@@ -62,13 +69,17 @@ public class firstPost {
             result[2] = articleText;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            return null;
         } catch (NullPointerException npe) {
-            npe.printStackTrace();
             articleText = null;
+            Crashlytics.logException(npe);
+            return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            return null;
         }
+
         return result;
 
     }

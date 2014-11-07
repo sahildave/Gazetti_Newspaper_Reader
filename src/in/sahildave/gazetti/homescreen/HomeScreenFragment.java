@@ -89,7 +89,7 @@ public class HomeScreenFragment extends Fragment {
 
             feedVersion = newfeedVersion;
             cellList.clear();
-            cellList = CellListUtil.getCellListFromSharedPrefs();
+            cellList = CellListUtil.getCellListFromSharedPrefs(getActivity());
 
             putAddNewCellInList();
 
@@ -148,7 +148,7 @@ public class HomeScreenFragment extends Fragment {
 
         }
 
-        cellList = CellListUtil.getCellListFromSharedPrefs();
+        cellList = CellListUtil.getCellListFromSharedPrefs(getActivity());
         putAddNewCellInList();
 
         adapter = new GridAdapter(getActivity(), cellList);
@@ -336,11 +336,9 @@ public class HomeScreenFragment extends Fragment {
                 cellList.remove(position);
                 adapter.notifyDataSetChanged();
 
-                CellListUtil cellListObject = new CellListUtil(getActivity());
-                cellListObject.saveCellListToSharedPrefs(cellList);
+                CellListUtil.saveCellListToSharedPrefs(getActivity(), cellList);
 
-                UserSelectionUtil userSelectionUtil = new UserSelectionUtil(getActivity());
-                userSelectionUtil.updateUserSelectionSharedPrefs();
+                UserSelectionUtil.updateUserSelectionSharedPrefs(getActivity());
                 return true;
             default:
                 return super.onContextItemSelected(item);

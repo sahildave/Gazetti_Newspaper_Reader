@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
+import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -67,8 +68,12 @@ public class ArticleLoadingCallback {
         Bundle bundle  = new Bundle();
         bundle.putString("URL", mArticleUrl);
         webViewFragment.setArguments(bundle);
-        ((FragmentActivity)activity).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.website_detail_container, webViewFragment, "webViewFragment").commit();
+        try {
+            ((FragmentActivity)activity).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.website_detail_container, webViewFragment, "webViewFragment").commit();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
     }
 
 

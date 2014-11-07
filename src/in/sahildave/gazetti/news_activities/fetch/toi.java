@@ -34,7 +34,12 @@ public class toi {
             Connection connection = Jsoup.connect(url).userAgent("Mozilla").timeout(10 * 1000);
             Response response = connection.execute();
 
-            if(response==null || response.statusCode() !=200){
+            if(response==null){
+                Crashlytics.log("Is response null ? "+(null==response));
+                return null;
+            } else if(response.statusCode() !=200){
+                Crashlytics.log("Received response - "+response.statusCode()+" -- "+response.statusMessage());
+                Crashlytics.log("Received response - "+response.body());
                 return null;
             }
 
@@ -58,14 +63,15 @@ public class toi {
             result[2] = bodyText;
 
         } catch (IOException e) {
-            e.printStackTrace();
             Crashlytics.logException(e);
+            return null;
         } catch (NullPointerException npe) {
-            npe.printStackTrace();
             bodyText = null;
             Crashlytics.logException(npe);
+            return null;
         } catch (Exception e) {
             Crashlytics.logException(e);
+            return null;
         }
 
         return result;
