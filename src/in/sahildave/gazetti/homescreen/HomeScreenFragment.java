@@ -2,7 +2,6 @@ package in.sahildave.gazetti.homescreen;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,20 +14,16 @@ import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.nineoldandroids.view.ViewHelper;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.adapter.CellModel;
+import in.sahildave.gazetti.homescreen.adapter.CellModelNew;
 import in.sahildave.gazetti.homescreen.adapter.GridAdapter;
-import in.sahildave.gazetti.homescreen.adapter.NewsCatModel;
-import in.sahildave.gazetti.news_activities.WebsiteListActivity;
-import in.sahildave.gazetti.util.CellListUtil;
-import in.sahildave.gazetti.util.CsvFileUtil;
-import in.sahildave.gazetti.util.UserSelectionUtil;
+import in.sahildave.gazetti.util.CellListJsonUtil;
+import in.sahildave.gazetti.util.Enums.Newspapers;
 
 import java.util.List;
 import java.util.Random;
@@ -36,7 +31,7 @@ import java.util.Random;
 public class HomeScreenFragment extends Fragment {
     private Callbacks activityCallback;
     private GridView gridview;
-    private List<CellModel> cellList;
+    private List<CellModelNew> cellList;
     private GridAdapter adapter;
     private int feedVersion;
     private SwingBottomInAnimationAdapter animAdapter;
@@ -78,31 +73,31 @@ public class HomeScreenFragment extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
-        int newfeedVersion = sharedPref.getInt("feedVersion", 0);
-
-        if ((newfeedVersion > feedVersion)) {
-
-            feedVersion = newfeedVersion;
-            cellList.clear();
-            cellList = CellListUtil.getCellListFromSharedPrefs(getActivity());
-
-            putAddNewCellInList();
-
-            adapter = new GridAdapter(getActivity(), cellList);
-
-            animAdapter = new SwingBottomInAnimationAdapter(adapter);
-            animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
-            animAdapterMultiple.setAbsListView(gridview);
-
-            gridview.setAdapter(animAdapterMultiple);
-        }
-
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
+//        int newfeedVersion = sharedPref.getInt("feedVersion", 0);
+//
+//        if ((newfeedVersion > feedVersion)) {
+//
+//            feedVersion = newfeedVersion;
+//            cellList.clear();
+//            cellList = CellListUtil.getCellListFromSharedPrefs(getActivity());
+//
+//            putAddNewCellInList();
+//
+//            adapter = new GridAdapter(getActivity(), cellList);
+//
+//            animAdapter = new SwingBottomInAnimationAdapter(adapter);
+//            animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
+//            animAdapterMultiple.setAbsListView(gridview);
+//
+//            gridview.setAdapter(animAdapterMultiple);
+//        }
+//
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,7 +143,7 @@ public class HomeScreenFragment extends Fragment {
 
         }
 
-        cellList = CellListUtil.getCellListFromSharedPrefs(getActivity());
+        cellList = CellListJsonUtil.getUserPrefCellList();
         putAddNewCellInList();
 
         adapter = new GridAdapter(getActivity(), cellList);
@@ -159,38 +154,38 @@ public class HomeScreenFragment extends Fragment {
         gridview.setAdapter(animAdapterMultiple);
 
         registerForContextMenu(gridview);
-        gridview.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-
-                if (position == (cellList.size() - 1)) {
-                    activityCallback.showAddNewCellDialog(cellList, adapter);
-                } else {
-                    CellModel clickedObject = cellList.get(position);
-                    String npImage = clickedObject.getNewspaperImage();
-                    String catName = clickedObject.getTitleCategory();
-
-                    CsvFileUtil csvFile = new CsvFileUtil(getActivity());
-                    NewsCatModel csvObject = csvFile.getObjectByNPImage(npImage, catName);
-
-                    String npId = csvObject.getNpId();
-                    String catId = csvObject.getCatId();
-                    String npName = csvObject.getNpName();
-
-                    npId = String.valueOf(Integer.parseInt(npId) + 1);
-                    catId = String.valueOf(Integer.parseInt(catId) + 1);
-
-                    Intent headlinesIntent = new Intent(getActivity(), WebsiteListActivity.class);
-                    headlinesIntent.putExtra("npId", npId);
-                    headlinesIntent.putExtra("catId", catId);
-                    headlinesIntent.putExtra("npName", npName);
-                    headlinesIntent.putExtra("catName", catName);
-                    startActivity(headlinesIntent);
-
-                    csvFile.closeUtilObject();
-                }
-
-            }
-        });
+//        gridview.setOnItemClickListener(new OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//
+//                if (position == (cellList.size() - 1)) {
+//                    activityCallback.showAddNewCellDialog(cellList, adapter);
+//                } else {
+//                    CellModel clickedObject = cellList.get(position);
+//                    String npImage = clickedObject.getNewspaperImage();
+//                    String catName = clickedObject.getTitleCategory();
+//
+//                    CsvFileUtil csvFile = new CsvFileUtil(getActivity());
+//                    NewsCatModel csvObject = csvFile.getObjectByNPImage(npImage, catName);
+//
+//                    String npId = csvObject.getNpId();
+//                    String catId = csvObject.getCatId();
+//                    String npName = csvObject.getNpName();
+//
+//                    npId = String.valueOf(Integer.parseInt(npId) + 1);
+//                    catId = String.valueOf(Integer.parseInt(catId) + 1);
+//
+//                    Intent headlinesIntent = new Intent(getActivity(), WebsiteListActivity.class);
+//                    headlinesIntent.putExtra("npId", npId);
+//                    headlinesIntent.putExtra("catId", catId);
+//                    headlinesIntent.putExtra("npName", npName);
+//                    headlinesIntent.putExtra("catName", catName);
+//                    startActivity(headlinesIntent);
+//
+//                    csvFile.closeUtilObject();
+//                }
+//
+//            }
+//        });
 
         if (phoneMode) {
 
@@ -224,12 +219,12 @@ public class HomeScreenFragment extends Fragment {
 
     private void putAddNewCellInList() {
         if (cellList.size() > 0) {
-            CellModel modelObject = cellList.get(cellList.size() - 1);
+            CellModelNew modelObject = cellList.get(cellList.size() - 1);
             if (!modelObject.getNewspaperImage().equals("add_new")) {
-                cellList.add(new CellModel("add_new", "Add New"));
+                cellList.add(new CellModelNew(Newspapers.ADD_NEW, "Add New"));
             }
         } else {
-            cellList.add(new CellModel("add_new", "Add New"));
+            cellList.add(new CellModelNew(Newspapers.ADD_NEW, "Add New"));
         }
     }
 
@@ -313,35 +308,35 @@ public class HomeScreenFragment extends Fragment {
         inflater.inflate(R.menu.gridview_context_menu, menu);
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        int position = info.position;
-        String newspaper = cellList.get(position).getNewspaperImage();
-        String category = cellList.get(position).getTitleCategory();
-
-        switch (item.getItemId()) {
-            case R.id.edit:
-                if (position == (cellList.size() - 1)) {
-                    Toast.makeText(getActivity(), "Cannot Edit", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                activityCallback.showEditCellDialog(position, newspaper, category, cellList, adapter);
-                return true;
-            case R.id.delete:
-                if (position == (cellList.size() - 1)) {
-                    Toast.makeText(getActivity(), "Cannot Delete", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                cellList.remove(position);
-                adapter.notifyDataSetChanged();
-
-                CellListUtil.saveCellListToSharedPrefs(getActivity(), cellList);
-
-                UserSelectionUtil.updateUserSelectionSharedPrefs(getActivity());
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+//        int position = info.position;
+//        String newspaper = cellList.get(position).getNewspaperImage();
+//        String category = cellList.get(position).getTitleCategory();
+//
+//        switch (item.getItemId()) {
+//            case R.id.edit:
+//                if (position == (cellList.size() - 1)) {
+//                    Toast.makeText(getActivity(), "Cannot Edit", Toast.LENGTH_SHORT).show();
+//                    return true;
+//                }
+//                activityCallback.showEditCellDialog(position, newspaper, category, cellList, adapter);
+//                return true;
+//            case R.id.delete:
+//                if (position == (cellList.size() - 1)) {
+//                    Toast.makeText(getActivity(), "Cannot Delete", Toast.LENGTH_SHORT).show();
+//                    return true;
+//                }
+//                cellList.remove(position);
+//                adapter.notifyDataSetChanged();
+//
+//                CellListUtil.saveCellListToSharedPrefs(getActivity(), cellList);
+//
+//                UserSelectionUtil.updateUserSelectionSharedPrefs(getActivity());
+//                return true;
+//            default:
+//                return super.onContextItemSelected(item);
+//        }
+//    }
 }

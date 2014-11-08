@@ -17,9 +17,9 @@ public class GridAdapter extends BaseAdapter {
     private Context mContext;
     private int cell_dimen;
     private LayoutInflater mInflater;
-    List<CellModel> cellList;
+    List<CellModelNew> cellList;
 
-    public GridAdapter(Context c, List<CellModel> cellList) {
+    public GridAdapter(Context c, List<CellModelNew> cellList) {
         mContext = c;
         this.cell_dimen = (int) c.getResources().getDimension(R.dimen.cell_dimen);
         mInflater = LayoutInflater.from(c);
@@ -57,7 +57,7 @@ public class GridAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        CellModel modelObject = cellList.get(position);
+        CellModelNew modelObject = cellList.get(position);
 
         String uri = modelObject.getNewspaperImage();
         int resID = mContext.getResources().getIdentifier(uri, "drawable", mContext.getPackageName());

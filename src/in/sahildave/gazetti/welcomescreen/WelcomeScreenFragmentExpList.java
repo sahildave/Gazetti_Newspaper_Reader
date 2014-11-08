@@ -14,6 +14,7 @@ import in.sahildave.gazetti.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WelcomeScreenFragmentExpList extends Fragment {
 
@@ -27,9 +28,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
     private WelcomeScreenFeedSelectCallback callback;
 
     public interface WelcomeScreenFeedSelectCallback {
-        public void fsFragBackButton();
-
-        public void fsFragDoneButton(HashMap<Integer, boolean[]> mChildCheckStates);
+        public void fsFragDoneButton(Map<String, Object> mChildCheckStates);
     }
 
     public static WelcomeScreenFragmentExpList create(int pageNumber) {
@@ -73,15 +72,11 @@ public class WelcomeScreenFragmentExpList extends Fragment {
         Button done_button = (Button) rootView.findViewById(R.id.welcome_feed_select_explist_done_button);
         done_button.setOnClickListener(new OnClickListener() {
             public void onClick(View next) {
-                HashMap<Integer, boolean[]> mChildCheckStates = expListAdapter.getClickedStates();
+                Map<String, Object> mChildCheckStates = expListAdapter.getClickedStates();
                 callback.fsFragDoneButton(mChildCheckStates);
             }
         });
         return rootView;
-    }
-
-    public int getPageNumber() {
-        return mPageNumber;
     }
 
     private void prepareListData() {

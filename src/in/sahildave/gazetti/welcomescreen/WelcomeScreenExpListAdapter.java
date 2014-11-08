@@ -4,25 +4,28 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import in.sahildave.gazetti.R;
-import in.sahildave.gazetti.util.UserSelectionUtil;
+import in.sahildave.gazetti.util.UserSelectionJsonUtil;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 
-    private static final String TAG = "FEED";
+    private static final String LOG_TAG = WelcomeScreenExpListAdapter.class.getName();
 
     private Context mContext;
     private List<String> mListDataHeader;
     private HashMap<String, List<String>> mListDataChild;
-    public static HashMap<Integer, boolean[]> mChildCheckStates;
+    public static Map<String, Object> mUserSelection;
+    public static Map<Integer, boolean[]> mChildCheckStates;
 
     private int lastExpandedGroupPosition = -1;
 
@@ -35,9 +38,35 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         this.mListDataHeader = listDataHeader;
         this.mListDataChild = listChildData;
 
-        mChildCheckStates = UserSelectionUtil.getUserFeedSelection(context);
-
+        mUserSelection = UserSelectionJsonUtil.getInstance().getSelectionMap();
         explist_np_images = mContext.getResources().obtainTypedArray(R.array.explist_newspaper_images);
+        setupChildCheckedStates();
+    }
+
+    private void setupChildCheckedStates() {
+        mChildCheckStates = new HashMap<Integer, boolean[]>();
+        int headerLength = mListDataHeader.size();
+
+        for(int i=0; i<headerLength; i++){
+            String newspaper = mListDataHeader.get(i);
+            Log.d(LOG_TAG, "newspaper - "+newspaper);
+            Map<String, Boolean> categories = (Map<String, Boolean>) mUserSelection.get(newspaper);
+            int categoriesLength = categories.size();
+            Log.d(LOG_TAG, "categoriesLength - "+categoriesLength);
+            Log.d(LOG_TAG, "categories - "+categories);
+            boolean[] checkStates = new boolean[categoriesLength];
+
+            for(int j=0; j<categoriesLength; j++){
+                String category = mListDataChild.get(newspaper).get(j);
+                Log.d(LOG_TAG, "category - "+category+" at "+j);
+                Boolean checkState = UserSelectionJsonUtil.getInstance().isNewsCatSelected(newspaper, category);
+                checkStates[j] = checkState;
+            }
+
+            mChildCheckStates.put(i, checkStates);
+        }
+
+        Log.d(LOG_TAG, mChildCheckStates.toString());
     }
 
     @Override
@@ -103,6 +132,9 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 
         childViewHolder.mCheckBox.setOnCheckedChangeListener(null);
 
+        String group = getGroup(mGroupPosition);
+
+
         if (mChildCheckStates.containsKey(mGroupPosition)) {
             boolean getChecked[] = mChildCheckStates.get(mGroupPosition);
             childViewHolder.mCheckBox.setChecked(getChecked[mChildPosition]);
@@ -131,12 +163,35 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         expandableList = explist;
     }
 
-    public HashMap<Integer, boolean[]> getClickedStates() {
-        return mChildCheckStates;
+    public Map<String, Object> getClickedStates() {
+        try {
+
+            int headerLength = mListDataHeader.size();
+            Map<String, Object> returnMap = new HashMap<String, Object>();
+
+            for(int i=0; i<headerLength; i++){
+
+                Map<String, Boolean> children = new HashMap<String, Boolean>();
+                String newspaper = mListDataHeader.get(i);
+                boolean[] checkedState = mChildCheckStates.get(i);
+
+                int categoriesLength = checkedState.length;
+                for(int j=0; j<categoriesLength; j++){
+                    String category = mListDataChild.get(newspaper).get(j);
+                    children.put(category, checkedState[j]);
+                }
+
+                returnMap.put(newspaper, children);
+            }
+            return returnMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosititon) {
+    public String getChild(int groupPosition, int childPosititon) {
         return mListDataChild.get(getGroup(groupPosition)).get(childPosititon);
     }
 
@@ -151,7 +206,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
+    public String getGroup(int groupPosition) {
         return mListDataHeader.get(groupPosition);
     }
 
