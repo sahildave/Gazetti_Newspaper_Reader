@@ -105,11 +105,6 @@ public class EditCellDialogFragment extends DialogFragment implements OnItemSele
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner_category.setAdapter(adapter);
         } else if (position == 3) {
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.ht_cat,
-                    android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner_category.setAdapter(adapter);
-        } else if (position == 4) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.tie_cat,
                     android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

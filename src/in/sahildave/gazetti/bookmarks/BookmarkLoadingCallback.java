@@ -18,7 +18,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import in.sahildave.gazetti.R;
-import in.sahildave.gazetti.util.TextViewEx;
+import in.sahildave.gazetti.widgets.TextViewEx;
 
 /**
  * Created by sahil on 4/10/14.

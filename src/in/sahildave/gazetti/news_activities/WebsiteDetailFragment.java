@@ -20,10 +20,7 @@ import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.bookmarks.sqlite.BookmarkDataSource;
 import in.sahildave.gazetti.bookmarks.sqlite.BookmarkModel;
 import in.sahildave.gazetti.news_activities.adapter.NewsAdapter;
-import in.sahildave.gazetti.news_activities.fetch.firstPost;
-import in.sahildave.gazetti.news_activities.fetch.hindu;
-import in.sahildave.gazetti.news_activities.fetch.indianExpress;
-import in.sahildave.gazetti.news_activities.fetch.toi;
+import in.sahildave.gazetti.news_activities.fetch.*;
 import in.sahildave.gazetti.util.ShareButtonListener;
 
 public class WebsiteDetailFragment extends Fragment {
@@ -51,7 +48,7 @@ public class WebsiteDetailFragment extends Fragment {
     private boolean bookmarked = false;
     private BookmarkDataSource dataSource;
     private Button mViewInBrowser;
-        private int actionBarColor = Color.DKGRAY;
+    private int actionBarColor = Color.DKGRAY;
 
     static interface LoadArticleCallback {
         void onPreExecute(View rootView);
@@ -85,17 +82,34 @@ public class WebsiteDetailFragment extends Fragment {
         dataSource = new BookmarkDataSource(getActivity());
         dataSource.open();
         setRetainInstance(true);
+        try {
+            if(getArguments()!=null){
+                npNameString = getArguments().getString("npName");
+                catNameString = getArguments().getString("catName");
+                actionBarColor = getArguments().getInt("actionBarColor");
 
-        if(getArguments()!=null){
-            npNameString = getArguments().getString("npName");
-            catNameString = getArguments().getString("catName");
-            actionBarColor = getArguments().getInt("actionBarColor");
+                if (getArguments().containsKey(HEADLINE_CLICKED)) {
+                    mArticleHeadline = getArguments().getString(HEADLINE_CLICKED);
+                    mArticleURL = NewsAdapter.linkMap.get(mArticleHeadline);
+                    mArticlePubDate = NewsAdapter.pubDateMap.get(mArticleHeadline);
+                } else {
+                    Crashlytics.log("Argument contains key -- "+HEADLINE_CLICKED+"--"+(getArguments().containsKey(HEADLINE_CLICKED)));
+                }
 
-            if (getArguments().containsKey(HEADLINE_CLICKED)) {
-                mArticleHeadline = getArguments().getString(HEADLINE_CLICKED);
-                mArticleURL = NewsAdapter.linkMap.get(mArticleHeadline);
-                mArticlePubDate = NewsAdapter.pubDateMap.get(mArticleHeadline);
+            } else {
+                Crashlytics.log("Get Arguments is null -- "+(null==getArguments()));
             }
+        } catch (Exception e) {
+            Crashlytics.log("Get Arguments is null -- "+(null==getArguments()));
+            Crashlytics.log("Argument contains key -- "+HEADLINE_CLICKED+"--"+(getArguments().containsKey(HEADLINE_CLICKED)));
+            Crashlytics.log("Null -- "
+                    +(npNameString==null)
+                    +(catNameString==null)
+                    +(actionBarColor==0)
+                    +(mArticleHeadline==null)
+                    +(mArticleURL==null)
+                    +(mArticlePubDate==null)
+            );
         }
 
         mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
@@ -300,8 +314,13 @@ public class WebsiteDetailFragment extends Fragment {
                 firstPost fpObject = new firstPost(mArticleURL);
                 articleContent = fpObject.getFirstPostArticleContent();
             } else if (npNameString.equalsIgnoreCase("The Indian Express")) {
-                indianExpress tieObject = new indianExpress(mArticleURL);
-                articleContent = tieObject.getTIEArticleContent();
+                if(catNameString.equalsIgnoreCase("Business")) {
+                    indianExpressBusiness tieBusinessObject = new indianExpressBusiness(mArticleURL);
+                    articleContent = tieBusinessObject.getTIEBusinessArticleContent();
+                } else {
+                    indianExpress tieObject = new indianExpress(mArticleURL);
+                    articleContent = tieObject.getTIEArticleContent();
+                }
             }
 
             if(articleContent == null){

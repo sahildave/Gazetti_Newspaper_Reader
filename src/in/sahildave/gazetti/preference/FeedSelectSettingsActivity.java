@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class FeedSelectViewpager extends ActionBarActivity implements FeedSelectFragment.FeedSelectCallback {
+public class FeedSelectSettingsActivity extends ActionBarActivity implements FeedSelectFragment.FeedSelectCallback {
 
     private static final String TAG = "FEED";
 

@@ -11,7 +11,6 @@ public class ConfigService {
         if (isConfigAvailable()) {
             ParseConfig config = ParseConfig.getCurrentConfig();
             setConfigVersion(config.getNumber("version"));
-
             setTheHinduElementsFromConfig(config);
             setTOIElementsFromConfig(config);
             setIndianExpressElementsFromConfig(config);
@@ -156,17 +155,28 @@ public class ConfigService {
         setIndianExpressBody(Constants.tie_body);
         setIndianExpressHead(Constants.tie_head);
         setIndianExpressImage(Constants.tie_image);
+
+        setIndianExpressBusinessBody(Constants.tie_business_body);
+        setIndianExpressBusinessHead(Constants.tie_business_head);
+        setIndianExpressBusinessImage(Constants.tie_business_image);
     }
 
     private void setIndianExpressElementsFromConfig(ParseConfig config) {
         setIndianExpressBody(config.getString("tie_body"));
         setIndianExpressHead(config.getString("tie_head"));
         setIndianExpressImage(config.getString("tie_image"));
+
+        setIndianExpressBusinessBody(config.getString("tie_business_body"));
+        setIndianExpressBusinessHead(config.getString("tie_business_head"));
+        setIndianExpressBusinessImage(config.getString("tie_business_image"));
     }
 
     private static String tieBody;
     private static String tieHead;
     private static String tieImage;
+    private static String tieBusinessBody;
+    private static String tieBusinessHead;
+    private static String tieBusinessImage;
 
     public static String getIndianExpressBody() {
         return tieBody;
@@ -190,6 +200,30 @@ public class ConfigService {
 
     public static void setIndianExpressImage(String tieImage) {
         ConfigService.tieImage = tieImage;
+    }
+
+    public static String getIndianExpressBusinessImage() {
+        return tieBusinessImage;
+    }
+
+    public static void setIndianExpressBusinessImage(String tieBusinessImage) {
+        ConfigService.tieBusinessImage = tieBusinessImage;
+    }
+
+    public static String getIndianExpressBusinessBody() {
+        return tieBusinessBody;
+    }
+
+    public static void setIndianExpressBusinessBody(String tieBusinessBody) {
+        ConfigService.tieBusinessBody = tieBusinessBody;
+    }
+
+    public static String getIndianExpressBusinessHead() {
+        return tieBusinessHead;
+    }
+
+    public static void setIndianExpressBusinessHead(String tieBusinessHead) {
+        ConfigService.tieBusinessHead = tieBusinessHead;
     }
 
     /*
