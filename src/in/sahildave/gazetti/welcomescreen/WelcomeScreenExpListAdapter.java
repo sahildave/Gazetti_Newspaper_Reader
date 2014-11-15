@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import in.sahildave.gazetti.R;
-import in.sahildave.gazetti.util.UserSelectionJsonUtil;
+import in.sahildave.gazetti.util.NewsCatFileUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,35 +38,35 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         this.mListDataHeader = listDataHeader;
         this.mListDataChild = listChildData;
 
-        mUserSelection = UserSelectionJsonUtil.getInstance().getSelectionMap();
+        mUserSelection = NewsCatFileUtil.getInstance().getFullJsonMap();
         explist_np_images = mContext.getResources().obtainTypedArray(R.array.explist_newspaper_images);
         setupChildCheckedStates();
     }
 
     private void setupChildCheckedStates() {
         mChildCheckStates = new HashMap<Integer, boolean[]>();
-        int headerLength = mListDataHeader.size();
+        int groupNumbers = mListDataHeader.size();
 
-        for(int i=0; i<headerLength; i++){
+        for(int i=0; i<groupNumbers; i++){
             String newspaper = mListDataHeader.get(i);
-            Log.d(LOG_TAG, "newspaper - "+newspaper);
-            Map<String, Boolean> categories = (Map<String, Boolean>) mUserSelection.get(newspaper);
-            int categoriesLength = categories.size();
+            Log.d(LOG_TAG, "newspaper - " + newspaper);
+            Map<String, Boolean> allCategories = (Map<String, Boolean>) mUserSelection.get(newspaper);
+            Log.d(LOG_TAG, "allCategories - "+allCategories);
+            int categoriesLength = allCategories.size();
             Log.d(LOG_TAG, "categoriesLength - "+categoriesLength);
-            Log.d(LOG_TAG, "categories - "+categories);
             boolean[] checkStates = new boolean[categoriesLength];
 
             for(int j=0; j<categoriesLength; j++){
                 String category = mListDataChild.get(newspaper).get(j);
                 Log.d(LOG_TAG, "category - "+category+" at "+j);
-                Boolean checkState = UserSelectionJsonUtil.getInstance().isNewsCatSelected(newspaper, category);
+                Boolean checkState = NewsCatFileUtil.getInstance().isNewsCatSelected(newspaper, category);
                 checkStates[j] = checkState;
             }
 
             mChildCheckStates.put(i, checkStates);
         }
 
-        Log.d(LOG_TAG, mChildCheckStates.toString());
+        Log.d(LOG_TAG, "Expandable List Adapter -- "+mChildCheckStates.toString());
     }
 
     @Override

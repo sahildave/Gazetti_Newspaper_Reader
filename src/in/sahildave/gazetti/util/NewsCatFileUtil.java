@@ -12,13 +12,14 @@ import java.util.*;
 /**
  * Created by sahil on 8/11/14.
  */
-public class UserSelectionJsonUtil {
+public class NewsCatFileUtil {
 
-    public static final String USER_SELECTION_JSON = "userSelection.json";
-    private static String LOG_TAG = UserSelectionJsonUtil.class.getName();
+    public static final String NEWS_CAT_FILE = "newsCat.json";
+    private static String LOG_TAG = NewsCatFileUtil.class.getName();
     private static Context context;
-    public static Map<String, Object> userSelectionMap;
-    private static UserSelectionJsonUtil _instance = null;
+    public static Map<String, Object> fullJsonMap;
+    public static Map<String, List<String>> userSelectionMap;
+    private static NewsCatFileUtil _instance = null;
 
     public static void init(Context parentContext) {
         context = parentContext;
@@ -26,14 +27,14 @@ public class UserSelectionJsonUtil {
         getInstance();
     }
 
-    private UserSelectionJsonUtil() {
+    private NewsCatFileUtil() {
         initUserSelectionMap();
     }
 
-    public static UserSelectionJsonUtil getInstance(){
-        synchronized (UserSelectionJsonUtil.class) {
+    public static NewsCatFileUtil getInstance(){
+        synchronized (NewsCatFileUtil.class) {
             if (_instance == null) {
-                _instance = new UserSelectionJsonUtil();
+                _instance = new NewsCatFileUtil();
             }
             return _instance;
         }
@@ -41,10 +42,14 @@ public class UserSelectionJsonUtil {
 
     private void initUserSelectionMap() {
         try {
-            String jsonString = readFromFile(USER_SELECTION_JSON);
-            Log.d(LOG_TAG, "JSON STRING - "+jsonString);
-            userSelectionMap = JsonHelper.toMap(new JSONObject(jsonString));
-            Log.d(LOG_TAG, "MAP - "+userSelectionMap.toString());
+            String jsonString = readFromFile(NEWS_CAT_FILE);
+            Log.d(LOG_TAG, "jsonString - "+jsonString);
+
+            fullJsonMap = JsonHelper.toMap(new JSONObject(jsonString));
+            Log.d(LOG_TAG, "fullJsonMap - " + fullJsonMap.toString());
+
+            userSelectionMap = getUserFeedMapFromJsonMap();
+            Log.d(LOG_TAG, "UserSelectionMap - " + userSelectionMap.toString());
         } catch (JSONException e) {
             Crashlytics.logException(e);
         }
@@ -52,8 +57,8 @@ public class UserSelectionJsonUtil {
 
     public boolean isNewsCatSelected(String newspaper, String category){
         boolean selected;
-        if(userSelectionMap.containsKey(newspaper)){
-            Map <String, Boolean> categories = getCategories(newspaper);
+        if(fullJsonMap.containsKey(newspaper)){
+            Map <String, Boolean> categories = getAllCategoriesFromJson(newspaper);
             selected = getValueOfKey(categories, category);
         } else {
             Crashlytics.log(Log.ERROR, LOG_TAG, "Key: " + newspaper + " not found..returning false");
@@ -63,8 +68,8 @@ public class UserSelectionJsonUtil {
     }
 
     public void selectNewsCat(String newspaper, String category){
-        if(userSelectionMap.containsKey(newspaper)){
-            Map <String, Boolean> categories = getCategories(newspaper);
+        if(fullJsonMap.containsKey(newspaper)){
+            Map <String, Boolean> categories = getAllCategoriesFromJson(newspaper);
             setValueOfKey(categories, category, true);
         } else {
             Crashlytics.log(Log.ERROR, LOG_TAG, "Key: " + newspaper + " not found..returning false");
@@ -73,8 +78,8 @@ public class UserSelectionJsonUtil {
     }
 
     public void deselectNewsCat(String newspaper, String category){
-        if(userSelectionMap.containsKey(newspaper)){
-            Map <String, Boolean> categories = getCategories(newspaper);
+        if(fullJsonMap.containsKey(newspaper)){
+            Map <String, Boolean> categories = getAllCategoriesFromJson(newspaper);
             setValueOfKey(categories, category, false);
         } else {
             Crashlytics.log(Log.ERROR, LOG_TAG, "Key: " + newspaper + " not found..returning false");
@@ -82,11 +87,14 @@ public class UserSelectionJsonUtil {
         }
     }
 
-    public void saveUserSelection(Map<String, Object> userSelection){
+    //TODO: make it private
+    public void saveUserSelectionToJsonFile(Map<String, Object> userSelectionJsonMap){
         try {
-            Object jsonString = JsonHelper.toJSON(userSelection);
+            Object jsonString = JsonHelper.toJSON(userSelectionJsonMap);
             Log.d(LOG_TAG, "Saving - "+jsonString.toString());
-            writeToInternalStorage(jsonString.toString(), USER_SELECTION_JSON);
+            userSelectionMap = getUserFeedMapFromJsonMap();
+            Log.d(LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
+            writeToInternalStorage(jsonString.toString(), NEWS_CAT_FILE);
         } catch (JSONException e) {
             e.printStackTrace();
         } finally {
@@ -94,38 +102,53 @@ public class UserSelectionJsonUtil {
         }
     }
 
-    private Map<String, Boolean> getCategories(String newspaper) {
-        return (Map<String, Boolean>) userSelectionMap.get(newspaper);
+    private Map<String, Boolean> getAllCategoriesFromJson(String newspaper) {
+        return (Map<String, Boolean>) fullJsonMap.get(newspaper);
     }
 
-    public Map<String, Object> getSelectionMap(){
-        return userSelectionMap;
+    public Map<String, Object> getFullJsonMap(){
+        return fullJsonMap;
     }
 
-    public Map<String, List<String>> getUserFeedMap(){
+    private Map<String, List<String>> getUserFeedMapFromJsonMap(){
         Map<String, List<String>> returnMap = new HashMap<String, List<String>>();
 
-        Iterator<String> npIterator = userSelectionMap.keySet().iterator();
-        while (npIterator.hasNext()){
-            String newspaper = npIterator.next();
-            Map<String , Boolean> categories = getCategories(newspaper);
+        for (String newspaper : fullJsonMap.keySet()) {
+            Map<String, Boolean> categories = getAllCategoriesFromJson(newspaper);
 
             Iterator<String> catIterator = categories.keySet().iterator();
             List<String> selectedCategories = new ArrayList<String>();
-            while (catIterator.hasNext()){
+            while (catIterator.hasNext()) {
                 String category = catIterator.next();
-                if(isNewsCatSelected(newspaper, category)){
-                    Log.d(LOG_TAG, "ADDING - "+newspaper+", "+category);
+                if (isNewsCatSelected(newspaper, category)) {
+                    Log.d(LOG_TAG, "ADDING - " + newspaper + ", " + category);
                     selectedCategories.add(category);
                 }
             }
 
-            if(selectedCategories.size() > 0){
+            if (selectedCategories.size() > 0) {
                 returnMap.put(newspaper, selectedCategories);
             }
         }
         Log.d(LOG_TAG, "USER FEED - "+returnMap);
         return returnMap;
+    }
+
+    public void convertUserFeedMapToJsonMap(){
+        for (String newspaper : fullJsonMap.keySet()) {
+            Map<String, Boolean> allCategories = getAllCategoriesFromJson(newspaper);
+            List<String> selectedCatForNewspaper = userSelectionMap.get(newspaper);
+
+            for (String category : allCategories.keySet()) {
+                if (selectedCatForNewspaper != null && selectedCatForNewspaper.contains(category)) {
+                    selectNewsCat(newspaper, category);
+                } else {
+                    deselectNewsCat(newspaper, category);
+                }
+            }
+        }
+
+        saveUserSelectionToJsonFile(fullJsonMap);
     }
 
     private boolean getValueOfKey(Map<String, Boolean> map, String key) {
@@ -172,7 +195,7 @@ public class UserSelectionJsonUtil {
             }
 
             input = new BufferedReader(isr);
-            String line = "";
+            String line;
             while ((line = input.readLine()) != null) {
                 returnString.append(line);
                 returnString.append("\n");
@@ -200,7 +223,7 @@ public class UserSelectionJsonUtil {
     }
 
     private void writeToInternalStorage(String content, String fileName){
-        FileOutputStream fos = null;
+        FileOutputStream fos;
         try {
             File file = new File(context.getCacheDir(), fileName);
             fos = new FileOutputStream(file);

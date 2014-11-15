@@ -28,6 +28,8 @@ import in.sahildave.gazetti.homescreen.adapter.AddCellDialogFragment.AddCellDial
 import in.sahildave.gazetti.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
 import in.sahildave.gazetti.preference.SettingsActivity;
 import in.sahildave.gazetti.util.*;
+import in.sahildave.gazetti.util.GazettiEnums.Category;
+import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
 import in.sahildave.gazetti.welcomescreen.WelcomeScreenViewPagerActivity;
 
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     private List<CellModel> cellList;
     private GridAdapter adapter;
     private PopupWindow popupWindow;
+    private GazettiEnums gazettiEnums;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +63,8 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         }
 
         checkCurrentConfig();
-        UserSelectionJsonUtil.init(this);
-
+        NewsCatFileUtil.init(this);
+        gazettiEnums = new GazettiEnums();
         fragmentManager = getSupportFragmentManager();
         Fragment homeScreenFragment = fragmentManager.findFragmentByTag("homeScreen");
 
@@ -193,10 +196,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         this.adapter = adapter;
 
         //Remove "custom" tag if on newspaper page
-        if (newspaper.contains("_custom")) {
-            newspaper = newspaper.substring(0, newspaper.length() - 7);
-        }
-        int newspaperId = cellList.get(position).getDefaultNewspaperId(newspaper);
+        int newspaperId = Integer.parseInt(cellList.get(position).getNewspaperId());
 
         EditCellDialogFragment editCellDialog = EditCellDialogFragment.newInstance(position, newspaperId, category);
         editCellDialog.show(fragmentManager, "editCell");
@@ -207,43 +207,38 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     public void onFinishEditingListener(int editPosition, String npName, String cat, boolean edited) {
 
         if (edited) {
-
-            CsvFileUtil csvFile = new CsvFileUtil(this);
-            NewsCatModel csvObject = csvFile.getObjectByNPName(npName, cat);
-
-            if (!isCellPresent(csvObject)) {
-                CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
+            NewsCatModel newsCatModel = createNewsCatModel(npName, cat);
+            if (!isCellPresent(newsCatModel)) {
+                CellModel newCell = new CellModel(newsCatModel);
+                CellModel oldCell = cellList.get(editPosition);
                 cellList.set(editPosition, newCell);
                 adapter.notifyDataSetChanged();
+
+                UserPrefUtil.replaceUserPref(oldCell, newCell);
             } else {
                 Toast.makeText(this, "Category Already Present.", Toast.LENGTH_LONG).show();
             }
-
-            csvFile.closeUtilObject();
-
-            CellListUtil.saveCellListToSharedPrefs(this, cellList);
-            UserSelectionUtil.updateUserSelectionSharedPrefs(this);
         }
 
+    }
+
+    private NewsCatModel createNewsCatModel(String npName, String cat) {
+        Newspapers npEnum = gazettiEnums.getNewspaperFromName(npName);
+        Category categoryEnum = gazettiEnums.getCategoryFromName(cat);
+        return new NewsCatModel(npEnum, categoryEnum);
     }
 
     @Override
     public void onFinishAddingListener(String npName, String cat) {
 
         try {
-            CsvFileUtil csvFile = new CsvFileUtil(this);
-            NewsCatModel csvObject = csvFile.getObjectByNPName(npName, cat);
-
-            if (!isCellPresent(csvObject)) {
-                CellModel newCell = new CellModel(csvObject.getNpImage(), csvObject.getCatName());
+            NewsCatModel newsCatModel = createNewsCatModel(npName, cat);
+            if (!isCellPresent(newsCatModel)) {
+                CellModel newCell = new CellModel(newsCatModel);
                 cellList.add(cellList.size()-1, newCell);
                 adapter.notifyDataSetChanged();
+                UserPrefUtil.addUserPref(newCell);
             }
-
-            csvFile.closeUtilObject();
-
-            CellListUtil.saveCellListToSharedPrefs(this, cellList);
-            UserSelectionUtil.updateUserSelectionSharedPrefs(this);
         } catch (Exception e) {
             Crashlytics.log(npName + ", " + cat);
             Crashlytics.log(cellList.toString());
@@ -255,8 +250,8 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     private boolean isCellPresent(NewsCatModel csvObject) {
         boolean isCellPresent = false;
         for (CellModel cellObj : cellList) {
-            boolean catMatch = (cellObj.getTitleCategory().equalsIgnoreCase(csvObject.getCatName()));
-            boolean npMatch = (cellObj.getNewspaperImage().equalsIgnoreCase(csvObject.getNpImage()));
+            boolean catMatch = (cellObj.getCategoryTitle().equalsIgnoreCase(csvObject.getCategoryTitle()));
+            boolean npMatch = (cellObj.getNewspaperImage().equalsIgnoreCase(csvObject.getNewspaperImage()));
             if ((catMatch && npMatch)) {
                 isCellPresent = true;
                 break;

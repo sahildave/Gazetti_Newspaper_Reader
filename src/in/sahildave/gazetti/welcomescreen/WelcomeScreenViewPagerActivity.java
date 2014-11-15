@@ -15,7 +15,7 @@ import com.jfeinstein.jazzyviewpager.JazzyViewPager.TransitionEffect;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.HomeScreenActivity;
 import in.sahildave.gazetti.util.Constants;
-import in.sahildave.gazetti.util.UserSelectionJsonUtil;
+import in.sahildave.gazetti.util.NewsCatFileUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,14 +80,7 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
         welcomeFinished();
         onBackPressed();
 
-        UserSelectionJsonUtil.getInstance().saveUserSelection(mChildCheckStates);
-
-        // Update feedPrefs
-//        UserSelectionUtil.saveUserSelectionSharedPrefs(this, mChildCheckStates);
-
-        // Update cellList
-//        CellListUtil.updateCellListByUserSelection(this);
-
+        NewsCatFileUtil.getInstance().saveUserSelectionToJsonFile(mChildCheckStates);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentPagerAdapter {

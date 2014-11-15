@@ -14,6 +14,7 @@ import in.sahildave.gazetti.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FeedSelectFragment extends Fragment {
 
@@ -32,7 +33,7 @@ public class FeedSelectFragment extends Fragment {
     public interface FeedSelectCallback {
         public void fsFragBackButton();
 
-        public void fsFragDoneButton(HashMap<Integer, boolean[]> mChildCheckStates);
+        public void fsFragDoneButton(Map<String, Object> mChildCheckStates);
     }
 
     public static FeedSelectFragment create(int pageNumber) {
@@ -84,8 +85,7 @@ public class FeedSelectFragment extends Fragment {
         Button done_button = (Button) rootView.findViewById(R.id.feed_select_explist_done_button);
         done_button.setOnClickListener(new OnClickListener() {
             public void onClick(View next) {
-                HashMap<Integer, boolean[]> mChildCheckStates = expListAdapter.getClickedStates();
-                callback.fsFragDoneButton(mChildCheckStates);
+                callback.fsFragDoneButton(expListAdapter.getClickedStates());
             }
         });
 

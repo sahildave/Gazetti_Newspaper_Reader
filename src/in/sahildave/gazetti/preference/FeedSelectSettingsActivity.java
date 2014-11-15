@@ -10,12 +10,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import in.sahildave.gazetti.R;
-import in.sahildave.gazetti.util.CellListUtil;
-import in.sahildave.gazetti.util.UserSelectionUtil;
+import in.sahildave.gazetti.util.NewsCatFileUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FeedSelectSettingsActivity extends ActionBarActivity implements FeedSelectFragment.FeedSelectCallback {
 
@@ -60,15 +59,11 @@ public class FeedSelectSettingsActivity extends ActionBarActivity implements Fee
     }
 
     @Override
-    public void fsFragDoneButton(HashMap<Integer, boolean[]> mChildCheckStates) {
+    public void fsFragDoneButton(Map<String, Object> mChildCheckStates) {
         backFlag = true;
         onBackPressed();
 
-        // Update feedPrefs
-        UserSelectionUtil.saveUserSelectionSharedPrefs(this, mChildCheckStates);
-
-        // Update cellList
-        CellListUtil.updateCellListByUserSelection(this);
+        NewsCatFileUtil.getInstance().saveUserSelectionToJsonFile(mChildCheckStates);
 
     }
 

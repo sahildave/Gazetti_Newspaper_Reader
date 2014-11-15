@@ -1,66 +1,68 @@
 package in.sahildave.gazetti.homescreen.adapter;
 
+import in.sahildave.gazetti.util.GazettiEnums.Category;
+import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
+
 public class NewsCatModel {
 
-    String npId;
-    String npName;
-    String catId;
-    String catName;
-    String npImage;
-    String catImage;
+    String newspaperId;
+    String newspaperTitle;
+    String categoryId;
+    String categoryTitle;
+    String newspaperImage;
 
-    public String getNpId() {
-        return npId;
+    public NewsCatModel(Newspapers newspaper, Category category){
+        setNewspaperId(newspaper.getNewspaperId());
+        setNewspaperImage(newspaper.getNewspaperImage());
+        setNewspaperTitle(newspaper.getTitle());
+        setCategoryId(category.getCategoryId());
+        setCategoryTitle(category.getTitle());
     }
 
-    public void setNpId(String npId) {
-        this.npId = npId;
+    public String getNewspaperId() {
+        return newspaperId;
     }
 
-    public String getNpName() {
-        return npName;
+    public void setNewspaperId(String newspaperId) {
+        this.newspaperId = newspaperId;
     }
 
-    public void setNpName(String npName) {
-        this.npName = npName;
+    public String getNewspaperTitle() {
+        return newspaperTitle;
     }
 
-    public String getCatId() {
-        return catId;
+    public void setNewspaperTitle(String newspaperTitle) {
+        this.newspaperTitle = newspaperTitle;
     }
 
-    public void setCatId(String catId) {
-        this.catId = catId;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public String getCatName() {
-        return catName;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public void setCatName(String catName) {
-        this.catName = catName;
+    public String getCategoryTitle() {
+        return categoryTitle;
     }
 
-    public String getNpImage() {
-        return npImage;
+    public void setCategoryTitle(String categoryTitle) {
+        this.categoryTitle = categoryTitle;
     }
 
-    public void setNpImage(String npImage) {
-        this.npImage = npImage;
+    public String getNewspaperImage() {
+        return newspaperImage;
     }
 
-    public String getCatImage() {
-        return catImage;
-    }
-
-    public void setCatImage(String catImage) {
-        this.catImage = catImage;
+    public void setNewspaperImage(String newspaperImage) {
+        this.newspaperImage = newspaperImage;
     }
 
     @Override
     public String toString() {
-        return "CSVObject [npId=" + npId + ", npName=" + npName + ", catId=" + catId + ", catName=" + catName
-                + ", npImage=" + npImage + ", catImage=" + catImage + "]";
+        return "CSVObject [newspaperId=" + newspaperId + ", newspaperTitle=" + newspaperTitle + ", categoryId=" + categoryId + ", categoryTitle=" + categoryTitle
+                + ", newspaperImage=" + newspaperImage + "]";
     }
 
 

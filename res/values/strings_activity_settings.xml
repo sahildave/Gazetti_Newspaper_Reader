@@ -9,6 +9,6 @@
     </string>
 
     <string name="cell_list_defvalue">[]</string>
-    <!-- <string name="cell_list_defvalue">[{\"newspaperImage\":\"th\",\"titleCategory\":\"National\"},{\"newspaperImage\":\"toi\",\"titleCategory\":\"National\"}]</string> -->
+    <!-- <string name="cell_list_defvalue">[{\"newspaperImage\":\"th\",\"categoryTitle\":\"National\"},{\"newspaperImage\":\"toi\",\"categoryTitle\":\"National\"}]</string> -->
 
 </resources>
