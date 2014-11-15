@@ -1,9 +1,7 @@
 package in.sahildave.gazetti.homescreen;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -81,12 +79,9 @@ public class HomeScreenFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
-        int newfeedVersion = sharedPref.getInt("feedVersion", 0);
+        if (UserPrefUtil.isUserPrefChanged()) {
 
-        if ((newfeedVersion > feedVersion)) {
-
-            feedVersion = newfeedVersion;
+            UserPrefUtil.setUserPrefChanged(false);
             cellList.clear();
             cellList = UserPrefUtil.getUserPrefCellList();
 
@@ -108,9 +103,6 @@ public class HomeScreenFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //Log.d(TAG, "HomeScreenFragment in onCreate ");
         setRetainInstance(true);
-
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
-        feedVersion = sharedPref.getInt("feedVersion", 0);
 
         firstRun = true;
     }

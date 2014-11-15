@@ -17,19 +17,18 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import com.crashlytics.android.Crashlytics;
-import com.parse.ConfigCallback;
 import com.parse.ParseAnalytics;
-import com.parse.ParseConfig;
-import com.parse.ParseException;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.bookmarks.BookmarkListActivity;
 import in.sahildave.gazetti.homescreen.adapter.*;
 import in.sahildave.gazetti.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
 import in.sahildave.gazetti.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
 import in.sahildave.gazetti.preference.SettingsActivity;
-import in.sahildave.gazetti.util.*;
+import in.sahildave.gazetti.util.Constants;
+import in.sahildave.gazetti.util.GazettiEnums;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
+import in.sahildave.gazetti.util.UserPrefUtil;
 import in.sahildave.gazetti.welcomescreen.WelcomeScreenViewPagerActivity;
 
 import java.util.ArrayList;
@@ -62,8 +61,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             return; // add this to prevent from doing unnecessary stuffs
         }
 
-        checkCurrentConfig();
-        NewsCatFileUtil.init(this);
         gazettiEnums = new GazettiEnums();
         fragmentManager = getSupportFragmentManager();
         Fragment homeScreenFragment = fragmentManager.findFragmentByTag("homeScreen");
@@ -80,16 +77,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             startActivity(welcomeIntent);
 
         }
-    }
-
-    private void checkCurrentConfig() {
-        //Log.d("TAG", "Getting the latest config...");
-        ParseConfig.getInBackground(new ConfigCallback() {
-            @Override
-            public void done(ParseConfig config, ParseException e) {
-                new ConfigService();
-            }
-        });
     }
 
     private void setupCustomActionBar() {

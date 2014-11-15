@@ -5,13 +5,17 @@ import in.sahildave.gazetti.homescreen.adapter.CellModel;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sahil on 9/11/14.
  */
 public class UserPrefUtil {
     private static final String LOG_TAG = UserPrefUtil.class.getName();
+    private static boolean UserPrefChanged = false;
 
     public static List<CellModel> getUserPrefCellList(){
 
@@ -31,7 +35,7 @@ public class UserPrefUtil {
             }
         }
 
-        Log.d(LOG_TAG, "CellList - "+returnList);
+        Log.d(LOG_TAG, "Returning CellList - "+returnList);
         return returnList;
     }
 
@@ -47,9 +51,10 @@ public class UserPrefUtil {
                 List<String> categories = userPrefMap.get(oldNewspaper);
                 if(categories.contains(oldCategory)){
                     categories.remove(oldCategory);
-                    categories.add(newCell.getCategoryTitle());
+                    categories.add(newCategory);
 
-                    //Update the map
+                    userPrefMap.remove(oldNewspaper);
+                    Log.d(LOG_TAG, "Removed - "+oldCell.toString()+", Added - "+newCell.toString());
                     updateUserSelectionMap(userPrefMap, oldNewspaper, categories);
                 }
             }
@@ -75,6 +80,7 @@ public class UserPrefUtil {
             categories = new ArrayList<String>();
             categories.add(category);
         }
+        Log.d(LOG_TAG, "Added - "+newCell.toString());
         updateUserSelectionMap(userPrefMap, newspaper, categories);
     }
 
@@ -88,11 +94,20 @@ public class UserPrefUtil {
             if(categories.contains(category)){
                 categories.remove(category);
                 userPrefMap.remove(newspaper);
+
+                Log.d(LOG_TAG, "Deleted - "+deleteCell.toString());
                 updateUserSelectionMap(userPrefMap, newspaper, categories);
             }
         }
+    }
 
+    public static boolean isUserPrefChanged() {
+        return UserPrefChanged;
+    }
 
+    public static void setUserPrefChanged(boolean userPrefChanged) {
+        Log.d(LOG_TAG, "Setting UserPrefChanged to "+userPrefChanged);
+        UserPrefChanged = userPrefChanged;
     }
 
     private static void updateUserSelectionMap(Map<String, List<String>> userPrefMap, String newspaper, List<String> categories) {

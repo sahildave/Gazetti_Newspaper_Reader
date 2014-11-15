@@ -71,7 +71,7 @@ public class CellModel {
 
     @Override
     public String toString() {
-        return newspaperImage;
+        return getNewspaperTitle()+" - "+getCategoryTitle();
     }
 
 }

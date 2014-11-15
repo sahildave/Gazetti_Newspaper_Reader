@@ -88,11 +88,16 @@ public class NewsCatFileUtil {
     }
 
     //TODO: make it private
-    public void saveUserSelectionToJsonFile(Map<String, Object> userSelectionJsonMap){
+    public void saveUserSelectionToJsonFile(Map<String, Object> newFullJsonMap){
         try {
-            Object jsonString = JsonHelper.toJSON(userSelectionJsonMap);
-            Log.d(LOG_TAG, "Saving - "+jsonString.toString());
+            fullJsonMap = newFullJsonMap;
+            Object jsonString = JsonHelper.toJSON(newFullJsonMap);
+
+            Log.d(LOG_TAG, "Updating fullJson - "+jsonString.toString());
             userSelectionMap = getUserFeedMapFromJsonMap();
+
+            UserPrefUtil.setUserPrefChanged(true);
+
             Log.d(LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
             writeToInternalStorage(jsonString.toString(), NEWS_CAT_FILE);
         } catch (JSONException e) {

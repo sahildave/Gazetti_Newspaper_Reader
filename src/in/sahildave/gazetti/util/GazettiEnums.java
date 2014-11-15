@@ -119,7 +119,7 @@ public class GazettiEnums {
         } else if (categoryName.equalsIgnoreCase("Add New")){
             return Category.ADD_NEW;
         }else {
-            return Category.valueOf(categoryName);
+            return Category.valueOf(categoryName.toUpperCase());
         }
     }
 }
