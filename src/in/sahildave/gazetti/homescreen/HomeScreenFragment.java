@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import com.crashlytics.android.Crashlytics;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
@@ -117,10 +119,7 @@ public class HomeScreenFragment extends Fragment {
                     String catId = clickedObject.getCategoryId();
                     String npName = clickedObject.getNewspaperTitle();
                     String catName = clickedObject.getCategoryTitle();
-
-                    npId = String.valueOf(Integer.parseInt(npId) + 1);
-                    catId = String.valueOf(Integer.parseInt(catId) + 1);
-
+                    Log.d(LOG_TAG, clickedObject.toString());
                     Intent headlinesIntent = new Intent(getActivity(), WebsiteListActivity.class);
                     headlinesIntent.putExtra("npId", npId);
                     headlinesIntent.putExtra("catId", catId);
@@ -191,49 +190,55 @@ public class HomeScreenFragment extends Fragment {
         kenBurnsView = (KenBurnsView) view.findViewById(R.id.kenBurnsView_Background);
         phoneMode = (kenBurnsView == null);
 
-        new AsyncTask<Void, Void, Integer>(){
-            @Override
-            protected Integer doInBackground(Void... params) {
-                if (phoneMode) {
-                    return getPhoneBackground();
-                } else {
-                    return getTabletBackground();
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Integer resID) {
-                if(phoneMode){
-                    Picasso.with(getActivity()).load(resID).into(phoneBackgroundImage);
-                } else {
-                    Picasso.with(getActivity()).load(resID).into(kenBurnsView);
+        try {
+            new AsyncTask<Void, Void, Integer>(){
+                @Override
+                protected Integer doInBackground(Void... params) {
+                    if (phoneMode) {
+                        return getPhoneBackground();
+                    } else {
+                        return getTabletBackground();
+                    }
                 }
 
-            }
-        }.execute();
+                @Override
+                protected void onPostExecute(Integer resID) {
+                    if(phoneMode){
+                        Picasso.with(getActivity()).load(resID).into(phoneBackgroundImage);
+                    } else {
+                        Picasso.with(getActivity()).load(resID).into(kenBurnsView);
+                    }
+
+                }
+            }.execute();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
     }
 
     private int getTabletBackground() {
         Random rand = new Random();
-        int n = rand.nextInt(4) + 1;
+        int n = rand.nextInt(2) + 1;
         String backgroundImageUri = "land_" + n;
 
         int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
         if (resID == 0) {
             resID = getResources().getIdentifier("land_0", "drawable", getActivity().getPackageName());
         }
+        Log.d(LOG_TAG, "returning "+resID+" for "+n);
         return resID;
     }
 
     private int getPhoneBackground() {
         // get a random image, if null then get image_0
         Random rand = new Random();
-        int n = rand.nextInt(4) + 1;
+        int n = rand.nextInt(2) + 1;
         String backgroundImageUri = "port_" + n;
         int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
         if (resID == 0) {
             resID = getResources().getIdentifier("port_0", "drawable", getActivity().getPackageName());
         }
+        Log.d(LOG_TAG, "returning "+resID+" for "+n);
         return resID;
     }
 

@@ -6,7 +6,7 @@
             android:id="@+id/kenBurnsView_Background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/land_1"/>
+            android:src="@drawable/land_0"/>
 
     <GridView
             android:id="@+id/gridview"

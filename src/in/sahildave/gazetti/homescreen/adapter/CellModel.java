@@ -71,7 +71,7 @@ public class CellModel {
 
     @Override
     public String toString() {
-        return getNewspaperTitle()+" - "+getCategoryTitle();
+        return getNewspaperId()+"-"+getNewspaperTitle()+", "+getCategoryId()+"-"+getCategoryTitle();
     }
 
 }
