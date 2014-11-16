@@ -67,7 +67,7 @@ public class GridAdapter extends BaseAdapter {
         holder.cellItemImage.setPadding(8, 8, 8, 8);
         holder.cellItemImage.setImageResource(resID);
 
-        holder.cellItemTitle.setText(modelObject.getTitleCategory());
+        holder.cellItemTitle.setText(modelObject.getCategoryTitle());
 
         return convertView;
     }

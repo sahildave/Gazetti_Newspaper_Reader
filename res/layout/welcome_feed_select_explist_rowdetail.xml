@@ -1,20 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="40dp"
+              android:layout_height="36dp"
               android:clickable="true"
-              android:orientation="vertical"
-              android:paddingLeft="40dp">
-
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+              android:orientation="horizontal"
+              android:gravity="center_vertical"
+              android:paddingLeft="48dp">
 
         <TextView
                 android:id="@+id/welcome_feed_select_explist_childTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
                 android:text="Default"
                 android:textColor="@android:color/white"/>
 
@@ -22,11 +19,7 @@
                 android:id="@+id/welcome_feed_select_explist_childCheckBox"
                 style="@style/CheckBoxAppTheme"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="16dp"/>
-    </RelativeLayout>
-
+                android:layout_marginRight="8dp"/>
 </LinearLayout>

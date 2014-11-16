@@ -83,6 +83,8 @@ public class BookmarkDetailFragment extends Fragment {
                 mArticleImageURL = BookmarkAdapter.articleImage.get(mArticleHeadline);
                 npNameString = BookmarkAdapter.npNameMap.get(mArticleHeadline);
                 catNameString = BookmarkAdapter.catNameMap.get(mArticleHeadline);
+            } else {
+                Crashlytics.log("Get Arguments is null -- "+(null==getArguments()));
             }
         } catch (Exception e) {
             Crashlytics.log("Get Arguments is null -- "+(null==getArguments()));
@@ -222,8 +224,11 @@ public class BookmarkDetailFragment extends Fragment {
     private OnClickListener webViewCalled = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mArticleURL)));
-
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mArticleURL)));
+            } catch (Exception e) {
+                Crashlytics.log("mArticleURL is null -- "+(null==mArticleURL));
+            }
         }
     };
 

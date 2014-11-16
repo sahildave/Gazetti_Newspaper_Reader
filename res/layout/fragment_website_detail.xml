@@ -86,7 +86,7 @@
                         android:text="READ IT\nLATER"/>
             </RelativeLayout>
 
-            <in.sahildave.gazetti.util.TextViewEx
+            <in.sahildave.gazetti.widgets.TextViewEx
                     android:id="@+id/article_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

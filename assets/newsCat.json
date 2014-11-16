@@ -1,0 +1,37 @@
+{
+	"The Hindu": {
+		National : false,
+		International : false,
+		Sports: false,
+		Science: false,
+		Entertainment: false,
+		Business: false
+    },
+
+	"The Times of India": {
+		National : false,
+		International : false,
+		Sports: false,
+		Science: false,
+		Entertainment: false,
+		Business: false
+    },
+
+	"First Post": {
+		National : false,
+		International : false,
+		Sports: false,
+		Science: false,
+		Entertainment: false,
+		Business: false
+	},
+
+	"The Indian Express": {
+		National : false,
+		International : false,
+		Sports: false,
+		Science: false,
+		Entertainment: false,
+		Business: false
+	}
+}

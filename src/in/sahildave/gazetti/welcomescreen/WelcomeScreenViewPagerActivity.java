@@ -10,17 +10,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import in.sahildave.gazetti.R;
 import com.jfeinstein.jazzyviewpager.JazzyViewPager;
 import com.jfeinstein.jazzyviewpager.JazzyViewPager.TransitionEffect;
+import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.HomeScreenActivity;
-import in.sahildave.gazetti.util.CellListUtil;
 import in.sahildave.gazetti.util.Constants;
-import in.sahildave.gazetti.util.UserSelectionUtil;
+import in.sahildave.gazetti.util.NewsCatFileUtil;
+import in.sahildave.gazetti.util.UserPrefUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
         WelcomeScreenFragmentExpList.WelcomeScreenFeedSelectCallback {
@@ -58,8 +58,6 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
             startActivity(intent);
             finish();
 
-            // } else if (mPager.getCurrentItem() == 1 && selected) {
-            // welcomeFinished();
         } else if (mPager.getCurrentItem() == 1 && !selected) {
             mPager.setCurrentItem(0);
         } else if (mPager.getCurrentItem() == 1 && selected) {
@@ -76,24 +74,15 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
     }
 
     @Override
-    public void fsFragBackButton() {
-        onBackPressed();
-    }
-
-    @Override
-    public void fsFragDoneButton(HashMap<Integer, boolean[]> mChildCheckStates) {
+    public void fsFragDoneButton(Map<String, Object> mChildCheckStates) {
 
         Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
         selected = true;
         welcomeFinished();
         onBackPressed();
 
-        // Update feedPrefs
-        UserSelectionUtil.saveUserSelectionSharedPrefs(this, mChildCheckStates);
-
-        // Update cellList
-        CellListUtil.updateCellListByUserSelection(this);
-
+        UserPrefUtil.setUserPrefChanged(true);
+        NewsCatFileUtil.getInstance().saveUserSelectionToJsonFile(mChildCheckStates);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentPagerAdapter {

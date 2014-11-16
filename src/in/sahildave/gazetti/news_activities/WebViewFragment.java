@@ -83,4 +83,10 @@ public class WebViewFragment extends Fragment {
     private void showProgressBar() {
         mProgressBar.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mWebView.getSettings().setBuiltInZoomControls(true);
+    }
 }

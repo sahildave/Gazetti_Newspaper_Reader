@@ -14,6 +14,7 @@ import in.sahildave.gazetti.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FeedSelectFragment extends Fragment {
 
@@ -32,7 +33,7 @@ public class FeedSelectFragment extends Fragment {
     public interface FeedSelectCallback {
         public void fsFragBackButton();
 
-        public void fsFragDoneButton(HashMap<Integer, boolean[]> mChildCheckStates);
+        public void fsFragDoneButton(Map<String, Object> mChildCheckStates);
     }
 
     public static FeedSelectFragment create(int pageNumber) {
@@ -84,8 +85,7 @@ public class FeedSelectFragment extends Fragment {
         Button done_button = (Button) rootView.findViewById(R.id.feed_select_explist_done_button);
         done_button.setOnClickListener(new OnClickListener() {
             public void onClick(View next) {
-                HashMap<Integer, boolean[]> mChildCheckStates = expListAdapter.getClickedStates();
-                callback.fsFragDoneButton(mChildCheckStates);
+                callback.fsFragDoneButton(expListAdapter.getClickedStates());
             }
         });
 
@@ -116,6 +116,7 @@ public class FeedSelectFragment extends Fragment {
         th.add("Sports");
         th.add("Science");
         th.add("Entertainment");
+        th.add("Business");
 
         List<String> toi = new ArrayList<String>();
         toi.add("National");
@@ -123,6 +124,7 @@ public class FeedSelectFragment extends Fragment {
         toi.add("Sports");
         toi.add("Science");
         toi.add("Entertainment");
+        toi.add("Business");
 
         List<String> fp = new ArrayList<String>();
         fp.add("National");
@@ -130,6 +132,7 @@ public class FeedSelectFragment extends Fragment {
         fp.add("Sports");
         fp.add("Science");
         fp.add("Entertainment");
+        fp.add("Business");
 
         List<String> tie = new ArrayList<String>();
         tie.add("National");
@@ -137,6 +140,7 @@ public class FeedSelectFragment extends Fragment {
         tie.add("Sports");
         tie.add("Science");
         tie.add("Entertainment");
+        tie.add("Business");
 
         // Header, Child data
         listDataChild.put(listDataHeader.get(0), th);

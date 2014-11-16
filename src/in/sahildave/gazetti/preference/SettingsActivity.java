@@ -57,7 +57,7 @@ public class SettingsActivity extends PreferenceActivity {
         feedSelectPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
 
-                Intent feedIntent = new Intent(SettingsActivity.this, FeedSelectViewpager.class);
+                Intent feedIntent = new Intent(SettingsActivity.this, FeedSelectSettingsActivity.class);
                 if (ActionBarColorId != -1) {
                     feedIntent.putExtra("ActionBarColor", ActionBarColorId);
                 }

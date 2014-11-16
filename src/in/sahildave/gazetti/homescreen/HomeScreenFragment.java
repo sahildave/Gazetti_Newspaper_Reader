@@ -1,11 +1,8 @@
 package in.sahildave.gazetti.homescreen;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -17,18 +14,19 @@ import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import com.crashlytics.android.Crashlytics;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.nineoldandroids.view.ViewHelper;
+import com.squareup.picasso.Picasso;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.adapter.CellModel;
 import in.sahildave.gazetti.homescreen.adapter.GridAdapter;
-import in.sahildave.gazetti.homescreen.adapter.NewsCatModel;
 import in.sahildave.gazetti.news_activities.WebsiteListActivity;
-import in.sahildave.gazetti.util.CellListUtil;
-import in.sahildave.gazetti.util.CsvFileUtil;
-import in.sahildave.gazetti.util.UserSelectionUtil;
+import in.sahildave.gazetti.util.GazettiEnums.Category;
+import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
+import in.sahildave.gazetti.util.UserPrefUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -38,19 +36,12 @@ public class HomeScreenFragment extends Fragment {
     private GridView gridview;
     private List<CellModel> cellList;
     private GridAdapter adapter;
-    private int feedVersion;
-    private SwingBottomInAnimationAdapter animAdapter;
-    private AlphaInAnimationAdapter animAdapterMultiple;
 
-    private String TAG = "HomeScreen";
+    private String LOG_TAG = HomeScreenFragment.class.getName();
 
-    private boolean firstRun = false;
     private boolean phoneMode;
-    private ActionBar actionBar;
     private View actionBarCustomView;
     private ImageView phoneBackgroundImage;
-    private LinearLayout photoCreditLayout;
-    private TextView photoCreditText;
     private KenBurnsView kenBurnsView;
     private Activity activity;
 
@@ -82,24 +73,10 @@ public class HomeScreenFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
-        int newfeedVersion = sharedPref.getInt("feedVersion", 0);
-
-        if ((newfeedVersion > feedVersion)) {
-
-            feedVersion = newfeedVersion;
+        if (UserPrefUtil.isUserPrefChanged()) {
+            UserPrefUtil.setUserPrefChanged(false);
             cellList.clear();
-            cellList = CellListUtil.getCellListFromSharedPrefs(getActivity());
-
-            putAddNewCellInList();
-
-            adapter = new GridAdapter(getActivity(), cellList);
-
-            animAdapter = new SwingBottomInAnimationAdapter(adapter);
-            animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
-            animAdapterMultiple.setAbsListView(gridview);
-
-            gridview.setAdapter(animAdapterMultiple);
+            setupCellGrid();
         }
 
     }
@@ -107,26 +84,18 @@ public class HomeScreenFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.d(TAG, "HomeScreenFragment in onCreate ");
         setRetainInstance(true);
-
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("CellList", Context.MODE_PRIVATE);
-        feedVersion = sharedPref.getInt("feedVersion", 0);
-
-        firstRun = true;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.homescreen_fragment, container, false);
 
-        actionBar = ((ActionBarActivity) activity).getSupportActionBar();
+        ActionBar actionBar = ((ActionBarActivity) activity).getSupportActionBar();
         actionBarCustomView = actionBar.getCustomView();
 
         gridview = (GridView) rootView.findViewById(R.id.gridview);
         phoneBackgroundImage = (ImageView) rootView.findViewById(R.id.phone_homescreen_background);
-        photoCreditLayout = (LinearLayout) rootView.findViewById(R.id.photoCreditLayout);
-        photoCreditText = (TextView) rootView.findViewById(R.id.photoCreditText);
 
         return rootView;
     }
@@ -135,29 +104,8 @@ public class HomeScreenFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (view.findViewById(R.id.kenBurnsView_Background) == null) {
-            // Phone
-            phoneMode = true;
-            loadPhoneBackground();
-
-        } else {
-            phoneMode = false;
-            kenBurnsView = (KenBurnsView) view.findViewById(R.id.kenBurnsView_Background);
-            Log.d(TAG, "loading for tablet");
-            loadTabletBackground();
-
-        }
-
-        cellList = CellListUtil.getCellListFromSharedPrefs(getActivity());
-        putAddNewCellInList();
-
-        adapter = new GridAdapter(getActivity(), cellList);
-        animAdapter = new SwingBottomInAnimationAdapter(adapter);
-        animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
-        animAdapterMultiple.setAbsListView(gridview);
-
-        gridview.setAdapter(animAdapterMultiple);
-
+        setupImageBackground(view);
+        setupCellGrid();
         registerForContextMenu(gridview);
         gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -166,27 +114,18 @@ public class HomeScreenFragment extends Fragment {
                     activityCallback.showAddNewCellDialog(cellList, adapter);
                 } else {
                     CellModel clickedObject = cellList.get(position);
-                    String npImage = clickedObject.getNewspaperImage();
-                    String catName = clickedObject.getTitleCategory();
 
-                    CsvFileUtil csvFile = new CsvFileUtil(getActivity());
-                    NewsCatModel csvObject = csvFile.getObjectByNPImage(npImage, catName);
-
-                    String npId = csvObject.getNpId();
-                    String catId = csvObject.getCatId();
-                    String npName = csvObject.getNpName();
-
-                    npId = String.valueOf(Integer.parseInt(npId) + 1);
-                    catId = String.valueOf(Integer.parseInt(catId) + 1);
-
+                    String npId = clickedObject.getNewspaperId();
+                    String catId = clickedObject.getCategoryId();
+                    String npName = clickedObject.getNewspaperTitle();
+                    String catName = clickedObject.getCategoryTitle();
+                    Log.d(LOG_TAG, clickedObject.toString());
                     Intent headlinesIntent = new Intent(getActivity(), WebsiteListActivity.class);
                     headlinesIntent.putExtra("npId", npId);
                     headlinesIntent.putExtra("catId", catId);
                     headlinesIntent.putExtra("npName", npName);
                     headlinesIntent.putExtra("catName", catName);
                     startActivity(headlinesIntent);
-
-                    csvFile.closeUtilObject();
                 }
 
             }
@@ -222,88 +161,85 @@ public class HomeScreenFragment extends Fragment {
 
     }
 
+    private void setupCellGrid() {
+        cellList = UserPrefUtil.getUserPrefCellList();
+        putAddNewCellInList();
+
+        adapter = new GridAdapter(getActivity(), cellList);
+
+        SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(adapter);
+        AlphaInAnimationAdapter animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
+        animAdapterMultiple.setAbsListView(gridview);
+
+        gridview.setAdapter(animAdapterMultiple);
+    }
+
     private void putAddNewCellInList() {
         if (cellList.size() > 0) {
             CellModel modelObject = cellList.get(cellList.size() - 1);
             if (!modelObject.getNewspaperImage().equals("add_new")) {
-                cellList.add(new CellModel("add_new", "Add New"));
+                cellList.add(new CellModel(Newspapers.ADD_NEW, Category.ADD_NEW));
             }
         } else {
-            cellList.add(new CellModel("add_new", "Add New"));
+            cellList.add(new CellModel(Newspapers.ADD_NEW, Category.ADD_NEW));
         }
     }
 
-    private void loadTabletBackground() {
-        if(kenBurnsView!=null){
-            Random rand = new Random();
-            int n = rand.nextInt(4) + 1;
-            String backgroundImageUri = "land_" + n;
+    private void setupImageBackground(View view) {
 
-            int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
-            if (resID == 0) {
-                resID = getResources().getIdentifier("land_0", "drawable", getActivity().getPackageName());
-            }
+        kenBurnsView = (KenBurnsView) view.findViewById(R.id.kenBurnsView_Background);
+        phoneMode = (kenBurnsView == null);
 
-            kenBurnsView.setImageResource(resID);
+        try {
+            new AsyncTask<Void, Void, Integer>(){
+                @Override
+                protected Integer doInBackground(Void... params) {
+                    if (phoneMode) {
+                        return getPhoneBackground();
+                    } else {
+                        return getTabletBackground();
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Integer resID) {
+                    if(phoneMode){
+                        Picasso.with(getActivity()).load(resID).into(phoneBackgroundImage);
+                    } else {
+                        Picasso.with(getActivity()).load(resID).into(kenBurnsView);
+                    }
+
+                }
+            }.execute();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
     }
 
-    private void loadPhoneBackground() {
-        // get a random image, if null then get image_0
+    private int getTabletBackground() {
         Random rand = new Random();
-        int n = rand.nextInt(4) + 1;
-        String backgroundImageUri = "port_" + n;
+        int n = rand.nextInt(2) + 1;
+        String backgroundImageUri = "land_" + n;
 
         int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
+        if (resID == 0) {
+            resID = getResources().getIdentifier("land_0", "drawable", getActivity().getPackageName());
+        }
+        Log.d(LOG_TAG, "returning "+resID+" for "+n);
+        return resID;
+    }
 
+    private int getPhoneBackground() {
+        // get a random image, if null then get image_0
+        Random rand = new Random();
+        int n = rand.nextInt(2) + 1;
+        String backgroundImageUri = "port_" + n;
+        int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
         if (resID == 0) {
             resID = getResources().getIdentifier("port_0", "drawable", getActivity().getPackageName());
         }
-
-        // Bitmap Options
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(getResources(), resID, options);
-
-        // Raw height and width of image
-        int imageHeight = options.outHeight;
-        int imageWidth = options.outWidth;
-        int inSampleSize = 1;
-
-        // height and width of screen
-        int reqHeight = getResources().getDisplayMetrics().heightPixels;
-        int reqWidth = getResources().getDisplayMetrics().widthPixels;
-
-        // SampleSize Calculations
-        if (imageHeight > reqHeight || imageWidth > reqWidth) {
-
-            final int halfHeight = imageHeight / 2;
-            final int halfWidth = imageWidth / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2
-            // and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-
-            // This offers some additional logic in case the image has a strange
-            // aspect ratio. Anything more than 2x the requested pixels we'll
-            // sample down
-            // further
-            long totalPixels = imageWidth * imageHeight / inSampleSize;
-            final long totalReqPixelsCap = reqWidth * reqHeight * 2;
-
-            while (totalPixels > totalReqPixelsCap) {
-                inSampleSize *= 2;
-                totalPixels /= 2;
-            }
-        }
-
-        options.inJustDecodeBounds = false;
-        Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);
-
-        phoneBackgroundImage.setImageBitmap(mBitmap);
+        Log.d(LOG_TAG, "returning "+resID+" for "+n);
+        return resID;
     }
 
     @Override
@@ -318,7 +254,7 @@ public class HomeScreenFragment extends Fragment {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
         String newspaper = cellList.get(position).getNewspaperImage();
-        String category = cellList.get(position).getTitleCategory();
+        String category = cellList.get(position).getCategoryTitle();
 
         switch (item.getItemId()) {
             case R.id.edit:
@@ -333,12 +269,9 @@ public class HomeScreenFragment extends Fragment {
                     Toast.makeText(getActivity(), "Cannot Delete", Toast.LENGTH_SHORT).show();
                     return true;
                 }
+                UserPrefUtil.deleteUserPref(cellList.get(position));
                 cellList.remove(position);
                 adapter.notifyDataSetChanged();
-
-                CellListUtil.saveCellListToSharedPrefs(getActivity(), cellList);
-
-                UserSelectionUtil.updateUserSelectionSharedPrefs(getActivity());
                 return true;
             default:
                 return super.onContextItemSelected(item);

@@ -1,4 +1,4 @@
-package in.sahildave.gazetti.util;
+package in.sahildave.gazetti.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

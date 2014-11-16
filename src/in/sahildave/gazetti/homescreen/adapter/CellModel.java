@@ -1,13 +1,32 @@
 package in.sahildave.gazetti.homescreen.adapter;
 
+import in.sahildave.gazetti.util.GazettiEnums.Category;
+import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
+
 public class CellModel {
 
     private String newspaperImage;
-    private String titleCategory;
+    private String newspaperTitle;
+    private String newspaperId;
+    private String categoryTitle;
+    private String categoryId;
 
-    public CellModel(String newspaperImage, String categoryTitle) {
-        setNewspaperImage(newspaperImage);
-        setTitleCategory(categoryTitle);
+    public CellModel(Newspapers newspapers, Category category) {
+        setNewspaperImage(newspapers.getNewspaperImage());
+        setNewspaperTitle(newspapers.getTitle());
+        setNewspaperId(newspapers.getNewspaperId());
+
+        setCategoryTitle(category.getTitle());
+        setCategoryId(category.getCategoryId());
+    }
+
+    public CellModel (NewsCatModel newsCatModel) {
+        setNewspaperImage(newsCatModel.getNewspaperImage());
+        setNewspaperTitle(newsCatModel.getNewspaperTitle());
+        setNewspaperId(newsCatModel.getNewspaperId());
+
+        setCategoryTitle(newsCatModel.getCategoryTitle());
+        setCategoryId(newsCatModel.getCategoryId());
     }
 
     public String getNewspaperImage() {
@@ -18,43 +37,41 @@ public class CellModel {
         this.newspaperImage = newspaperImage;
     }
 
-    public String getTitleCategory() {
-        return titleCategory;
+    public String getCategoryTitle() {
+        return categoryTitle;
     }
 
-    public void setTitleCategory(String titleCategory) {
-        this.titleCategory = titleCategory;
+    public void setCategoryTitle(String categoryTitle) {
+        this.categoryTitle = categoryTitle;
     }
 
-    public int getDefaultNewspaperId(String newspaperImage) {
-        if (newspaperImage.equals("th")) {
-            return 0;
-        } else if (newspaperImage.equals("toi")) {
-            return 1;
-        } else if (newspaperImage.equals("fp")) {
-            return 2;
-        } else if (newspaperImage.equals("ht")) {
-            return 3;
-        } else if (newspaperImage.equals("tie")) {
-            return 4;
-        } else if (newspaperImage.equals("th_custom")) {
-            return 0;
-        } else if (newspaperImage.equals("toi_custom")) {
-            return 1;
-        } else if (newspaperImage.equals("fp_custom")) {
-            return 2;
-        } else if (newspaperImage.equals("ht_custom")) {
-            return 3;
-        } else if (newspaperImage.equals("tie_custom")) {
-            return 4;
-        } else {
-            return -1;
-        }
+    public String getNewspaperTitle() {
+        return newspaperTitle;
+    }
+
+    public void setNewspaperTitle(String newspaperTitle) {
+        this.newspaperTitle = newspaperTitle;
+    }
+
+    public String getNewspaperId() {
+        return newspaperId;
+    }
+
+    public void setNewspaperId(String newspaperId) {
+        this.newspaperId = newspaperId;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override
     public String toString() {
-        return newspaperImage;
+        return getNewspaperId()+"-"+getNewspaperTitle()+", "+getCategoryId()+"-"+getCategoryTitle();
     }
 
 }

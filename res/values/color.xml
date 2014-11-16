@@ -7,22 +7,28 @@
     <color name="nav_list_background_pressed">#EEEEEE</color>
     <color name="nav_list_divider">#ffffff</color>
     <color name="nav_list_end_divider">#000000</color>
+
+    <color name="exp_list_group_divider">#aaffffff</color>
+    <color name="exp_list_child_divider">#aaffffff</color>
+
     <color name="main_list_background">#DCDCDC</color>
     <color name="main_list_item_title">#000000</color>
     <color name="main_list_item_title_selected">#006B99</color>
+
     <color name="holo_blue_bright">#ff00ddff</color>
     <color name="holo_green_light">#ff99cc00</color>
     <color name="holo_red_light">#ffff4444</color>
     <color name="holo_blue_light">#ff33b5e5</color>
     <color name="holo_orange_light">#ffffbb33</color>
+    
     <color name="green_sports">#009678</color>
     <color name="red_entertainment">#CC0000</color>
     <color name="blue_nation">#4285F4</color>
-    <color name="blue_dark">#3F5CA9</color>
     <color name="orange_world">#EF6C00</color>
     <color name="purple_science">#7E3794</color>
+    <color name="grey_blue_business">#607D8B</color>
+
     <color name="actionbar_default_color">#4285F4</color>
-    <color name="green_welcome_2">#57AC68</color>
     <color name="green_welcome">#2BB24C</color>
     <color name="green_welcome_dark">#478E55</color>
     <color name="green_welcome_text">#8FC89A</color>
