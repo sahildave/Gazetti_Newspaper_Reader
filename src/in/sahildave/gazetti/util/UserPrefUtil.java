@@ -1,6 +1,5 @@
 package in.sahildave.gazetti.util;
 
-import android.util.Log;
 import in.sahildave.gazetti.homescreen.adapter.CellModel;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
@@ -35,7 +34,7 @@ public class UserPrefUtil {
             }
         }
 
-        Log.d(LOG_TAG, "Returning CellList - "+returnList);
+        //Log.d(LOG_TAG, "Returning CellList - "+returnList);
         return returnList;
     }
 
@@ -54,7 +53,7 @@ public class UserPrefUtil {
                     categories.add(newCategory);
 
                     userPrefMap.remove(oldNewspaper);
-                    Log.d(LOG_TAG, "Removed - "+oldCell.toString()+", Added - "+newCell.toString());
+                    //Log.d(LOG_TAG, "Removed - "+oldCell.toString()+", Added - "+newCell.toString());
                     updateUserSelectionMap(userPrefMap, oldNewspaper, categories);
                 }
             }
@@ -80,7 +79,7 @@ public class UserPrefUtil {
             categories = new ArrayList<String>();
             categories.add(category);
         }
-        Log.d(LOG_TAG, "Added - "+newCell.toString());
+        //Log.d(LOG_TAG, "Added - "+newCell.toString());
         updateUserSelectionMap(userPrefMap, newspaper, categories);
     }
 
@@ -95,7 +94,7 @@ public class UserPrefUtil {
                 categories.remove(category);
                 userPrefMap.remove(newspaper);
 
-                Log.d(LOG_TAG, "Deleted - "+deleteCell.toString());
+                //Log.d(LOG_TAG, "Deleted - "+deleteCell.toString());
                 updateUserSelectionMap(userPrefMap, newspaper, categories);
             }
         }
@@ -106,7 +105,7 @@ public class UserPrefUtil {
     }
 
     public static void setUserPrefChanged(boolean userPrefChanged) {
-        Log.d(LOG_TAG, "Setting UserPrefChanged to "+userPrefChanged);
+        //Log.d(LOG_TAG, "Setting UserPrefChanged to "+userPrefChanged);
         UserPrefChanged = userPrefChanged;
     }
 

@@ -58,7 +58,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         // When coming from WelcomeScreen but without completing the task, the intent would have "Exit Me"
         if (getIntent().getBooleanExtra("Exit me", false)) {
             this.finish();
-            return; // add this to prevent from doing unnecessary stuffs
         }
 
         gazettiEnums = new GazettiEnums();
@@ -75,7 +74,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             //Show welcomeActivity if first time user
             Intent welcomeIntent = new Intent(this, WelcomeScreenViewPagerActivity.class);
             startActivity(welcomeIntent);
-
         }
     }
 

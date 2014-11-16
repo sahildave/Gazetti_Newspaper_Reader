@@ -1,6 +1,7 @@
 package in.sahildave.gazetti.util;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import org.json.JSONException;
@@ -43,13 +44,13 @@ public class NewsCatFileUtil {
     private void initUserSelectionMap() {
         try {
             String jsonString = readFromFile(NEWS_CAT_FILE);
-            Log.d(LOG_TAG, "jsonString - "+jsonString);
+            //Log.d(LOG_TAG, "jsonString - "+jsonString);
 
             fullJsonMap = JsonHelper.toMap(new JSONObject(jsonString));
-            Log.d(LOG_TAG, "fullJsonMap - " + fullJsonMap.toString());
+            //Log.d(LOG_TAG, "fullJsonMap - " + fullJsonMap.toString());
 
             userSelectionMap = getUserFeedMapFromJsonMap();
-            Log.d(LOG_TAG, "UserSelectionMap - " + userSelectionMap.toString());
+            //Log.d(LOG_TAG, "UserSelectionMap - " + userSelectionMap.toString());
         } catch (JSONException e) {
             Crashlytics.logException(e);
         }
@@ -93,12 +94,10 @@ public class NewsCatFileUtil {
             fullJsonMap = newFullJsonMap;
             Object jsonString = JsonHelper.toJSON(newFullJsonMap);
 
-            Log.d(LOG_TAG, "Updating fullJson - "+jsonString.toString());
+            //Log.d(LOG_TAG, "Updating fullJson - "+jsonString.toString());
             userSelectionMap = getUserFeedMapFromJsonMap();
 
-            UserPrefUtil.setUserPrefChanged(true);
-
-            Log.d(LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
+            //Log.d(LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
             writeToInternalStorage(jsonString.toString(), NEWS_CAT_FILE);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -126,7 +125,7 @@ public class NewsCatFileUtil {
             while (catIterator.hasNext()) {
                 String category = catIterator.next();
                 if (isNewsCatSelected(newspaper, category)) {
-                    Log.d(LOG_TAG, "ADDING - " + newspaper + ", " + category);
+                    //Log.d(LOG_TAG, "ADDING - " + newspaper + ", " + category);
                     selectedCategories.add(category);
                 }
             }
@@ -135,7 +134,7 @@ public class NewsCatFileUtil {
                 returnMap.put(newspaper, selectedCategories);
             }
         }
-        Log.d(LOG_TAG, "USER FEED - "+returnMap);
+        //Log.d(LOG_TAG, "USER FEED - "+returnMap);
         return returnMap;
     }
 
@@ -153,6 +152,7 @@ public class NewsCatFileUtil {
             }
         }
 
+        UserPrefUtil.setUserPrefChanged(true);
         saveUserSelectionToJsonFile(fullJsonMap);
     }
 
@@ -189,12 +189,12 @@ public class NewsCatFileUtil {
             File file = new File(context.getCacheDir(), fileName);
             if(file.exists()) {
                 //Reading from Internal
-                Log.d(LOG_TAG, "Reading from Internal");
+                //Log.d(LOG_TAG, "Reading from Internal");
                 fis = new FileInputStream(file);
                 isr = new InputStreamReader(fis);
             } else {
                 //Reading from Assets
-                Log.d(LOG_TAG, "Reading from Assets");
+                //Log.d(LOG_TAG, "Reading from Assets");
                 is = context.getAssets().open(fileName);
                 isr = new InputStreamReader(is);
             }
@@ -227,19 +227,30 @@ public class NewsCatFileUtil {
         return returnString.toString();
     }
 
-    private void writeToInternalStorage(String content, String fileName){
-        FileOutputStream fos;
-        try {
-            File file = new File(context.getCacheDir(), fileName);
-            fos = new FileOutputStream(file);
-            fos.write(content.getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-        } catch (IOException e) {
-            Crashlytics.logException(e);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-        }
+    private void writeToInternalStorage(final String content, final String fileName){
+
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                FileOutputStream fos;
+                try {
+                    File file = new File(context.getCacheDir(), fileName);
+                    fos = new FileOutputStream(file);
+                    fos.write(content.getBytes());
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    Crashlytics.logException(e);
+                } catch (IOException e) {
+                    Crashlytics.logException(e);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                }
+
+                return null;
+            }
+
+        }.execute();
+
     }
 }

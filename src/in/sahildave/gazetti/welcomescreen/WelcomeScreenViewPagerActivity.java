@@ -16,6 +16,7 @@ import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.HomeScreenActivity;
 import in.sahildave.gazetti.util.Constants;
 import in.sahildave.gazetti.util.NewsCatFileUtil;
+import in.sahildave.gazetti.util.UserPrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,7 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
         welcomeFinished();
         onBackPressed();
 
+        UserPrefUtil.setUserPrefChanged(true);
         NewsCatFileUtil.getInstance().saveUserSelectionToJsonFile(mChildCheckStates);
     }
 
