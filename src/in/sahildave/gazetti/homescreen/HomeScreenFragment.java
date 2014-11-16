@@ -2,13 +2,11 @@ package in.sahildave.gazetti.homescreen;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.*;
@@ -19,6 +17,7 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.nineoldandroids.view.ViewHelper;
+import com.squareup.picasso.Picasso;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.adapter.CellModel;
 import in.sahildave.gazetti.homescreen.adapter.GridAdapter;
@@ -35,19 +34,12 @@ public class HomeScreenFragment extends Fragment {
     private GridView gridview;
     private List<CellModel> cellList;
     private GridAdapter adapter;
-    private int feedVersion;
-    private SwingBottomInAnimationAdapter animAdapter;
-    private AlphaInAnimationAdapter animAdapterMultiple;
 
-    private String TAG = "HomeScreen";
+    private String LOG_TAG = HomeScreenFragment.class.getName();
 
-    private boolean firstRun = false;
     private boolean phoneMode;
-    private ActionBar actionBar;
     private View actionBarCustomView;
     private ImageView phoneBackgroundImage;
-    private LinearLayout photoCreditLayout;
-    private TextView photoCreditText;
     private KenBurnsView kenBurnsView;
     private Activity activity;
 
@@ -80,20 +72,9 @@ public class HomeScreenFragment extends Fragment {
         super.onResume();
 
         if (UserPrefUtil.isUserPrefChanged()) {
-
             UserPrefUtil.setUserPrefChanged(false);
             cellList.clear();
-            cellList = UserPrefUtil.getUserPrefCellList();
-
-            putAddNewCellInList();
-
-            adapter = new GridAdapter(getActivity(), cellList);
-
-            animAdapter = new SwingBottomInAnimationAdapter(adapter);
-            animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
-            animAdapterMultiple.setAbsListView(gridview);
-
-            gridview.setAdapter(animAdapterMultiple);
+            setupCellGrid();
         }
 
     }
@@ -101,23 +82,18 @@ public class HomeScreenFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.d(TAG, "HomeScreenFragment in onCreate ");
         setRetainInstance(true);
-
-        firstRun = true;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.homescreen_fragment, container, false);
 
-        actionBar = ((ActionBarActivity) activity).getSupportActionBar();
+        ActionBar actionBar = ((ActionBarActivity) activity).getSupportActionBar();
         actionBarCustomView = actionBar.getCustomView();
 
         gridview = (GridView) rootView.findViewById(R.id.gridview);
         phoneBackgroundImage = (ImageView) rootView.findViewById(R.id.phone_homescreen_background);
-        photoCreditLayout = (LinearLayout) rootView.findViewById(R.id.photoCreditLayout);
-        photoCreditText = (TextView) rootView.findViewById(R.id.photoCreditText);
 
         return rootView;
     }
@@ -126,29 +102,8 @@ public class HomeScreenFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (view.findViewById(R.id.kenBurnsView_Background) == null) {
-            // Phone
-            phoneMode = true;
-            loadPhoneBackground();
-
-        } else {
-            phoneMode = false;
-            kenBurnsView = (KenBurnsView) view.findViewById(R.id.kenBurnsView_Background);
-            Log.d(TAG, "loading for tablet");
-            loadTabletBackground();
-
-        }
-
-        cellList = UserPrefUtil.getUserPrefCellList();
-        putAddNewCellInList();
-
-        adapter = new GridAdapter(getActivity(), cellList);
-        animAdapter = new SwingBottomInAnimationAdapter(adapter);
-        animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
-        animAdapterMultiple.setAbsListView(gridview);
-
-        gridview.setAdapter(animAdapterMultiple);
-
+        setupImageBackground(view);
+        setupCellGrid();
         registerForContextMenu(gridview);
         gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -207,6 +162,19 @@ public class HomeScreenFragment extends Fragment {
 
     }
 
+    private void setupCellGrid() {
+        cellList = UserPrefUtil.getUserPrefCellList();
+        putAddNewCellInList();
+
+        adapter = new GridAdapter(getActivity(), cellList);
+
+        SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(adapter);
+        AlphaInAnimationAdapter animAdapterMultiple = new AlphaInAnimationAdapter(animAdapter);
+        animAdapterMultiple.setAbsListView(gridview);
+
+        gridview.setAdapter(animAdapterMultiple);
+    }
+
     private void putAddNewCellInList() {
         if (cellList.size() > 0) {
             CellModel modelObject = cellList.get(cellList.size() - 1);
@@ -218,77 +186,55 @@ public class HomeScreenFragment extends Fragment {
         }
     }
 
-    private void loadTabletBackground() {
-        if(kenBurnsView!=null){
-            Random rand = new Random();
-            int n = rand.nextInt(4) + 1;
-            String backgroundImageUri = "land_" + n;
+    private void setupImageBackground(View view) {
 
-            int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
-            if (resID == 0) {
-                resID = getResources().getIdentifier("land_0", "drawable", getActivity().getPackageName());
+        kenBurnsView = (KenBurnsView) view.findViewById(R.id.kenBurnsView_Background);
+        phoneMode = (kenBurnsView == null);
+
+        new AsyncTask<Void, Void, Integer>(){
+            @Override
+            protected Integer doInBackground(Void... params) {
+                if (phoneMode) {
+                    return getPhoneBackground();
+                } else {
+                    return getTabletBackground();
+                }
             }
 
-            kenBurnsView.setImageResource(resID);
-        }
+            @Override
+            protected void onPostExecute(Integer resID) {
+                if(phoneMode){
+                    Picasso.with(getActivity()).load(resID).into(phoneBackgroundImage);
+                } else {
+                    Picasso.with(getActivity()).load(resID).into(kenBurnsView);
+                }
+
+            }
+        }.execute();
     }
 
-    private void loadPhoneBackground() {
+    private int getTabletBackground() {
+        Random rand = new Random();
+        int n = rand.nextInt(4) + 1;
+        String backgroundImageUri = "land_" + n;
+
+        int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
+        if (resID == 0) {
+            resID = getResources().getIdentifier("land_0", "drawable", getActivity().getPackageName());
+        }
+        return resID;
+    }
+
+    private int getPhoneBackground() {
         // get a random image, if null then get image_0
         Random rand = new Random();
         int n = rand.nextInt(4) + 1;
         String backgroundImageUri = "port_" + n;
-
         int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
-
         if (resID == 0) {
             resID = getResources().getIdentifier("port_0", "drawable", getActivity().getPackageName());
         }
-
-        // Bitmap Options
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(getResources(), resID, options);
-
-        // Raw height and width of image
-        int imageHeight = options.outHeight;
-        int imageWidth = options.outWidth;
-        int inSampleSize = 1;
-
-        // height and width of screen
-        int reqHeight = getResources().getDisplayMetrics().heightPixels;
-        int reqWidth = getResources().getDisplayMetrics().widthPixels;
-
-        // SampleSize Calculations
-        if (imageHeight > reqHeight || imageWidth > reqWidth) {
-
-            final int halfHeight = imageHeight / 2;
-            final int halfWidth = imageWidth / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2
-            // and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-
-            // This offers some additional logic in case the image has a strange
-            // aspect ratio. Anything more than 2x the requested pixels we'll
-            // sample down
-            // further
-            long totalPixels = imageWidth * imageHeight / inSampleSize;
-            final long totalReqPixelsCap = reqWidth * reqHeight * 2;
-
-            while (totalPixels > totalReqPixelsCap) {
-                inSampleSize *= 2;
-                totalPixels /= 2;
-            }
-        }
-
-        options.inJustDecodeBounds = false;
-        Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resID, options);
-
-        phoneBackgroundImage.setImageBitmap(mBitmap);
+        return resID;
     }
 
     @Override
