@@ -77,4 +77,7 @@
     <string name="title_activity_welcome_screen_view_pager">Welcome</string>
     <string name="title_activity_licenses">Licenses</string>
     <string name="swipe">  &#60;  SWIPE LEFT  &#60;  </string>
+
+    <string name="welcome_exp_list_button_enabled">Let\'s Get Started</string>
+    <string name="welcome_exp_list_button_disabled">Select Some Feeds</string>
 </resources>

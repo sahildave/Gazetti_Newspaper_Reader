@@ -93,16 +93,14 @@ public class NewsCatFileUtil {
         try {
             fullJsonMap = newFullJsonMap;
             Object jsonString = JsonHelper.toJSON(newFullJsonMap);
+//            Log.d(LOG_TAG, "Updating fullJson - "+jsonString.toString());
 
-            //Log.d(LOG_TAG, "Updating fullJson - "+jsonString.toString());
             userSelectionMap = getUserFeedMapFromJsonMap();
+//            Log.d(LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
 
-            //Log.d(LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
             writeToInternalStorage(jsonString.toString(), NEWS_CAT_FILE);
         } catch (JSONException e) {
             e.printStackTrace();
-        } finally {
-            initUserSelectionMap();
         }
     }
 

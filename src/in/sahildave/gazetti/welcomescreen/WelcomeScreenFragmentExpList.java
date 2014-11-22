@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import in.sahildave.gazetti.R;
+import in.sahildave.gazetti.welcomescreen.WelcomeScreenExpListAdapter.CheckBoxInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class WelcomeScreenFragmentExpList extends Fragment {
 
     public static final String ARG_PAGE = "page";
+    private static final String LOG_TAG = WelcomeScreenFragmentExpList.class.getName();
 
     private int mPageNumber;
     private WelcomeScreenExpListAdapter expListAdapter;
@@ -26,6 +28,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
     private HashMap<String, List<String>> listDataChild;
 
     private WelcomeScreenFeedSelectCallback callback;
+    private Button doneButton;
 
     public interface WelcomeScreenFeedSelectCallback {
         public void fsFragDoneButton(Map<String, Object> mChildCheckStates);
@@ -64,20 +67,35 @@ public class WelcomeScreenFragmentExpList extends Fragment {
         ExpandableListView expListView = (ExpandableListView) rootView
                 .findViewById(R.id.welcome_feed_select_expandable_list);
 
-        prepareListData();
-        expListAdapter = new WelcomeScreenExpListAdapter(getActivity(), listDataHeader, listDataChild);
-        expListAdapter.setExpList(expListView);
-        expListView.setAdapter(expListAdapter);
-
-        Button done_button = (Button) rootView.findViewById(R.id.welcome_feed_select_explist_done_button);
-        done_button.setOnClickListener(new OnClickListener() {
+        doneButton = (Button) rootView.findViewById(R.id.welcome_feed_select_explist_done_button);
+        doneButton.setEnabled(false);
+        doneButton.setOnClickListener(new OnClickListener() {
             public void onClick(View next) {
                 Map<String, Object> mChildCheckStates = expListAdapter.getClickedStates();
                 callback.fsFragDoneButton(mChildCheckStates);
             }
         });
+
+        prepareListData();
+        expListAdapter = new WelcomeScreenExpListAdapter(getActivity(), listDataHeader, listDataChild, checkBoxInterface);
+        expListAdapter.setExpList(expListView);
+        expListView.setAdapter(expListAdapter);
+
         return rootView;
     }
+
+    CheckBoxInterface checkBoxInterface = new CheckBoxInterface() {
+        @Override
+        public void checkBoxClicked(boolean isChecked) {
+            if(isChecked){
+                doneButton.setText(R.string.welcome_exp_list_button_enabled);
+            } else {
+                doneButton.setText(R.string.welcome_exp_list_button_disabled);
+            }
+            doneButton.setEnabled(isChecked);
+        }
+    };
+
 
     private void prepareListData() {
         listDataHeader = new ArrayList<String>();

@@ -23,13 +23,18 @@
 
         <Button
                 android:id="@+id/welcome_feed_select_explist_done_button"
-                style="@style/ButtonAppTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:background="@drawable/welcome_exp_list_button"
+                android:layout_width="wrap_content"
+                android:minWidth="240dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="16dp"
+                android:layout_gravity="center"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
                 android:gravity="center"
-                android:text="Let&apos;s Get Started!"
-                android:textColor="@android:color/white"/>
+                android:enabled="false"
+                android:text="@string/welcome_exp_list_button_disabled"
+                android:textColor="@drawable/welcome_exp_list_button_text"/>
     </LinearLayout>
 
     <LinearLayout

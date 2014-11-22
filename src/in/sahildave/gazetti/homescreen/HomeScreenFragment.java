@@ -119,7 +119,9 @@ public class HomeScreenFragment extends Fragment {
                     String catId = clickedObject.getCategoryId();
                     String npName = clickedObject.getNewspaperTitle();
                     String catName = clickedObject.getCategoryTitle();
-                    Log.d(LOG_TAG, clickedObject.toString());
+
+                    npId = String.valueOf(Integer.parseInt(npId) + 1);
+
                     Intent headlinesIntent = new Intent(getActivity(), WebsiteListActivity.class);
                     headlinesIntent.putExtra("npId", npId);
                     headlinesIntent.putExtra("catId", catId);
@@ -218,7 +220,7 @@ public class HomeScreenFragment extends Fragment {
 
     private int getTabletBackground() {
         Random rand = new Random();
-        int n = rand.nextInt(2) + 1;
+        int n = rand.nextInt(3);
         String backgroundImageUri = "land_" + n;
 
         int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
@@ -232,7 +234,7 @@ public class HomeScreenFragment extends Fragment {
     private int getPhoneBackground() {
         // get a random image, if null then get image_0
         Random rand = new Random();
-        int n = rand.nextInt(2) + 1;
+        int n = rand.nextInt(3);
         String backgroundImageUri = "port_" + n;
         int resID = getResources().getIdentifier(backgroundImageUri, "drawable", getActivity().getPackageName());
         if (resID == 0) {

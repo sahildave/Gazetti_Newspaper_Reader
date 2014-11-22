@@ -66,7 +66,7 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
 
     }
 
-    private void welcomeFinished() {
+    private void setFirstRunFalse() {
         SharedPreferences preferences = getSharedPreferences(Constants.IS_FIRST_RUN, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(Constants.IS_FIRST_RUN, false);
@@ -76,13 +76,14 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
     @Override
     public void fsFragDoneButton(Map<String, Object> mChildCheckStates) {
 
-        Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Loading Your Feeds!", Toast.LENGTH_LONG).show();
         selected = true;
-        welcomeFinished();
-        onBackPressed();
 
         UserPrefUtil.setUserPrefChanged(true);
         NewsCatFileUtil.getInstance().saveUserSelectionToJsonFile(mChildCheckStates);
+
+        setFirstRunFalse();
+        onBackPressed();
     }
 
     private class ScreenSlidePagerAdapter extends FragmentPagerAdapter {

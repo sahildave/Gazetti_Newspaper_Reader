@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -31,9 +32,17 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 
     public static ExpandableListView expandableList;
     TypedArray explist_np_images;
+    CheckBoxInterface checkBoxInterface;
+
+    public interface CheckBoxInterface {
+        void checkBoxClicked(boolean isChecked);
+    }
+
 
     public WelcomeScreenExpListAdapter(Context context, List<String> listDataHeader,
-                                       HashMap<String, List<String>> listChildData) {
+                                       HashMap<String, List<String>> listChildData,
+                                       CheckBoxInterface checkBoxInterface) {
+        this.checkBoxInterface = checkBoxInterface;
         this.mContext = context;
         this.mListDataHeader = listDataHeader;
         this.mListDataChild = listChildData;
@@ -66,7 +75,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
             mChildCheckStates.put(i, checkStates);
         }
 
-        Log.d(LOG_TAG, "Expandable List Adapter -- "+mChildCheckStates.toString());
+//        Log.d(LOG_TAG, "Expandable List Adapter -- "+mChildCheckStates.toString());
     }
 
     @Override
@@ -107,9 +116,9 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         final int mGroupPosition = groupPosition;
         final int mChildPosition = childPosition;
 
-        String childText = (String) getChild(groupPosition, childPosition);
+        String childText = getChild(groupPosition, childPosition);
 
-        ChildViewHolder childViewHolder;
+        final ChildViewHolder childViewHolder;
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.welcome_feed_select_explist_rowdetail,  parent, false);
@@ -129,11 +138,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         }
 
         childViewHolder.mChildText.setText(childText);
-
         childViewHolder.mCheckBox.setOnCheckedChangeListener(null);
-
-        String group = getGroup(mGroupPosition);
-
 
         if (mChildCheckStates.containsKey(mGroupPosition)) {
             boolean getChecked[] = mChildCheckStates.get(mGroupPosition);
@@ -145,6 +150,13 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
             childViewHolder.mCheckBox.setChecked(false);
         }
 
+        convertView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                childViewHolder.mCheckBox.toggle();
+            }
+        });
+
         childViewHolder.mCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
             @Override
@@ -153,6 +165,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
                 boolean getChecked[] = mChildCheckStates.get(mGroupPosition);
                 getChecked[mChildPosition] = isChecked;
                 mChildCheckStates.put(mGroupPosition, getChecked);
+                checkBoxInterface.checkBoxClicked(isAnythingSelected());
             }
         });
 
@@ -188,6 +201,31 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public boolean isAnythingSelected(){
+        try {
+            int headerLength = mListDataHeader.size();
+            for(int i=0; i<headerLength; i++){
+                boolean[] checkedState = mChildCheckStates.get(i);
+                if(isBooleanArrayTrue(checkedState)){
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isBooleanArrayTrue(boolean[] checkedState) {
+        for (boolean aCheckedState : checkedState) {
+            if (aCheckedState) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -251,5 +289,23 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 
         TextView mChildText;
         CheckBox mCheckBox;
+    }
+
+    @Override
+    public String toString() {
+        int headerLength = mListDataHeader.size();
+
+        String returnString = "";
+        for(int i=0; i<headerLength; i++){
+            returnString += i+" -- ";
+            boolean[] checkedState = mChildCheckStates.get(i);
+            int categoriesLength = checkedState.length;
+            for(int j=0; j<categoriesLength; j++){
+                boolean state = mChildCheckStates.get(1)[j];
+                returnString += state + ", " ;
+            }
+            returnString += "; ";
+        }
+        return returnString;
     }
 }

@@ -30,8 +30,7 @@
 
     <color name="actionbar_default_color">#4285F4</color>
     <color name="green_welcome">#2BB24C</color>
-    <color name="green_welcome_dark">#478E55</color>
+    <color name="green_welcome_dark">#24a043</color>
     <color name="green_welcome_text">#8FC89A</color>
-
-
+    <color name="green_pressed">#24a043</color>
 </resources>

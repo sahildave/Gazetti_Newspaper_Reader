@@ -90,13 +90,20 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         if (!(activity instanceof ItemSelectedCallback)) {
             throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
+        mItemSelectedCallback = (ItemSelectedCallback) activity;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Log.d(TAG, "ListFragment in onCreate ");
+        firstRun = true;
 
         mTwoPane = getArguments().getBoolean("mTwoPane");
         npIdString = getArguments().getString("npId");
         npNameString = getArguments().getString("npName");
         catIdString = getArguments().getString("catId");
         listViewHeaderColor = getArguments().getInt("color");
-        mItemSelectedCallback = (ItemSelectedCallback) activity;
 
         if (npIdString.equalsIgnoreCase("1")) {
             dbToSearch = "hindu_data";
@@ -107,13 +114,6 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
         } else if (npIdString.equalsIgnoreCase("4")) {
             dbToSearch = "tie_data";
         }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Log.d(TAG, "ListFragment in onCreate ");
-        firstRun = true;
 
         setRetainInstance(true);
     }
@@ -231,7 +231,6 @@ public class WebsiteListFragment extends ListFragment implements SwipeRefreshLay
                     }
                     firstRun = false;
                 } else {
-
                     Crashlytics.log("Wrong while fetching - " + exception.getMessage());
                     headerTextView.setText("Something went wrong!");
                 }

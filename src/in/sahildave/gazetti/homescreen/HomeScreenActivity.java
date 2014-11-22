@@ -37,7 +37,7 @@ import java.util.List;
 public class HomeScreenActivity extends ActionBarActivity implements HomeScreenFragment.Callbacks,
         AddCellDialogListener, EditCellDialogListener {
 
-    private static final String TAG = "HomeScreen";
+    private static final String LOG_TAG = HomeScreenActivity.class.getName();
 
     private FragmentManager fragmentManager;
     private List<CellModel> cellList;
@@ -57,7 +57,8 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 
         // When coming from WelcomeScreen but without completing the task, the intent would have "Exit Me"
         if (getIntent().getBooleanExtra("Exit me", false)) {
-            this.finish();
+            finish();
+            return;
         }
 
         gazettiEnums = new GazettiEnums();
@@ -191,17 +192,27 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     @Override
     public void onFinishEditingListener(int editPosition, String npName, String cat, boolean edited) {
 
-        if (edited) {
-            NewsCatModel newsCatModel = createNewsCatModel(npName, cat);
-            if (!isCellPresent(newsCatModel)) {
-                CellModel newCell = new CellModel(newsCatModel);
-                CellModel oldCell = cellList.get(editPosition);
-                cellList.set(editPosition, newCell);
-                adapter.notifyDataSetChanged();
+        try {
+            if (edited) {
+                NewsCatModel newsCatModel = createNewsCatModel(npName, cat);
+                if (!isCellPresent(newsCatModel)) {
+                    CellModel newCell = new CellModel(newsCatModel);
+                    CellModel oldCell = cellList.get(editPosition);
+                    cellList.set(editPosition, newCell);
+                    adapter.notifyDataSetChanged();
 
-                UserPrefUtil.replaceUserPref(oldCell, newCell);
+                    UserPrefUtil.replaceUserPref(oldCell, newCell);
+                } else {
+                    Toast.makeText(this, "Category Already Present.", Toast.LENGTH_LONG).show();
+                }
+            }
+        } catch (Exception e) {
+            Crashlytics.log(npName + ", " + cat);
+            Crashlytics.logException(e);
+            if(cellList!=null){
+                Crashlytics.log(cellList.toString());
             } else {
-                Toast.makeText(this, "Category Already Present.", Toast.LENGTH_LONG).show();
+                Crashlytics.log("Cell List is null!!");
             }
         }
 
@@ -226,8 +237,12 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             }
         } catch (Exception e) {
             Crashlytics.log(npName + ", " + cat);
-            Crashlytics.log(cellList.toString());
             Crashlytics.logException(e);
+            if(cellList!=null){
+                Crashlytics.log(cellList.toString());
+            } else {
+                Crashlytics.log("Cell List is null!!");
+            }
         }
 
     }
