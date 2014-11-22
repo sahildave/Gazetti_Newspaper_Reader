@@ -81,7 +81,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
-        String groupText = getGroup(groupPosition).toString();
+        String groupText = getGroup(groupPosition);
 
         GroupViewHolder groupViewHolder;
         if (convertView == null) {

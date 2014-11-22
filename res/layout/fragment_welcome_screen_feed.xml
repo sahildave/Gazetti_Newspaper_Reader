@@ -1,15 +1,57 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:animateLayoutChanges="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:background="@color/green_welcome">
 
     <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/top_layer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/welcome_screen_top"
+            android:orientation="vertical">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:lines="2"
+                android:text="Please Select What You\n   Would Like To Read"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
+
+        <View
+                android:layout_width="240dp"
+                android:layout_height="0.5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/white"/>
+    </LinearLayout>
+
+
+    <ExpandableListView
+            android:id="@+id/welcome_feed_select_expandable_list"
+            android:layout_width="300dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:divider="@color/exp_list_group_divider"
+            android:childDivider="@color/exp_list_child_divider"
+            style="@style/ExpandableListLight"
+            android:cacheColorHint="@android:color/transparent"
+            android:fadingEdgeLength="1dp"
+            android:scrollbars="none"/>
+
+
+    <LinearLayout
+            android:id="@+id/bottom_layer"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="@dimen/welcome_screen_bottom"
             android:layout_marginTop="16dp"
@@ -37,47 +79,5 @@
                 android:textColor="@drawable/welcome_exp_list_button_text"/>
     </LinearLayout>
 
-    <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/linearLayout2"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/welcome_screen_top"
-            android:orientation="vertical">
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:lines="2"
-                android:text="Please Select What You\n   Would Like To Read"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"/>
-
-        <View
-                android:layout_width="240dp"
-                android:layout_height="0.5dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/white"/>
-
-        <ExpandableListView
-                android:id="@+id/welcome_feed_select_expandable_list"
-                android:layout_width="300dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:divider="@color/exp_list_group_divider"
-                android:childDivider="@color/exp_list_child_divider"
-                style="@style/ExpandableListLight"
-                android:cacheColorHint="@android:color/transparent"
-                android:fadingEdgeLength="1dp"
-                android:scrollbars="none"/>
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

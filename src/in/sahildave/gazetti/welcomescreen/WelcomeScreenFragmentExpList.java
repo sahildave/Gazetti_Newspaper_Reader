@@ -3,12 +3,16 @@ package in.sahildave.gazetti.welcomescreen;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.welcomescreen.WelcomeScreenExpListAdapter.CheckBoxInterface;
 
@@ -21,6 +25,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
 
     public static final String ARG_PAGE = "page";
     private static final String LOG_TAG = WelcomeScreenFragmentExpList.class.getName();
+    private static int originalBottomMargin;
 
     private int mPageNumber;
     private WelcomeScreenExpListAdapter expListAdapter;
@@ -29,6 +34,9 @@ public class WelcomeScreenFragmentExpList extends Fragment {
 
     private WelcomeScreenFeedSelectCallback callback;
     private Button doneButton;
+    private static LinearLayout topLayer;
+    public static boolean topLayerHidden;
+    private static LinearLayout bottomLayer;
 
     public interface WelcomeScreenFeedSelectCallback {
         public void fsFragDoneButton(Map<String, Object> mChildCheckStates);
@@ -63,7 +71,9 @@ public class WelcomeScreenFragmentExpList extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_screen_feed, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_welcome_screen_feed, container, false);
+        topLayer = (LinearLayout) rootView.findViewById(R.id.top_layer);
+        bottomLayer = (LinearLayout) rootView.findViewById(R.id.bottom_layer);
         ExpandableListView expListView = (ExpandableListView) rootView
                 .findViewById(R.id.welcome_feed_select_expandable_list);
 
@@ -81,6 +91,26 @@ public class WelcomeScreenFragmentExpList extends Fragment {
         expListAdapter.setExpList(expListView);
         expListView.setAdapter(expListAdapter);
 
+        expListView.setOnGroupClickListener(new OnGroupClickListener() {
+
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                Log.d(LOG_TAG, "Top Layer Hidden ? " + topLayerHidden);
+                if (topLayer.getVisibility()==View.VISIBLE) {
+                    LayoutParams originalParams = (LayoutParams) bottomLayer.getLayoutParams();
+                    originalBottomMargin = originalParams.bottomMargin;
+
+                    LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 0, 0, 0);
+                    bottomLayer.setLayoutParams(params);
+
+                    topLayer.setVisibility(View.GONE);
+                    topLayerHidden = true;
+                }
+                return false;
+            }
+        });
+
         return rootView;
     }
 
@@ -96,6 +126,20 @@ public class WelcomeScreenFragmentExpList extends Fragment {
         }
     };
 
+    public static boolean handleBackPressed(){
+        if(topLayerHidden){
+            topLayer.setVisibility(View.VISIBLE);
+            topLayerHidden = false;
+
+            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            params.setMargins(0,0,0,originalBottomMargin);
+            bottomLayer.setLayoutParams(params);
+
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     private void prepareListData() {
         listDataHeader = new ArrayList<String>();

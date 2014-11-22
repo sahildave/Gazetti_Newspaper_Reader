@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.jfeinstein.jazzyviewpager.JazzyViewPager;
@@ -27,7 +26,7 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
 
     private static final int NUM_ITEMS = 2;
     private JazzyViewPager mPager;
-    private boolean selected;
+    private ScreenSlidePagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
         fragmentList.add(WelcomeScreenFragmentFirst.create(0));
         fragmentList.add(WelcomeScreenFragmentExpList.create(1));
 
-        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragmentList);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), fragmentList);
 
         mPager = (JazzyViewPager) findViewById(R.id.welcome_screen_pager);
         mPager.setTransitionEffect(TransitionEffect.Tablet);
@@ -58,10 +57,8 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
             startActivity(intent);
             finish();
 
-        } else if (mPager.getCurrentItem() == 1 && !selected) {
+        } else if (mPager.getCurrentItem() == 1 && WelcomeScreenFragmentExpList.handleBackPressed()) {
             mPager.setCurrentItem(0);
-        } else if (mPager.getCurrentItem() == 1 && selected) {
-            super.onBackPressed();
         }
 
     }
@@ -77,8 +74,6 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
     public void fsFragDoneButton(Map<String, Object> mChildCheckStates) {
 
         Toast.makeText(this, "Loading Your Feeds!", Toast.LENGTH_LONG).show();
-        selected = true;
-
         UserPrefUtil.setUserPrefChanged(true);
         NewsCatFileUtil.getInstance().saveUserSelectionToJsonFile(mChildCheckStates);
 
@@ -88,7 +83,7 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
 
     private class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
 
-        private List<Fragment> fragmentList;
+        private final List<Fragment> fragmentList;
 
         public ScreenSlidePagerAdapter(FragmentManager fm, List<Fragment> fragmentList) {
             super(fm);

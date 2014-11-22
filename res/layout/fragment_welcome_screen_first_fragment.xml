@@ -5,7 +5,7 @@
                 android:focusableInTouchMode="true">
 
     <LinearLayout
-            android:id="@+id/linearLayout1"
+            android:id="@+id/top_layer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"

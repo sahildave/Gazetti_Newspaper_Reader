@@ -187,12 +187,12 @@ public class NewsCatFileUtil {
             File file = new File(context.getCacheDir(), fileName);
             if(file.exists()) {
                 //Reading from Internal
-                //Log.d(LOG_TAG, "Reading from Internal");
+                Crashlytics.log("Reading from Internal");
                 fis = new FileInputStream(file);
                 isr = new InputStreamReader(fis);
             } else {
                 //Reading from Assets
-                //Log.d(LOG_TAG, "Reading from Assets");
+                Crashlytics.log("Reading from Assets");
                 is = context.getAssets().open(fileName);
                 isr = new InputStreamReader(is);
             }
