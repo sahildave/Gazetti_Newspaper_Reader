@@ -5,7 +5,7 @@
             android:id="@+id/action_share"
             android:orderInCategory="99"
             android:title="Share"
-            android:icon="@android:drawable/ic_menu_share"
+            android:icon="@drawable/ic_share_white"
             android:showAsAction="ifRoom"
             app:showAsAction="ifRoom"/>
 

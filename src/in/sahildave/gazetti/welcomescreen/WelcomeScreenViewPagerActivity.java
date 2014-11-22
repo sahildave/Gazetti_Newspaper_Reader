@@ -78,7 +78,7 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
         NewsCatFileUtil.getInstance().saveUserSelectionToJsonFile(mChildCheckStates);
 
         setFirstRunFalse();
-        onBackPressed();
+        super.onBackPressed();
     }
 
     private class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
