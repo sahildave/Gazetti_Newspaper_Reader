@@ -20,10 +20,12 @@ import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.nineoldandroids.view.ViewHelper;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.adapter.CellModel;
 import in.sahildave.gazetti.homescreen.adapter.GridAdapter;
 import in.sahildave.gazetti.news_activities.WebsiteListActivity;
+import in.sahildave.gazetti.util.BitmapTransform;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
 import in.sahildave.gazetti.util.UserPrefUtil;
@@ -192,6 +194,10 @@ public class HomeScreenFragment extends Fragment {
         kenBurnsView = (KenBurnsView) view.findViewById(R.id.kenBurnsView_Background);
         phoneMode = (kenBurnsView == null);
 
+        //height and width of screen
+        final int MAX_HEIGHT = getResources().getDisplayMetrics().heightPixels;
+        final int MAX_WIDTH = getResources().getDisplayMetrics().widthPixels;
+
         try {
             new AsyncTask<Void, Void, Integer>(){
                 @Override
@@ -205,10 +211,15 @@ public class HomeScreenFragment extends Fragment {
 
                 @Override
                 protected void onPostExecute(Integer resID) {
+
+                    RequestCreator requestCreator = Picasso.with(getActivity())
+                            .load(resID)
+                            .transform(new BitmapTransform(MAX_WIDTH, MAX_HEIGHT));
+
                     if(phoneMode){
-                        Picasso.with(getActivity()).load(resID).into(phoneBackgroundImage);
+                        requestCreator.into(phoneBackgroundImage);
                     } else {
-                        Picasso.with(getActivity()).load(resID).into(kenBurnsView);
+                        requestCreator.into(kenBurnsView);
                     }
 
                 }
