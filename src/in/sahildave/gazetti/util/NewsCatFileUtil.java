@@ -211,9 +211,10 @@ public class NewsCatFileUtil {
         InputStream is = null;
         try {
             File file = new File(context.getCacheDir(), fileName);
-            if(!file.exists() || isAssetFileNew()) {
+            boolean readFromAsset = !file.exists() || isAssetFileNew();
+            if(readFromAsset) {
                 //Reading from Assets
-                Log.d(LOG_TAG, "Reading from Assets");
+                Log.d(LOG_TAG, "Reading from Assets - "+file.exists()+", "+isAssetFileNew());
                 is = context.getAssets().open(fileName);
                 isr = new InputStreamReader(is);
             } else {
@@ -229,7 +230,10 @@ public class NewsCatFileUtil {
                 returnString.append(line);
                 returnString.append("\n");
             }
-            writeToInternalStorage(returnString.toString(), fileName);
+
+            if(readFromAsset){
+                writeToInternalStorage(returnString.toString(), fileName);
+            }
         } catch (FileNotFoundException e){
             Crashlytics.logException(e);
         }catch (Exception e) {
@@ -270,7 +274,7 @@ public class NewsCatFileUtil {
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                 }
-
+                Log.d(LOG_TAG, "File written to internal storage!");
                 return null;
             }
 
@@ -284,6 +288,7 @@ public class NewsCatFileUtil {
     }
 
     public boolean isAssetFileNew(){
+        Log.d(LOG_TAG, "Asset File is new ? "+compiledAssetVersion + " > "+sharedPrefsAssetVersion);
         return (compiledAssetVersion > sharedPrefsAssetVersion);
     }
 
