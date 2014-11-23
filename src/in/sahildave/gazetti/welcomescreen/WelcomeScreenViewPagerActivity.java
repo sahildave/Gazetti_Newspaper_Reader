@@ -15,7 +15,6 @@ import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.HomeScreenActivity;
 import in.sahildave.gazetti.util.Constants;
 import in.sahildave.gazetti.util.NewsCatFileUtil;
-import in.sahildave.gazetti.util.UserPrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +73,8 @@ public class WelcomeScreenViewPagerActivity extends FragmentActivity implements
     public void fsFragDoneButton(Map<String, Object> mChildCheckStates) {
 
         Toast.makeText(this, "Loading Your Feeds!", Toast.LENGTH_LONG).show();
-        UserPrefUtil.setUserPrefChanged(true);
-        NewsCatFileUtil.getInstance().saveUserSelectionToJsonFile(mChildCheckStates);
+        NewsCatFileUtil.getInstance(this).setUserPrefChanged(true);
+        NewsCatFileUtil.getInstance(this).saveUserSelectionToJsonFile(mChildCheckStates);
 
         setFirstRunFalse();
         super.onBackPressed();

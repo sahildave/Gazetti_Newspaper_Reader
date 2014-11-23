@@ -74,6 +74,8 @@
         <item>@drawable/ic_tie</item>
     </array>
 
+    <string name="title_activity_settings">Settings</string>
+
     <string name="title_activity_welcome_screen_view_pager">Welcome</string>
     <string name="title_activity_licenses">Licenses</string>
     <string name="swipe">  &#60;  SWIPE LEFT  &#60;  </string>

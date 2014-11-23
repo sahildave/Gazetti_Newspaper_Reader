@@ -1,9 +1,11 @@
 package in.sahildave.gazetti.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
+import in.sahildave.gazetti.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,27 +17,33 @@ import java.util.*;
  */
 public class NewsCatFileUtil {
 
-    public static final String NEWS_CAT_FILE = "newsCat.json";
+    private static final String NEWS_CAT_FILE = "newsCat.json";
     private static String LOG_TAG = NewsCatFileUtil.class.getName();
-    private static Context context;
-    public static Map<String, Object> fullJsonMap;
-    public static Map<String, List<String>> userSelectionMap;
     private static NewsCatFileUtil _instance = null;
+    private Context context;
+    public  Map<String, Object> fullJsonMap;
+    public Map<String, List<String>> userSelectionMap;
+    private int compiledAssetVersion;
+    private int sharedPrefsAssetVersion;
+    private SharedPreferences sharedPreferences;
+    private boolean UserPrefChanged = false;
 
-    public static void init(Context parentContext) {
+    private NewsCatFileUtil(Context parentContext) {
         context = parentContext;
-        _instance = null; //new session will be created
-        getInstance();
-    }
 
-    private NewsCatFileUtil() {
+        sharedPreferences = context.getSharedPreferences(Constants.GAZETTI, context.MODE_PRIVATE);
+        sharedPrefsAssetVersion = sharedPreferences.getInt(Constants.ASSET_VERSION, 0);
+        compiledAssetVersion = context.getResources().getInteger(R.integer.assetVersion);
+
         initUserSelectionMap();
+        Log.d(LOG_TAG, "compiled - " + compiledAssetVersion + ", shared - " + sharedPrefsAssetVersion);
+
     }
 
-    public static NewsCatFileUtil getInstance(){
+    public static NewsCatFileUtil getInstance(Context context){
         synchronized (NewsCatFileUtil.class) {
             if (_instance == null) {
-                _instance = new NewsCatFileUtil();
+                _instance = new NewsCatFileUtil(context.getApplicationContext());
             }
             return _instance;
         }
@@ -44,13 +52,13 @@ public class NewsCatFileUtil {
     private void initUserSelectionMap() {
         try {
             String jsonString = readFromFile(NEWS_CAT_FILE);
-            //Log.d(LOG_TAG, "jsonString - "+jsonString);
+            Log.d(LOG_TAG, "jsonString - "+jsonString);
 
             fullJsonMap = JsonHelper.toMap(new JSONObject(jsonString));
-            //Log.d(LOG_TAG, "fullJsonMap - " + fullJsonMap.toString());
+            Log.d(LOG_TAG, "fullJsonMap - " + fullJsonMap.toString());
 
             userSelectionMap = getUserFeedMapFromJsonMap();
-            //Log.d(LOG_TAG, "UserSelectionMap - " + userSelectionMap.toString());
+            Log.d(LOG_TAG, "UserSelectionMap - " + userSelectionMap.toString());
         } catch (JSONException e) {
             Crashlytics.logException(e);
         }
@@ -66,6 +74,14 @@ public class NewsCatFileUtil {
             selected = false;
         }
         return selected;
+    }
+
+    public Map<String, List<String>> getUserSelectionMap() {
+        return userSelectionMap;
+    }
+
+    public void setUserSelectionMap(Map<String, List<String>> userSelectionMap) {
+        this.userSelectionMap = userSelectionMap;
     }
 
     public void selectNewsCat(String newspaper, String category){
@@ -93,10 +109,10 @@ public class NewsCatFileUtil {
         try {
             fullJsonMap = newFullJsonMap;
             Object jsonString = JsonHelper.toJSON(newFullJsonMap);
-//            Log.d(LOG_TAG, "Updating fullJson - "+jsonString.toString());
+            Log.d(LOG_TAG, "Updating fullJson - "+jsonString.toString());
 
             userSelectionMap = getUserFeedMapFromJsonMap();
-//            Log.d(LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
+            Log.d(LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
 
             writeToInternalStorage(jsonString.toString(), NEWS_CAT_FILE);
         } catch (JSONException e) {
@@ -150,9 +166,19 @@ public class NewsCatFileUtil {
             }
         }
 
-        UserPrefUtil.setUserPrefChanged(true);
+        setUserPrefChanged(true);
         saveUserSelectionToJsonFile(fullJsonMap);
     }
+
+    public boolean isUserPrefChanged() {
+        return UserPrefChanged;
+    }
+
+    public void setUserPrefChanged(boolean userPrefChanged) {
+        Log.d(LOG_TAG, "Setting UserPrefChanged to "+userPrefChanged);
+        UserPrefChanged = userPrefChanged;
+    }
+
 
     private boolean getValueOfKey(Map<String, Boolean> map, String key) {
         if (isKeyPresent(map, key)) {
@@ -185,16 +211,16 @@ public class NewsCatFileUtil {
         InputStream is = null;
         try {
             File file = new File(context.getCacheDir(), fileName);
-            if(file.exists()) {
-                //Reading from Internal
-                Crashlytics.log("Reading from Internal");
-                fis = new FileInputStream(file);
-                isr = new InputStreamReader(fis);
-            } else {
+            if(!file.exists() || isAssetFileNew()) {
                 //Reading from Assets
-                Crashlytics.log("Reading from Assets");
+                Log.d(LOG_TAG, "Reading from Assets");
                 is = context.getAssets().open(fileName);
                 isr = new InputStreamReader(is);
+            } else {
+                //Reading from Internal
+                Log.d(LOG_TAG, "Reading from Internal");
+                fis = new FileInputStream(file);
+                isr = new InputStreamReader(fis);
             }
 
             input = new BufferedReader(isr);
@@ -248,7 +274,18 @@ public class NewsCatFileUtil {
                 return null;
             }
 
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                sharedPreferences.edit().putInt(Constants.ASSET_VERSION, compiledAssetVersion).commit();
+            }
         }.execute();
 
     }
+
+    public boolean isAssetFileNew(){
+        return (compiledAssetVersion > sharedPrefsAssetVersion);
+    }
+
+
 }
