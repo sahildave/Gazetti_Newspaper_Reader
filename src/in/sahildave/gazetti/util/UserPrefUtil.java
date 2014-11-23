@@ -1,5 +1,6 @@
 package in.sahildave.gazetti.util;
 
+import android.content.Context;
 import in.sahildave.gazetti.homescreen.adapter.CellModel;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
@@ -14,12 +15,26 @@ import java.util.Map;
  */
 public class UserPrefUtil {
     private static final String LOG_TAG = UserPrefUtil.class.getName();
-    private static boolean UserPrefChanged = false;
+    private static UserPrefUtil _instance = null;
+    private Context context;
 
-    public static List<CellModel> getUserPrefCellList(){
+    public static UserPrefUtil getInstance(Context context){
+        synchronized (NewsCatFileUtil.class) {
+            if (_instance == null) {
+                _instance = new UserPrefUtil(context.getApplicationContext());
+            }
+            return _instance;
+        }
+    }
+
+    private UserPrefUtil(Context parentContext) {
+        context = parentContext;
+    }
+
+    public List<CellModel> getUserPrefCellList(){
 
         List<CellModel> returnList = new ArrayList<CellModel>();
-        Map<String, List<String>> userPrefMap = NewsCatFileUtil.userSelectionMap;
+        Map<String, List<String>> userPrefMap = NewsCatFileUtil.getInstance(context).getUserSelectionMap();
 
         GazettiEnums gazettiEnums = new GazettiEnums();
         Iterator<String> iterator = userPrefMap.keySet().iterator();
@@ -38,8 +53,8 @@ public class UserPrefUtil {
         return returnList;
     }
 
-    public static void replaceUserPref(CellModel oldCell, CellModel newCell){
-        Map<String, List<String>> userPrefMap = NewsCatFileUtil.userSelectionMap;
+    public void replaceUserPref(CellModel oldCell, CellModel newCell){
+        Map<String, List<String>> userPrefMap = NewsCatFileUtil.getInstance(context).getUserSelectionMap();
         String oldNewspaper = oldCell.getNewspaperTitle();
         String oldCategory = oldCell.getCategoryTitle();
         String newNewspaper = newCell.getNewspaperTitle();
@@ -63,8 +78,8 @@ public class UserPrefUtil {
         }
     }
 
-    public static void addUserPref(CellModel newCell){
-        Map<String, List<String>> userPrefMap = NewsCatFileUtil.userSelectionMap;
+    public void addUserPref(CellModel newCell){
+        Map<String, List<String>> userPrefMap = NewsCatFileUtil.getInstance(context).getUserSelectionMap();
         String newspaper = newCell.getNewspaperTitle();
         String category = newCell.getCategoryTitle();
 
@@ -83,8 +98,8 @@ public class UserPrefUtil {
         updateUserSelectionMap(userPrefMap, newspaper, categories);
     }
 
-    public static void deleteUserPref(CellModel deleteCell){
-        Map<String, List<String>> userPrefMap = NewsCatFileUtil.userSelectionMap;
+    public void deleteUserPref(CellModel deleteCell){
+        Map<String, List<String>> userPrefMap = NewsCatFileUtil.getInstance(context).getUserSelectionMap();
         String newspaper = deleteCell.getNewspaperTitle();
         String category = deleteCell.getCategoryTitle();
 
@@ -100,24 +115,15 @@ public class UserPrefUtil {
         }
     }
 
-    public static boolean isUserPrefChanged() {
-        return UserPrefChanged;
-    }
-
-    public static void setUserPrefChanged(boolean userPrefChanged) {
-        //Log.d(LOG_TAG, "Setting UserPrefChanged to "+userPrefChanged);
-        UserPrefChanged = userPrefChanged;
-    }
-
-    private static void updateUserSelectionMap(Map<String, List<String>> userPrefMap, String newspaper, List<String> categories) {
+    private void updateUserSelectionMap(Map<String, List<String>> userPrefMap, String newspaper, List<String> categories) {
         userPrefMap.put(newspaper, categories);
-        NewsCatFileUtil.userSelectionMap = userPrefMap;
+        NewsCatFileUtil.getInstance(context).setUserSelectionMap(userPrefMap);
 
         updateJsonMapFile();
     }
 
-    private static void updateJsonMapFile(){
-        NewsCatFileUtil.getInstance().convertUserFeedMapToJsonMap();
+    private void updateJsonMapFile(){
+        NewsCatFileUtil.getInstance(context).convertUserFeedMapToJsonMap();
     }
 
 }

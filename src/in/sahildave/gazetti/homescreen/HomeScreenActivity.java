@@ -28,6 +28,7 @@ import in.sahildave.gazetti.util.Constants;
 import in.sahildave.gazetti.util.GazettiEnums;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
+import in.sahildave.gazetti.util.NewsCatFileUtil;
 import in.sahildave.gazetti.util.UserPrefUtil;
 import in.sahildave.gazetti.welcomescreen.WelcomeScreenViewPagerActivity;
 
@@ -62,6 +63,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         }
 
         gazettiEnums = new GazettiEnums();
+        NewsCatFileUtil.getInstance(this);
         fragmentManager = getSupportFragmentManager();
         Fragment homeScreenFragment = fragmentManager.findFragmentByTag("homeScreen");
 
@@ -201,7 +203,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
                     cellList.set(editPosition, newCell);
                     adapter.notifyDataSetChanged();
 
-                    UserPrefUtil.replaceUserPref(oldCell, newCell);
+                    UserPrefUtil.getInstance(this).replaceUserPref(oldCell, newCell);
                 } else {
                     Toast.makeText(this, "Category Already Present.", Toast.LENGTH_LONG).show();
                 }
@@ -233,7 +235,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
                 CellModel newCell = new CellModel(newsCatModel);
                 cellList.add(cellList.size()-1, newCell);
                 adapter.notifyDataSetChanged();
-                UserPrefUtil.addUserPref(newCell);
+                UserPrefUtil.getInstance(this).addUserPref(newCell);
             }
         } catch (Exception e) {
             Crashlytics.log(npName + ", " + cat);
@@ -260,4 +262,9 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         return isCellPresent;
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

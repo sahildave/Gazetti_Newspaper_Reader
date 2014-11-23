@@ -47,7 +47,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
         this.mListDataHeader = listDataHeader;
         this.mListDataChild = listChildData;
 
-        mUserSelection = NewsCatFileUtil.getInstance().getFullJsonMap();
+        mUserSelection = NewsCatFileUtil.getInstance(mContext).getFullJsonMap();
         explist_np_images = mContext.getResources().obtainTypedArray(R.array.explist_newspaper_images);
         setupChildCheckedStates();
     }
@@ -68,7 +68,7 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
             for(int j=0; j<categoriesLength; j++){
                 String category = mListDataChild.get(newspaper).get(j);
                 Log.d(LOG_TAG, "category - "+category+" at "+j);
-                Boolean checkState = NewsCatFileUtil.getInstance().isNewsCatSelected(newspaper, category);
+                Boolean checkState = NewsCatFileUtil.getInstance(mContext).isNewsCatSelected(newspaper, category);
                 checkStates[j] = checkState;
             }
 

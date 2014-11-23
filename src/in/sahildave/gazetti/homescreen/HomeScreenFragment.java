@@ -28,6 +28,7 @@ import in.sahildave.gazetti.news_activities.WebsiteListActivity;
 import in.sahildave.gazetti.util.BitmapTransform;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
+import in.sahildave.gazetti.util.NewsCatFileUtil;
 import in.sahildave.gazetti.util.UserPrefUtil;
 
 import java.util.List;
@@ -75,8 +76,8 @@ public class HomeScreenFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (UserPrefUtil.isUserPrefChanged()) {
-            UserPrefUtil.setUserPrefChanged(false);
+        if (NewsCatFileUtil.getInstance(getActivity()).isUserPrefChanged()) {
+            NewsCatFileUtil.getInstance(getActivity()).setUserPrefChanged(false);
             cellList.clear();
             setupCellGrid();
         }
@@ -166,7 +167,7 @@ public class HomeScreenFragment extends Fragment {
     }
 
     private void setupCellGrid() {
-        cellList = UserPrefUtil.getUserPrefCellList();
+        cellList = UserPrefUtil.getInstance(getActivity()).getUserPrefCellList();
         putAddNewCellInList();
 
         adapter = new GridAdapter(getActivity(), cellList);
@@ -282,7 +283,7 @@ public class HomeScreenFragment extends Fragment {
                     Toast.makeText(getActivity(), "Cannot Delete", Toast.LENGTH_SHORT).show();
                     return true;
                 }
-                UserPrefUtil.deleteUserPref(cellList.get(position));
+                UserPrefUtil.getInstance(getActivity()).deleteUserPref(cellList.get(position));
                 cellList.remove(position);
                 adapter.notifyDataSetChanged();
                 return true;
