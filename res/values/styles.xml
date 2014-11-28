@@ -19,4 +19,10 @@
         <item name="android:button">@drawable/welcome_exp_checbox</item>
     </style>
 
+    <style name="NO_TITLE_GREEN" parent="android:Theme.Dialog">
+        <item name="android:windowBackground">@color/green_welcome</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>

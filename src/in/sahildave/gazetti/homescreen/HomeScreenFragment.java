@@ -52,6 +52,16 @@ public class HomeScreenFragment extends Fragment {
 
     }
 
+    public void refreshCellGrid() {
+        if (NewsCatFileUtil.getInstance(getActivity()).isUserPrefChanged()) {
+            NewsCatFileUtil.getInstance(getActivity()).setUserPrefChanged(false);
+            if(cellList!=null){
+                cellList.clear();
+            }
+            setupCellGrid();
+        }
+    }
+
     public interface Callbacks {
         public void showAddNewCellDialog(List<CellModel> cellList, GridAdapter adapter);
 
@@ -69,19 +79,12 @@ public class HomeScreenFragment extends Fragment {
         }
 
         this.activity = activity;
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (NewsCatFileUtil.getInstance(getActivity()).isUserPrefChanged()) {
-            NewsCatFileUtil.getInstance(getActivity()).setUserPrefChanged(false);
-            cellList.clear();
-            setupCellGrid();
-        }
-
+        refreshCellGrid();
     }
 
     @Override
@@ -167,6 +170,7 @@ public class HomeScreenFragment extends Fragment {
     }
 
     private void setupCellGrid() {
+        Log.d(LOG_TAG, "Setting up cell grid");
         cellList = UserPrefUtil.getInstance(getActivity()).getUserPrefCellList();
         putAddNewCellInList();
 
