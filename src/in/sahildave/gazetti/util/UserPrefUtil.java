@@ -6,7 +6,6 @@ import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,13 +17,11 @@ public class UserPrefUtil {
     private static UserPrefUtil _instance = null;
     private Context context;
 
-    public static UserPrefUtil getInstance(Context context){
-        synchronized (NewsCatFileUtil.class) {
-            if (_instance == null) {
-                _instance = new UserPrefUtil(context.getApplicationContext());
-            }
-            return _instance;
+    public static synchronized UserPrefUtil getInstance(Context context){
+        if (_instance == null) {
+            _instance = new UserPrefUtil(context.getApplicationContext());
         }
+        return _instance;
     }
 
     private UserPrefUtil(Context parentContext) {
@@ -37,12 +34,10 @@ public class UserPrefUtil {
         Map<String, List<String>> userPrefMap = NewsCatFileUtil.getInstance(context).getUserSelectionMap();
 
         GazettiEnums gazettiEnums = new GazettiEnums();
-        Iterator<String> iterator = userPrefMap.keySet().iterator();
-        while (iterator.hasNext()){
-            String newspaper = iterator.next();
+        for (String newspaper : userPrefMap.keySet()) {
             List<String> categoriesSelected = userPrefMap.get(newspaper);
             Newspapers npEnum = gazettiEnums.getNewspaperFromName(newspaper);
-            for(String category : categoriesSelected){
+            for (String category : categoriesSelected) {
                 Category catEnum = gazettiEnums.getCategoryFromName(category);
                 CellModel cellModel = new CellModel(npEnum, catEnum);
                 returnList.add(cellModel);
@@ -126,4 +121,8 @@ public class UserPrefUtil {
         NewsCatFileUtil.getInstance(context).convertUserFeedMapToJsonMap();
     }
 
+    public void destroyUtil() {
+        _instance = null;
+        context = null;
+    }
 }

@@ -14,9 +14,11 @@ public class StarterApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("StarterApplication", "Starting Application - "+getApplicationContext().toString());
+        Log.d(StarterApplication.class.getName(), "Starting Application - " + System.currentTimeMillis());
+
         Parse.initialize(this, Constants.PARSE_APP_ID, Constants.PARSE_CLIENT_KEY);
         Parse.enableLocalDatastore(this);
+
         Crashlytics.start(this);
         Crashlytics.getInstance().setDebugMode(true);
 

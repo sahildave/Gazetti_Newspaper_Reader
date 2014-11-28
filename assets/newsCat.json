@@ -6,7 +6,7 @@
 		"Science": false,
 		"Entertainment": false,
 		"Business": false,
-		"Opinion\\/Blog\\/Editorials": false
+		"Blogs and Editorials": false
     },
 
 	"The Times of India": {
@@ -16,7 +16,7 @@
 		"Science": false,
 		"Entertainment": false,
 		"Business": false,
-        "Opinion\\/Blog\\/Editorials": false
+        "Blogs and Editorials": false
     },
 
 	"First Post": {
@@ -26,7 +26,7 @@
 		"Science": false,
 		"Entertainment": false,
 		"Business": false,
-        "Opinion\\/Blog\\/Editorials": false
+        "Blogs and Editorials": false
 	},
 
 	"The Indian Express": {
@@ -36,6 +36,6 @@
 		"Science": false,
 		"Entertainment": false,
 		"Business": false,
-        "Opinion\\/Blog\\/Editorials": false
+        "Blogs and Editorials": false
 	}
 }

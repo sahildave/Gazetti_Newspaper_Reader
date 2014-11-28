@@ -31,22 +31,27 @@ public class NewsCatFileUtil {
     private NewsCatFileUtil(Context parentContext) {
         context = parentContext;
 
-        sharedPreferences = context.getSharedPreferences(Constants.GAZETTI, context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(Constants.GAZETTI, Context.MODE_PRIVATE);
         sharedPrefsAssetVersion = sharedPreferences.getInt(Constants.ASSET_VERSION, 0);
         compiledAssetVersion = context.getResources().getInteger(R.integer.assetVersion);
 
         initUserSelectionMap();
-        Log.d(LOG_TAG, "compiled - " + compiledAssetVersion + ", shared - " + sharedPrefsAssetVersion);
+        Log.d(LOG_TAG, "Asset Versions: compiled - " + compiledAssetVersion + ", shared - " + sharedPrefsAssetVersion);
 
     }
 
-    public static NewsCatFileUtil getInstance(Context context){
-        synchronized (NewsCatFileUtil.class) {
-            if (_instance == null) {
-                _instance = new NewsCatFileUtil(context.getApplicationContext());
-            }
-            return _instance;
+    public static synchronized NewsCatFileUtil getInstance(Context context){
+        if (_instance == null) {
+            _instance = new NewsCatFileUtil(context.getApplicationContext());
         }
+        return _instance;
+    }
+
+    public void destroyUtil(){
+        _instance = null;
+        fullJsonMap = null;
+        userSelectionMap = null;
+        context = null;
     }
 
     private void initUserSelectionMap() {
@@ -284,7 +289,9 @@ public class NewsCatFileUtil {
     }
 
     public boolean isAssetFileNew(){
-        return (compiledAssetVersion > sharedPrefsAssetVersion);
+        boolean returnData = compiledAssetVersion > sharedPrefsAssetVersion;
+        Log.d(LOG_TAG, "Is AssetFile New - "+returnData);
+        return returnData;
     }
 
 

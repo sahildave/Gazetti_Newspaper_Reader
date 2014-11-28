@@ -159,7 +159,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
         th.add("Science");
         th.add("Entertainment");
         th.add("Business");
-        th.add("Opinion/Blog/Editorials");
+        th.add("Blogs and Editorials");
 
         List<String> toi = new ArrayList<String>();
         toi.add("National");
@@ -168,7 +168,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
         toi.add("Science");
         toi.add("Entertainment");
         toi.add("Business");
-        toi.add("Opinion/Blog/Editorials");
+        toi.add("Blogs and Editorials");
 
         List<String> fp = new ArrayList<String>();
         fp.add("National");
@@ -177,7 +177,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
         fp.add("Science");
         fp.add("Entertainment");
         fp.add("Business");
-        fp.add("Opinion/Blog/Editorials");
+        fp.add("Blogs and Editorials");
 
         List<String> tie = new ArrayList<String>();
         tie.add("National");
@@ -186,7 +186,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
         tie.add("Science");
         tie.add("Entertainment");
         tie.add("Business");
-        tie.add("Opinion/Blog/Editorials");
+        tie.add("Blogs and Editorials");
 
         // Header, Child data
         listDataChild.put(listDataHeader.get(0), th);
