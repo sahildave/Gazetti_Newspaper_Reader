@@ -114,7 +114,7 @@ public class GazettiEnums {
     }
 
     public Category getCategoryFromName(String categoryName){
-        if (categoryName.equalsIgnoreCase("Blog and Editorials")){
+        if (categoryName.equalsIgnoreCase("Blogs and Editorials")){
             return Category.OPINION_BLOG_EDITORIAL;
         } else if (categoryName.equalsIgnoreCase("Add New")){
             return Category.ADD_NEW;

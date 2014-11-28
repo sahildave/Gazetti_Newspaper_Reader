@@ -16,8 +16,10 @@ import android.widget.*;
 import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import in.sahildave.gazetti.R;
+import in.sahildave.gazetti.util.BitmapTransform;
 import in.sahildave.gazetti.widgets.TextViewEx;
 
 /**
@@ -119,8 +121,16 @@ public class ArticleLoadingCallback {
             mTitleTextView.setText(titleText);
 
             mMainImageView = (ImageView) headerStub.findViewById(R.id.article_header_image);
-            Picasso picassoInstance = Picasso.with(activity);
-            picassoInstance.load(mImageURL).into(mMainImageView, new Callback() {
+
+            //height and width of screen
+            final int MAX_HEIGHT = activity.getResources().getDisplayMetrics().heightPixels;
+            final int MAX_WIDTH = activity.getResources().getDisplayMetrics().widthPixels;
+
+            RequestCreator requestCreator = Picasso.with(activity)
+                    .load(mImageURL)
+                    .transform(new BitmapTransform(MAX_WIDTH, MAX_HEIGHT));
+
+            requestCreator.into(mMainImageView, new Callback() {
 
                 @Override
                 public void onSuccess() {

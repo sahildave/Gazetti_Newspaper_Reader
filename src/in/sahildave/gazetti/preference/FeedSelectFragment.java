@@ -117,7 +117,7 @@ public class FeedSelectFragment extends Fragment {
         th.add("Science");
         th.add("Entertainment");
         th.add("Business");
-        th.add("Blog and Editorials");
+        th.add("Blogs and Editorials");
 
         List<String> toi = new ArrayList<String>();
         toi.add("National");
@@ -126,7 +126,7 @@ public class FeedSelectFragment extends Fragment {
         toi.add("Science");
         toi.add("Entertainment");
         toi.add("Business");
-        toi.add("Blog and Editorials");
+        toi.add("Blogs and Editorials");
 
         List<String> fp = new ArrayList<String>();
         fp.add("National");
@@ -135,7 +135,7 @@ public class FeedSelectFragment extends Fragment {
         fp.add("Science");
         fp.add("Entertainment");
         fp.add("Business");
-        fp.add("Blog and Editorials");
+        fp.add("Blogs and Editorials");
 
         List<String> tie = new ArrayList<String>();
         tie.add("National");
@@ -144,7 +144,7 @@ public class FeedSelectFragment extends Fragment {
         tie.add("Science");
         tie.add("Entertainment");
         tie.add("Business");
-        tie.add("Blog and Editorials");
+        tie.add("Blogs and Editorials");
 
         // Header, Child data
         listDataChild.put(listDataHeader.get(0), th);

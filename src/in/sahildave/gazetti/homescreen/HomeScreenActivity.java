@@ -262,9 +262,10 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         return isCellPresent;
     }
 
-
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
+        NewsCatFileUtil.getInstance(this).destroyUtil();
+        UserPrefUtil.getInstance(this).destroyUtil();
         super.onDestroy();
     }
 }
