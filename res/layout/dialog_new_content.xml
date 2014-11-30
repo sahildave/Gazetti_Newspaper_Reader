@@ -45,7 +45,7 @@
             android:layout_weight="1"
             android:divider="@color/exp_list_group_divider"
             android:childDivider="@color/exp_list_child_divider"
-            style="@style/ExpandableListLight"
+            style="@style/ExpandableListDark"
             android:cacheColorHint="@android:color/transparent"
             android:fadingEdgeLength="1dp"
             android:scrollbars="none"/>

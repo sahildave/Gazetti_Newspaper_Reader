@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.*;
@@ -170,7 +169,7 @@ public class HomeScreenFragment extends Fragment {
     }
 
     private void setupCellGrid() {
-        Log.d(LOG_TAG, "Setting up cell grid");
+//        Log.d(LOG_TAG, "Setting up cell grid");
         cellList = UserPrefUtil.getInstance(getActivity()).getUserPrefCellList();
         putAddNewCellInList();
 
@@ -243,7 +242,7 @@ public class HomeScreenFragment extends Fragment {
         if (resID == 0) {
             resID = getResources().getIdentifier("land_0", "drawable", getActivity().getPackageName());
         }
-        Log.d(LOG_TAG, "returning "+resID+" for "+n);
+//        Log.d(LOG_TAG, "returning "+resID+" for "+n);
         return resID;
     }
 
@@ -256,7 +255,7 @@ public class HomeScreenFragment extends Fragment {
         if (resID == 0) {
             resID = getResources().getIdentifier("port_0", "drawable", getActivity().getPackageName());
         }
-        Log.d(LOG_TAG, "returning "+resID+" for "+n);
+//        Log.d(LOG_TAG, "returning "+resID+" for "+n);
         return resID;
     }
 

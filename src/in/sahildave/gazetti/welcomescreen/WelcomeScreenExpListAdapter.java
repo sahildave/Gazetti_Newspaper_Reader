@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,16 +57,16 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 
         for(int i=0; i<groupNumbers; i++){
             String newspaper = mListDataHeader.get(i);
-            Log.d(LOG_TAG, "newspaper - " + newspaper);
+//            Log.d(LOG_TAG, "newspaper - " + newspaper);
             Map<String, Boolean> allCategories = (Map<String, Boolean>) mUserSelection.get(newspaper);
-            Log.d(LOG_TAG, "allCategories - "+allCategories);
+//            Log.d(LOG_TAG, "allCategories - "+allCategories);
             int categoriesLength = allCategories.size();
-            Log.d(LOG_TAG, "categoriesLength - "+categoriesLength);
+//            Log.d(LOG_TAG, "categoriesLength - "+categoriesLength);
             boolean[] checkStates = new boolean[categoriesLength];
 
             for(int j=0; j<categoriesLength; j++){
                 String category = mListDataChild.get(newspaper).get(j);
-                Log.d(LOG_TAG, "category - "+category+" at "+j);
+//                Log.d(LOG_TAG, "category - "+category+" at "+j);
                 Boolean checkState = NewsCatFileUtil.getInstance(mContext).isNewsCatSelected(newspaper, category);
                 checkStates[j] = checkState;
             }

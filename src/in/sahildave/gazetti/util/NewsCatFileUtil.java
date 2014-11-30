@@ -46,13 +46,13 @@ public class NewsCatFileUtil {
     private void initUserSelectionMap() {
         try {
             String jsonString = readFromFile(NEWS_CAT_FILE);
-            Log.d(LOG_TAG, "jsonString - "+jsonString);
+            Crashlytics.log(Log.INFO, LOG_TAG, "jsonString - "+jsonString);
 
             fullJsonMap = JsonHelper.toMap(new JSONObject(jsonString));
-            Log.d(LOG_TAG, "fullJsonMap - " + fullJsonMap.toString());
+            Crashlytics.log(Log.INFO, LOG_TAG, "fullJsonMap - " + fullJsonMap.toString());
 
             userSelectionMap = getUserFeedMapFromJsonMap(fullJsonMap);
-            Log.d(LOG_TAG, "UserSelectionMap - " + userSelectionMap.toString());
+            Crashlytics.log(Log.INFO, LOG_TAG, "UserSelectionMap - " + userSelectionMap.toString());
         } catch (JSONException e) {
             Crashlytics.logException(e);
         }
@@ -107,10 +107,10 @@ public class NewsCatFileUtil {
         try {
             fullJsonMap = newFullJsonMap;
             Object jsonString = JsonHelper.toJSON(newFullJsonMap);
-            Log.d(LOG_TAG, "Updating fullJson - "+jsonString.toString());
+            Crashlytics.log(Log.INFO, LOG_TAG, "Updating fullJson - "+jsonString.toString());
 
             userSelectionMap = getUserFeedMapFromJsonMap(fullJsonMap);
-            Log.d(LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
+            Crashlytics.log(Log.INFO, LOG_TAG, "Updated UserSelectionMap - " + userSelectionMap.toString());
 
             writeToInternalStorage(jsonString.toString(), NEWS_CAT_FILE);
         } catch (JSONException e) {
@@ -177,7 +177,7 @@ public class NewsCatFileUtil {
     }
 
     public void setUserPrefChanged(boolean userPrefChanged) {
-        Log.d(LOG_TAG, "Setting UserPrefChanged to "+userPrefChanged);
+//        Log.d(LOG_TAG, "Setting UserPrefChanged to "+userPrefChanged);
         UserPrefChanged = userPrefChanged;
     }
 
@@ -206,14 +206,14 @@ public class NewsCatFileUtil {
     public void updateNewsCatFileWithNewAssets() {
         try {
             String jsonString = readFromFile(NEWS_CAT_FILE, true);
-            Log.d(LOG_TAG, "newJsonString - "+jsonString);
+            Crashlytics.log(Log.INFO, LOG_TAG, "newJsonString - "+jsonString);
 
             Map<String, Object> newFullJsonMap = JsonHelper.toMap(new JSONObject(jsonString));
-            Log.d(LOG_TAG, "newFullJsonMap - " + newFullJsonMap.toString());
+            Crashlytics.log(Log.INFO, LOG_TAG, "newFullJsonMap - " + newFullJsonMap.toString());
 
             convertUserFeedMapToJsonMap(newFullJsonMap);
             Map<String, List<String>>  newUserSelectionMap = getUserFeedMapFromJsonMap(newFullJsonMap);
-            Log.d(LOG_TAG, "newUserSelectionMap - "+newUserSelectionMap);
+            Crashlytics.log(Log.INFO, LOG_TAG, "newUserSelectionMap - "+newUserSelectionMap);
 
             setUserSelectionMap(newUserSelectionMap);
 
@@ -223,9 +223,9 @@ public class NewsCatFileUtil {
     }
 
     public void updateSelectionWithNewAssets(Map<String, Object> map){
-        Log.d(LOG_TAG, "Received map - "+map);
+        Crashlytics.log(Log.INFO, LOG_TAG, "Received map - "+map);
         Map<String, List<String>> selected = getUserFeedMapFromJsonMap(map);
-        Log.d(LOG_TAG, "New selected - "+selected);
+        Crashlytics.log(Log.INFO, LOG_TAG, "New selected - "+selected);
 
         for (String newspaper : selected.keySet()) {
             List<String> categories;
@@ -237,9 +237,9 @@ public class NewsCatFileUtil {
             }
             userSelectionMap.put(newspaper, categories);
 
-            Log.d(LOG_TAG, "New selection for "+newspaper+ " is "+categories);
+            Crashlytics.log(Log.INFO, LOG_TAG, "New selection for "+newspaper+ " is "+categories);
         }
-        Log.d(LOG_TAG, "newUserSelectionMap - "+userSelectionMap);
+        Crashlytics.log(Log.INFO, LOG_TAG, "newUserSelectionMap - "+userSelectionMap);
 
         setUserPrefChanged(true);
         convertUserFeedMapToJsonMap();
@@ -262,12 +262,12 @@ public class NewsCatFileUtil {
             File file = new File(context.getCacheDir(), fileName);
             if(readFromAsset) {
                 //Reading from Assets
-                Log.d(LOG_TAG, "Reading from Assets");
+                Crashlytics.log(Log.INFO, LOG_TAG, "Reading from Assets");
                 is = context.getAssets().open(fileName);
                 isr = new InputStreamReader(is);
             } else {
                 //Reading from Internal
-                Log.d(LOG_TAG, "Reading from Internal");
+                Crashlytics.log(Log.INFO, LOG_TAG, "Reading from Internal");
                 fis = new FileInputStream(file);
                 isr = new InputStreamReader(fis);
             }
@@ -322,7 +322,7 @@ public class NewsCatFileUtil {
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                 }
-                Log.d(LOG_TAG, "File written to internal storage!");
+                Crashlytics.log(Log.INFO, LOG_TAG, "File written to internal storage!");
                 return null;
             }
         }.execute();

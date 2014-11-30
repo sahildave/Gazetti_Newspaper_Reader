@@ -13,7 +13,8 @@
         <item name="background">@drawable/actionbar_background</item>
     </style>
 
-    <style name="ExpandableListLight" parent="android:Widget.Holo.ExpandableListView"/>
+    <style name="ExpandableListDark" parent="android:Widget.Holo.ExpandableListView"/>
+    <style name="ExpandableListLight" parent="android:Widget.Holo.Light.ExpandableListView"/>
 
     <style name="CheckBoxAppTheme" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/welcome_exp_checbox</item>

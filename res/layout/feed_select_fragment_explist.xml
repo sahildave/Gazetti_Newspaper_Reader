@@ -6,6 +6,7 @@
 
     <ExpandableListView
             android:id="@+id/feed_select_expandable_list"
+            style="@style/ExpandableListLight"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>

@@ -15,7 +15,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Default"/>
+                android:textColor="@android:color/black"/>
 
         <CheckBox
                 android:id="@+id/feed_select_explist_childCheckBox"
@@ -23,8 +23,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="4px"
-                android:layout_marginRight="10px"/>
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="10dp"/>
     </RelativeLayout>
 
     <View

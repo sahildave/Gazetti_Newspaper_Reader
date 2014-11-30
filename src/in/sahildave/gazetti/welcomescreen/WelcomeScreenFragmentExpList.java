@@ -3,7 +3,6 @@ package in.sahildave.gazetti.welcomescreen;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -95,7 +94,7 @@ public class WelcomeScreenFragmentExpList extends Fragment {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Log.d(LOG_TAG, "Top Layer Hidden ? " + topLayerHidden);
+//                Log.d(LOG_TAG, "Top Layer Hidden ? " + topLayerHidden);
                 if (topLayer.getVisibility()==View.VISIBLE) {
                     LayoutParams originalParams = (LayoutParams) bottomLayer.getLayoutParams();
                     originalBottomMargin = originalParams.bottomMargin;

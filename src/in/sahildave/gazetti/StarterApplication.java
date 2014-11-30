@@ -1,6 +1,7 @@
 package in.sahildave.gazetti;
 
 import android.app.Application;
+import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.parse.ConfigCallback;
 import com.parse.Parse;
@@ -13,7 +14,7 @@ public class StarterApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        Log.d(StarterApplication.class.getName(), "Starting Application - " + System.currentTimeMillis());
+       Crashlytics.log(Log.INFO, StarterApplication.class.getName(), "Starting Application - " + System.currentTimeMillis());
 
         Parse.initialize(this, Constants.PARSE_APP_ID, Constants.PARSE_CLIENT_KEY);
         Parse.enableLocalDatastore(this);

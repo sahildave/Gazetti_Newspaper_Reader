@@ -2,9 +2,9 @@ package in.sahildave.gazetti.preference;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,16 +49,16 @@ public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
 
         for(int i=0; i<groupNumbers; i++){
             String newspaper = mListDataHeader.get(i);
-            Log.d(LOG_TAG, "newspaper - " + newspaper);
+//            Log.d(LOG_TAG, "newspaper - " + newspaper);
             Map<String, Boolean> allCategories = (Map<String, Boolean>) mUserSelection.get(newspaper);
-            Log.d(LOG_TAG, "allCategories - "+allCategories);
+//            Log.d(LOG_TAG, "allCategories - "+allCategories);
             int categoriesLength = allCategories.size();
-            Log.d(LOG_TAG, "categoriesLength - "+categoriesLength);
+//            Log.d(LOG_TAG, "categoriesLength - "+categoriesLength);
             boolean[] checkStates = new boolean[categoriesLength];
 
             for(int j=0; j<categoriesLength; j++){
                 String category = mListDataChild.get(newspaper).get(j);
-                Log.d(LOG_TAG, "category - "+category+" at "+j);
+//                Log.d(LOG_TAG, "category - "+category+" at "+j);
                 Boolean checkState = NewsCatFileUtil.getInstance(mContext).isNewsCatSelected(newspaper, category);
                 checkStates[j] = checkState;
             }
@@ -66,7 +66,7 @@ public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
             mChildCheckStates.put(i, checkStates);
         }
 
-        Log.d(LOG_TAG, "Expandable List Adapter -- " + mChildCheckStates.toString());
+//        Log.d(LOG_TAG, "Expandable List Adapter -- " + mChildCheckStates.toString());
     }
 
     @Override
@@ -78,19 +78,20 @@ public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
 
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.welcome_feed_select_explist_group, parent, false);
+            convertView = inflater.inflate(R.layout.feed_select_explist_group, parent, false);
 
             // Initialize the GroupViewHolder defined at the bottom of this
             // document
             groupViewHolder = new GroupViewHolder();
             groupViewHolder.mGroupText = (TextView) convertView
-                    .findViewById(R.id.welcome_feed_select_explist_group_textview);
+                    .findViewById(R.id.feed_select_explist_group_textview);
             convertView.setTag(groupViewHolder);
         } else {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
 
         groupViewHolder.mGroupText.setText(groupText);
+        groupViewHolder.mGroupText.setTextColor(Color.BLACK);
         groupViewHolder.mGroupText.setTypeface(null, Typeface.BOLD);
 
         int imageResId = explist_np_images.getResourceId(groupPosition, -1);
@@ -112,24 +113,24 @@ public class PreferenceExpListAdapter extends BaseExpandableListAdapter {
         ChildViewHolder childViewHolder;
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.welcome_feed_select_explist_rowdetail,  parent, false);
+            convertView = inflater.inflate(R.layout.feed_select_explist_rowdetail,  parent, false);
 
             childViewHolder = new ChildViewHolder();
 
             childViewHolder.mChildText = (TextView) convertView
-                    .findViewById(R.id.welcome_feed_select_explist_childTextView);
+                    .findViewById(R.id.feed_select_explist_childTextView);
 
             childViewHolder.mCheckBox = (CheckBox) convertView
-                    .findViewById(R.id.welcome_feed_select_explist_childCheckBox);
+                    .findViewById(R.id.feed_select_explist_childCheckBox);
 
-            convertView.setTag(R.layout.welcome_feed_select_explist_rowdetail, childViewHolder);
+            convertView.setTag(R.layout.feed_select_explist_rowdetail, childViewHolder);
         } else {
 
-            childViewHolder = (ChildViewHolder) convertView.getTag(R.layout.welcome_feed_select_explist_rowdetail);
+            childViewHolder = (ChildViewHolder) convertView.getTag(R.layout.feed_select_explist_rowdetail);
         }
 
         childViewHolder.mChildText.setText(childText);
-
+//        childViewHolder.mChildText.setTextColor(Color.BLACK);
         childViewHolder.mCheckBox.setOnCheckedChangeListener(null);
 
         String group = getGroup(mGroupPosition);

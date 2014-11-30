@@ -8,6 +8,7 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
-    <style name="ExpandableListLight" parent="android:Widget.Holo.ExpandableListView"/>
+    <style name="ExpandableListDark" parent="android:Widget.Holo.ExpandableListView"/>
+    <style name="ExpandableListLight" parent="android:Widget.Holo.Light.ExpandableListView"/>
 
 </resources>
