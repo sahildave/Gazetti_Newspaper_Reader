@@ -1,12 +1,13 @@
 package in.sahildave.gazetti.homescreen;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
@@ -23,19 +24,24 @@ import in.sahildave.gazetti.bookmarks.BookmarkListActivity;
 import in.sahildave.gazetti.homescreen.adapter.*;
 import in.sahildave.gazetti.homescreen.adapter.AddCellDialogFragment.AddCellDialogListener;
 import in.sahildave.gazetti.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
+import in.sahildave.gazetti.homescreen.newcontent.DialogNewContent;
+import in.sahildave.gazetti.homescreen.newcontent.DialogNewContent.NewContentCallback;
 import in.sahildave.gazetti.preference.SettingsActivity;
 import in.sahildave.gazetti.util.Constants;
 import in.sahildave.gazetti.util.GazettiEnums;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
+import in.sahildave.gazetti.util.NewsCatFileUtil;
 import in.sahildave.gazetti.util.UserPrefUtil;
 import in.sahildave.gazetti.welcomescreen.WelcomeScreenViewPagerActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeScreenActivity extends ActionBarActivity implements HomeScreenFragment.Callbacks,
-        AddCellDialogListener, EditCellDialogListener {
+        AddCellDialogListener, EditCellDialogListener, NewContentCallback {
 
     private static final String LOG_TAG = HomeScreenActivity.class.getName();
 
@@ -44,6 +50,9 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     private GridAdapter adapter;
     private PopupWindow popupWindow;
     private GazettiEnums gazettiEnums;
+    private int compiledAssetVersion;
+    private SharedPreferences sharedPreferences;
+    private HomeScreenFragment homeScreenFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +70,13 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             return;
         }
 
+        sharedPreferences = getSharedPreferences(Constants.GAZETTI, Context.MODE_PRIVATE);
+        compiledAssetVersion = getResources().getInteger(R.integer.assetVersion);
+
         gazettiEnums = new GazettiEnums();
+        NewsCatFileUtil.getInstance(this);
         fragmentManager = getSupportFragmentManager();
-        Fragment homeScreenFragment = fragmentManager.findFragmentByTag("homeScreen");
+        homeScreenFragment = (HomeScreenFragment) fragmentManager.findFragmentByTag("homeScreen");
 
         if (homeScreenFragment == null) {
             homeScreenFragment = new HomeScreenFragment();
@@ -75,7 +88,24 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             //Show welcomeActivity if first time user
             Intent welcomeIntent = new Intent(this, WelcomeScreenViewPagerActivity.class);
             startActivity(welcomeIntent);
+        } else if(isAssetFileNew()) {
+            try {
+                InputStream is = getAssets().open("newData.json");
+                if(is != null){
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    DialogNewContent dialogFragment = new DialogNewContent();
+                    dialogFragment.show(ft, "dialog");
+                    NewsCatFileUtil.getInstance(this).updateNewsCatFileWithNewAssets();
+
+                    is.close();
+                }
+            } catch (IOException e) {
+                Crashlytics.logException(e);
+                e.printStackTrace();
+            }
         }
+
+        sharedPreferences.edit().putInt(Constants.ASSET_VERSION, compiledAssetVersion).commit();
     }
 
     private void setupCustomActionBar() {
@@ -165,6 +195,11 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         return preferences.getBoolean(Constants.IS_FIRST_RUN, true);
     }
 
+    public boolean isAssetFileNew(){
+        int sharedPrefsAssetVersion = sharedPreferences.getInt(Constants.ASSET_VERSION, 0);
+        return compiledAssetVersion > sharedPrefsAssetVersion;
+    }
+
     @Override
     public void showAddNewCellDialog(List<CellModel> cellList, GridAdapter adapter) {
         this.cellList = cellList;
@@ -201,7 +236,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
                     cellList.set(editPosition, newCell);
                     adapter.notifyDataSetChanged();
 
-                    UserPrefUtil.replaceUserPref(oldCell, newCell);
+                    UserPrefUtil.getInstance(this).replaceUserPref(oldCell, newCell);
                 } else {
                     Toast.makeText(this, "Category Already Present.", Toast.LENGTH_LONG).show();
                 }
@@ -233,7 +268,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
                 CellModel newCell = new CellModel(newsCatModel);
                 cellList.add(cellList.size()-1, newCell);
                 adapter.notifyDataSetChanged();
-                UserPrefUtil.addUserPref(newCell);
+                UserPrefUtil.getInstance(this).addUserPref(newCell);
             }
         } catch (Exception e) {
             Crashlytics.log(npName + ", " + cat);
@@ -260,4 +295,17 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         return isCellPresent;
     }
 
+    @Override
+    public void onDestroy() {
+        NewsCatFileUtil.getInstance(this).destroyUtil();
+        UserPrefUtil.getInstance(this).destroyUtil();
+        super.onDestroy();
+    }
+
+    @Override
+    public void newContentDoneButton() {
+        if(homeScreenFragment!=null){
+            homeScreenFragment.refreshCellGrid();
+        }
+    }
 }

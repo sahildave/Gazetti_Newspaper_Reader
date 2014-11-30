@@ -1,10 +1,9 @@
-package in.sahildave.gazetti.welcomescreen;
+package in.sahildave.gazetti.homescreen.newcontent;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,9 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
+public class DialogNewContentExpListAdaper extends BaseExpandableListAdapter {
 
-    private static final String LOG_TAG = WelcomeScreenExpListAdapter.class.getName();
+    private static final String LOG_TAG = DialogNewContentExpListAdaper.class.getName();
 
     private Context mContext;
     private List<String> mListDataHeader;
@@ -32,17 +31,9 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 
     public static ExpandableListView expandableList;
     TypedArray explist_np_images;
-    CheckBoxInterface checkBoxInterface;
 
-    public interface CheckBoxInterface {
-        void checkBoxClicked(boolean isChecked);
-    }
-
-
-    public WelcomeScreenExpListAdapter(Context context, List<String> listDataHeader,
-                                       HashMap<String, List<String>> listChildData,
-                                       CheckBoxInterface checkBoxInterface) {
-        this.checkBoxInterface = checkBoxInterface;
+    public DialogNewContentExpListAdaper(Context context, List<String> listDataHeader,
+                                         HashMap<String, List<String>> listChildData) {
         this.mContext = context;
         this.mListDataHeader = listDataHeader;
         this.mListDataChild = listChildData;
@@ -58,23 +49,15 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
 
         for(int i=0; i<groupNumbers; i++){
             String newspaper = mListDataHeader.get(i);
-            Log.d(LOG_TAG, "newspaper - " + newspaper);
-            Map<String, Boolean> allCategories = (Map<String, Boolean>) mUserSelection.get(newspaper);
-            Log.d(LOG_TAG, "allCategories - "+allCategories);
+//            Log.d(LOG_TAG, "newspaper - " + newspaper);
+            List<String> allCategories = mListDataChild.get(newspaper);
+//            Log.d(LOG_TAG, "allCategories - "+allCategories);
             int categoriesLength = allCategories.size();
-            Log.d(LOG_TAG, "categoriesLength - "+categoriesLength);
+//            Log.d(LOG_TAG, "categoriesLength - "+categoriesLength);
             boolean[] checkStates = new boolean[categoriesLength];
-
-            for(int j=0; j<categoriesLength; j++){
-                String category = mListDataChild.get(newspaper).get(j);
-                Log.d(LOG_TAG, "category - "+category+" at "+j);
-                Boolean checkState = NewsCatFileUtil.getInstance(mContext).isNewsCatSelected(newspaper, category);
-                checkStates[j] = checkState;
-            }
 
             mChildCheckStates.put(i, checkStates);
         }
-
 //        Log.d(LOG_TAG, "Expandable List Adapter -- "+mChildCheckStates.toString());
     }
 
@@ -165,7 +148,6 @@ public class WelcomeScreenExpListAdapter extends BaseExpandableListAdapter {
                 boolean getChecked[] = mChildCheckStates.get(mGroupPosition);
                 getChecked[mChildPosition] = isChecked;
                 mChildCheckStates.put(mGroupPosition, getChecked);
-                checkBoxInterface.checkBoxClicked(isAnythingSelected());
             }
         });
 

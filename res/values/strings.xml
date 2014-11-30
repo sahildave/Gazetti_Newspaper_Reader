@@ -23,6 +23,7 @@
         <item>Science</item>
         <item>Entertainment</item>
         <item>Business</item>
+        <item>Blogs and Editorials</item>
     </string-array>
     <string-array name="hindu_cat">
         <item>National</item>
@@ -31,6 +32,7 @@
         <item>Science</item>
         <item>Entertainment</item>
         <item>Business</item>
+        <item>Blogs and Editorials</item>
     </string-array>
     <string-array name="fp_cat">
         <item>National</item>
@@ -39,6 +41,7 @@
         <item>Science</item>
         <item>Entertainment</item>
         <item>Business</item>
+        <item>Blogs and Editorials</item>
     </string-array>
     <string-array name="tie_cat">
         <item>National</item>
@@ -47,6 +50,7 @@
         <item>Science</item>
         <item>Entertainment</item>
         <item>Business</item>
+        <item>Blogs and Editorials</item>
     </string-array>
 
     <!-- Nav Drawer Menu Items -->
@@ -57,6 +61,7 @@
         <item>Science</item>
         <item>Entertainment</item>
         <item>Business</item>
+        <item>Blogs and Editorials</item>
     </string-array>
 
     <array name="action_bar_colors">
@@ -66,6 +71,7 @@
         <item>@color/purple_science</item>
         <item>@color/red_entertainment</item>
         <item>@color/grey_blue_business</item>
+        <item>@color/brown_opinions</item>
     </array>
     <array name="explist_newspaper_images">
         <item>@drawable/ic_hindu</item>
@@ -73,6 +79,8 @@
         <item>@drawable/ic_fp</item>
         <item>@drawable/ic_tie</item>
     </array>
+
+    <string name="title_activity_settings">Settings</string>
 
     <string name="title_activity_welcome_screen_view_pager">Welcome</string>
     <string name="title_activity_licenses">Licenses</string>

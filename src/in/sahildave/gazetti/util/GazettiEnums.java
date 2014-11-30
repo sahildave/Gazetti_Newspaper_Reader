@@ -71,7 +71,7 @@ public class GazettiEnums {
         SPORTS ("Sports", "3"),
         SCIENCE ("Science", "4"),
         BUSINESS ("Business", "6"),
-        OPINIONS_BLOGS ("Opinion/Blogs", "7"),
+        OPINION_BLOG_EDITORIAL("Blogs and Editorials", "7"),
         ENTERTAINMENT ("Entertainment", "5"),
         ADD_NEW("Add New", "-1");
 
@@ -106,7 +106,7 @@ public class GazettiEnums {
         } else if (catId.equals("6")) {
             return Category.BUSINESS;
         } else if (catId.equals("7")) {
-            return Category.OPINIONS_BLOGS;
+            return Category.OPINION_BLOG_EDITORIAL;
         } else if (catId.equals("-1")) {
             return Category.ADD_NEW;
         }
@@ -114,8 +114,8 @@ public class GazettiEnums {
     }
 
     public Category getCategoryFromName(String categoryName){
-        if (categoryName.equalsIgnoreCase("Opinion/Blogs")){
-            return Category.OPINIONS_BLOGS;
+        if (categoryName.equalsIgnoreCase("Blogs and Editorials")){
+            return Category.OPINION_BLOG_EDITORIAL;
         } else if (categoryName.equalsIgnoreCase("Add New")){
             return Category.ADD_NEW;
         }else {

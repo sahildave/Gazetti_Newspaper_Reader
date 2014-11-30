@@ -20,12 +20,15 @@ import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.nineoldandroids.view.ViewHelper;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.homescreen.adapter.CellModel;
 import in.sahildave.gazetti.homescreen.adapter.GridAdapter;
 import in.sahildave.gazetti.news_activities.WebsiteListActivity;
+import in.sahildave.gazetti.util.BitmapTransform;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
+import in.sahildave.gazetti.util.NewsCatFileUtil;
 import in.sahildave.gazetti.util.UserPrefUtil;
 
 import java.util.List;
@@ -49,6 +52,16 @@ public class HomeScreenFragment extends Fragment {
 
     }
 
+    public void refreshCellGrid() {
+        if (NewsCatFileUtil.getInstance(getActivity()).isUserPrefChanged()) {
+            NewsCatFileUtil.getInstance(getActivity()).setUserPrefChanged(false);
+            if(cellList!=null){
+                cellList.clear();
+            }
+            setupCellGrid();
+        }
+    }
+
     public interface Callbacks {
         public void showAddNewCellDialog(List<CellModel> cellList, GridAdapter adapter);
 
@@ -66,19 +79,12 @@ public class HomeScreenFragment extends Fragment {
         }
 
         this.activity = activity;
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (UserPrefUtil.isUserPrefChanged()) {
-            UserPrefUtil.setUserPrefChanged(false);
-            cellList.clear();
-            setupCellGrid();
-        }
-
+        refreshCellGrid();
     }
 
     @Override
@@ -164,7 +170,8 @@ public class HomeScreenFragment extends Fragment {
     }
 
     private void setupCellGrid() {
-        cellList = UserPrefUtil.getUserPrefCellList();
+        Log.d(LOG_TAG, "Setting up cell grid");
+        cellList = UserPrefUtil.getInstance(getActivity()).getUserPrefCellList();
         putAddNewCellInList();
 
         adapter = new GridAdapter(getActivity(), cellList);
@@ -192,6 +199,10 @@ public class HomeScreenFragment extends Fragment {
         kenBurnsView = (KenBurnsView) view.findViewById(R.id.kenBurnsView_Background);
         phoneMode = (kenBurnsView == null);
 
+        //height and width of screen
+        final int MAX_HEIGHT = getResources().getDisplayMetrics().heightPixels;
+        final int MAX_WIDTH = getResources().getDisplayMetrics().widthPixels;
+
         try {
             new AsyncTask<Void, Void, Integer>(){
                 @Override
@@ -205,10 +216,15 @@ public class HomeScreenFragment extends Fragment {
 
                 @Override
                 protected void onPostExecute(Integer resID) {
+
+                    RequestCreator requestCreator = Picasso.with(getActivity())
+                            .load(resID)
+                            .transform(new BitmapTransform(MAX_WIDTH, MAX_HEIGHT));
+
                     if(phoneMode){
-                        Picasso.with(getActivity()).load(resID).into(phoneBackgroundImage);
+                        requestCreator.into(phoneBackgroundImage);
                     } else {
-                        Picasso.with(getActivity()).load(resID).into(kenBurnsView);
+                        requestCreator.into(kenBurnsView);
                     }
 
                 }
@@ -271,7 +287,7 @@ public class HomeScreenFragment extends Fragment {
                     Toast.makeText(getActivity(), "Cannot Delete", Toast.LENGTH_SHORT).show();
                     return true;
                 }
-                UserPrefUtil.deleteUserPref(cellList.get(position));
+                UserPrefUtil.getInstance(getActivity()).deleteUserPref(cellList.get(position));
                 cellList.remove(position);
                 adapter.notifyDataSetChanged();
                 return true;
