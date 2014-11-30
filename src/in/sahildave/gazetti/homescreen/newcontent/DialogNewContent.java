@@ -53,7 +53,7 @@ public class DialogNewContent extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.NO_TITLE_GREEN);
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.dialogNewContent);
     }
 
     @Override

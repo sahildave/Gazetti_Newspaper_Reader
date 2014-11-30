@@ -4,41 +4,44 @@
               android:animateLayoutChanges="true"
               android:gravity="center_horizontal"
               android:orientation="vertical"
-              android:background="@color/green_welcome">
+              android:padding="16dp"
+              android:background="@drawable/dialog_new_content">
 
     <LinearLayout
             android:id="@+id/new_content_top_layer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/welcome_screen_top"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
             android:orientation="vertical">
 
         <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:lines="2"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:lines="1"
+                android:layout_marginBottom="8dp"
                 android:text="We have added new content!"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"/>
 
         <View
-                android:layout_width="240dp"
+                android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="16dp"
                 android:background="@android:color/white"/>
     </LinearLayout>
 
 
     <ExpandableListView
             android:id="@+id/new_content_expandable_list"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:divider="@color/exp_list_group_divider"
             android:childDivider="@color/exp_list_child_divider"
@@ -49,15 +52,15 @@
 
 
     <LinearLayout
-            android:layout_width="240dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="@dimen/welcome_screen_bottom"
-            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:orientation="vertical">
 
         <View
-                android:layout_width="240dp"
+                android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"/>
@@ -65,6 +68,7 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
             <Button

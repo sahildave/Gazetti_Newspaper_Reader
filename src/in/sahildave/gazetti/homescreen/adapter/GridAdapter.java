@@ -46,7 +46,7 @@ public class GridAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.cell_layout, parent, false);
+            convertView = mInflater.inflate(R.layout.homescreen_cell_layout, parent, false);
 
             holder = new ViewHolder();
             holder.cellItemImage = (ImageView) convertView.findViewById(R.id.cellItemImageView);
