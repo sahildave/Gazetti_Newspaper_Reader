@@ -36,7 +36,6 @@ public class DialogNewContent extends DialogFragment {
 
     public interface NewContentCallback {
         void newContentDoneButton();
-        void newContentCloseButton();
     }
 
 
@@ -94,7 +93,6 @@ public class DialogNewContent extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-                activityCallback.newContentCloseButton();
             }
         });
 

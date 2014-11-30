@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +51,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     private PopupWindow popupWindow;
     private GazettiEnums gazettiEnums;
     private int compiledAssetVersion;
-    private int sharedPrefsAssetVersion;
     private SharedPreferences sharedPreferences;
     private HomeScreenFragment homeScreenFragment;
 
@@ -72,6 +70,9 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             return;
         }
 
+        sharedPreferences = getSharedPreferences(Constants.GAZETTI, Context.MODE_PRIVATE);
+        compiledAssetVersion = getResources().getInteger(R.integer.assetVersion);
+
         gazettiEnums = new GazettiEnums();
         NewsCatFileUtil.getInstance(this);
         fragmentManager = getSupportFragmentManager();
@@ -87,34 +88,24 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             //Show welcomeActivity if first time user
             Intent welcomeIntent = new Intent(this, WelcomeScreenViewPagerActivity.class);
             startActivity(welcomeIntent);
-        }
-
-
-        if(isAssetFileNew()) {
-            InputStream is = null;
+        } else if(isAssetFileNew()) {
             try {
-                is = getAssets().open("newData.json");
+                InputStream is = getAssets().open("newData.json");
+                if(is != null){
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    DialogNewContent dialogFragment = new DialogNewContent();
+                    dialogFragment.show(ft, "dialog");
+                    NewsCatFileUtil.getInstance(this).updateNewsCatFileWithNewAssets();
+
+                    is.close();
+                }
             } catch (IOException e) {
+                Crashlytics.logException(e);
                 e.printStackTrace();
             }
-
-            Log.d(LOG_TAG, "Is is null ? "+(is==null));
-
-            if(is != null){
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                DialogNewContent dialogFragment = new DialogNewContent();
-                dialogFragment.show(ft, "dialog");
-                NewsCatFileUtil.getInstance(this).updateNewsCatFileWithNewAssets();
-
-                Log.d(LOG_TAG, "Is homeScreenFragment null ? "+(homeScreenFragment==null));
-            }
         }
-    }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
+        sharedPreferences.edit().putInt(Constants.ASSET_VERSION, compiledAssetVersion).commit();
     }
 
     private void setupCustomActionBar() {
@@ -205,14 +196,8 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     }
 
     public boolean isAssetFileNew(){
-        sharedPreferences = getSharedPreferences(Constants.GAZETTI, Context.MODE_PRIVATE);
-        sharedPrefsAssetVersion = sharedPreferences.getInt(Constants.ASSET_VERSION, 0);
-        compiledAssetVersion = getResources().getInteger(R.integer.assetVersion);
-
-        boolean returnData = compiledAssetVersion > sharedPrefsAssetVersion;
-        Log.d(LOG_TAG, "Is AssetFile New - " + returnData);
-        //sharedPreferences.edit().putInt(Constants.ASSET_VERSION, compiledAssetVersion).commit();
-        return returnData;
+        int sharedPrefsAssetVersion = sharedPreferences.getInt(Constants.ASSET_VERSION, 0);
+        return compiledAssetVersion > sharedPrefsAssetVersion;
     }
 
     @Override
@@ -322,10 +307,5 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         if(homeScreenFragment!=null){
             homeScreenFragment.refreshCellGrid();
         }
-    }
-
-    @Override
-    public void newContentCloseButton() {
-
     }
 }
