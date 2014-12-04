@@ -5,12 +5,11 @@ Gazetti
 An blazing fast Android app to make reading newspaper easy and interesting.
 --------------
 
-minSDK - API 10 (2.3.3)
-
 <a href="https://play.google.com/store/apps/details?id=in.sahildave.gazetti">
   <img alt="Get it on Google Play"
        src="http://developer.android.com/images/brand/en_generic_rgb_wo_60.png" />
 </a>
+
 This app is focused on giving full control to the users for what they want to read, down to the category level. From a Newspapers you'd like to read and select the category. If you don't like *Politics*, don't select it in your feed selector!
 
 The latest news would be displayed in a list and the article would be displayed in a reading mode, free of external links and ads. You can now enjoy reading your newspapers distraction free.
@@ -50,3 +49,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Follow:
+-------------------------------
+
+Sahil Dave <a href="https://twitter.com/sahildave1991" class="twitter-follow-button" data-show-count="false" data-size="large" data-dnt="true">Follow @sahildave1991</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+Gazetti <a href="https://twitter.com/GazettiApp" class="twitter-follow-button" data-show-count="false" data-size="large" data-dnt="true">Follow @GazettiApp</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
