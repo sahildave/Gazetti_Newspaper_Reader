@@ -49,14 +49,14 @@ public class hindu {
             Element bodyElement = doc.body();
 
             // get Title
-            String HinduTitleXPath = ConfigService.getTheHinduHead();
+            String HinduTitleXPath = ConfigService.getInstance().getTheHinduHead();
             Elements titleElements = bodyElement.select(HinduTitleXPath);
             titleText = titleElements.first().text();
 
             // get HeaderImageUrl
             mImageURL = getImageURL(bodyElement);
 
-            String HinduArticleXPath = ConfigService.getTheHinduBody();
+            String HinduArticleXPath = ConfigService.getInstance().getTheHinduBody();
             Elements bodyArticleElements = bodyElement.select(HinduArticleXPath);
             for (Element textArticleElement : bodyArticleElements) {
                 bodyText += textArticleElement.text() + "\n\n";
@@ -83,8 +83,8 @@ public class hindu {
     }
 
     private String getImageURL(Element bodyElement) {
-        Elements mainImageElement = bodyElement.select(ConfigService.getTheHinduImageFirst());
-        Elements carouselElements = bodyElement.select(ConfigService.getTheHinduImageSecond());
+        Elements mainImageElement = bodyElement.select(ConfigService.getInstance().getTheHinduImageFirst());
+        Elements carouselElements = bodyElement.select(ConfigService.getInstance().getTheHinduImageSecond());
 
         if (mainImageElement.size() != 0) {
             mImageURL = mainImageElement.first().attr("src");

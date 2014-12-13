@@ -86,7 +86,9 @@ public class WebViewFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        mWebView.getSettings().setBuiltInZoomControls(false);
         super.onDestroy();
-        mWebView.getSettings().setBuiltInZoomControls(true);
+        mWebView.setVisibility(View.GONE);
+        mWebView.destroy();
     }
 }

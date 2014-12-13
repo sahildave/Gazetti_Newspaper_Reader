@@ -7,7 +7,9 @@ import com.parse.ParseConfig;
  */
 public class ConfigService {
 
-    public ConfigService() {
+    private static ConfigService _instance;
+
+    private ConfigService() {
         if (isConfigAvailable()) {
             ParseConfig config = ParseConfig.getCurrentConfig();
             setConfigVersion(config.getNumber("version"));
@@ -22,19 +24,29 @@ public class ConfigService {
             setFirstPostElementsFromConstants();
         }
     }
+    public static synchronized ConfigService getInstance(){
+        if (_instance == null) {
+            _instance = new ConfigService();
+        }
+        return _instance;
+    }
 
+    public void destroyConfigService(){
+        _instance = null;
+    }
+    
     private boolean isConfigAvailable() {
         return (ParseConfig.getCurrentConfig() != null);
     }
 
-    private static Number configVersion;
+    private Number configVersion;
 
-    public static Number getConfigVersion() {
+    public Number getConfigVersion() {
         return configVersion;
     }
 
-    public static void setConfigVersion(Number configVersion) {
-        ConfigService.configVersion = configVersion;
+    public void setConfigVersion(Number configVersion) {
+        this.configVersion = configVersion;
     }
 
     /*
@@ -55,41 +67,41 @@ public class ConfigService {
         setTheHinduImageSecond(config.getString("th_image_2"));
     }
 
-    private static String theHinduBody;
-    private static String theHinduHead;
-    private static String theHinduImageFirst;
-    private static String theHinduImageSecond;
+    private String theHinduBody;
+    private String theHinduHead;
+    private String theHinduImageFirst;
+    private String theHinduImageSecond;
 
-    public static String getTheHinduBody() {
+    public String getTheHinduBody() {
         return theHinduBody;
     }
 
-    public static void setTheHinduBody(String theHinduBody) {
-        ConfigService.theHinduBody = theHinduBody;
+    public void setTheHinduBody(String theHinduBody) {
+        this.theHinduBody = theHinduBody;
     }
 
-    public static String getTheHinduHead() {
+    public String getTheHinduHead() {
         return theHinduHead;
     }
 
-    public static void setTheHinduHead(String theHinduHead) {
-        ConfigService.theHinduHead = theHinduHead;
+    public void setTheHinduHead(String theHinduHead) {
+        this.theHinduHead = theHinduHead;
     }
 
-    public static String getTheHinduImageFirst() {
+    public String getTheHinduImageFirst() {
         return theHinduImageFirst;
     }
 
-    public static void setTheHinduImageFirst(String theHinduImageFirst) {
-        ConfigService.theHinduImageFirst = theHinduImageFirst;
+    public void setTheHinduImageFirst(String theHinduImageFirst) {
+        this.theHinduImageFirst = theHinduImageFirst;
     }
 
-    public static String getTheHinduImageSecond() {
+    public String getTheHinduImageSecond() {
         return theHinduImageSecond;
     }
 
-    public static void setTheHinduImageSecond(String theHinduImageSecond) {
-        ConfigService.theHinduImageSecond = theHinduImageSecond;
+    public void setTheHinduImageSecond(String theHinduImageSecond) {
+        this.theHinduImageSecond = theHinduImageSecond;
     }
 
      /*
@@ -110,41 +122,41 @@ public class ConfigService {
         setTOIImageSecond(config.getString("toi_image_2"));
     }
 
-    private static String toiBody;
-    private static String toiHead;
-    private static String toiImageFirst;
-    private static String toiImageSecond;
+    private String toiBody;
+    private String toiHead;
+    private String toiImageFirst;
+    private String toiImageSecond;
 
-    public static String getTOIBody() {
+    public String getTOIBody() {
         return toiBody;
     }
 
-    public static void setTOIBody(String toiBody) {
-        ConfigService.toiBody = toiBody;
+    public void setTOIBody(String toiBody) {
+        this.toiBody = toiBody;
     }
 
-    public static String getTOIHead() {
+    public String getTOIHead() {
         return toiHead;
     }
 
-    public static void setTOIHead(String toiHead) {
-        ConfigService.toiHead = toiHead;
+    public void setTOIHead(String toiHead) {
+        this.toiHead = toiHead;
     }
 
-    public static String getTOIImageFirst() {
+    public String getTOIImageFirst() {
         return toiImageFirst;
     }
 
-    public static void setTOIImageFirst(String toiImageFirst) {
-        ConfigService.toiImageFirst = toiImageFirst;
+    public void setTOIImageFirst(String toiImageFirst) {
+        this.toiImageFirst = toiImageFirst;
     }
 
-    public static String getTOIImageSecond() {
+    public String getTOIImageSecond() {
         return toiImageSecond;
     }
 
-    public static void setTOIImageSecond(String toiImageSecond) {
-        ConfigService.toiImageSecond = toiImageSecond;
+    public void setTOIImageSecond(String toiImageSecond) {
+        this.toiImageSecond = toiImageSecond;
     }
     
      /*
@@ -171,59 +183,59 @@ public class ConfigService {
         setIndianExpressBusinessImage(config.getString("tie_business_image"));
     }
 
-    private static String tieBody;
-    private static String tieHead;
-    private static String tieImage;
-    private static String tieBusinessBody;
-    private static String tieBusinessHead;
-    private static String tieBusinessImage;
+    private String tieBody;
+    private String tieHead;
+    private String tieImage;
+    private String tieBusinessBody;
+    private String tieBusinessHead;
+    private String tieBusinessImage;
 
-    public static String getIndianExpressBody() {
+    public String getIndianExpressBody() {
         return tieBody;
     }
 
-    public static void setIndianExpressBody(String tieBody) {
-        ConfigService.tieBody = tieBody;
+    public void setIndianExpressBody(String tieBody) {
+        this.tieBody = tieBody;
     }
 
-    public static String getIndianExpressHead() {
+    public String getIndianExpressHead() {
         return tieHead;
     }
 
-    public static void setIndianExpressHead(String tieHead) {
-        ConfigService.tieHead = tieHead;
+    public void setIndianExpressHead(String tieHead) {
+        this.tieHead = tieHead;
     }
 
-    public static String getIndianExpressImage() {
+    public String getIndianExpressImage() {
         return tieImage;
     }
 
-    public static void setIndianExpressImage(String tieImage) {
-        ConfigService.tieImage = tieImage;
+    public void setIndianExpressImage(String tieImage) {
+        this.tieImage = tieImage;
     }
 
-    public static String getIndianExpressBusinessImage() {
+    public String getIndianExpressBusinessImage() {
         return tieBusinessImage;
     }
 
-    public static void setIndianExpressBusinessImage(String tieBusinessImage) {
-        ConfigService.tieBusinessImage = tieBusinessImage;
+    public void setIndianExpressBusinessImage(String tieBusinessImage) {
+        this.tieBusinessImage = tieBusinessImage;
     }
 
-    public static String getIndianExpressBusinessBody() {
+    public String getIndianExpressBusinessBody() {
         return tieBusinessBody;
     }
 
-    public static void setIndianExpressBusinessBody(String tieBusinessBody) {
-        ConfigService.tieBusinessBody = tieBusinessBody;
+    public void setIndianExpressBusinessBody(String tieBusinessBody) {
+        this.tieBusinessBody = tieBusinessBody;
     }
 
-    public static String getIndianExpressBusinessHead() {
+    public String getIndianExpressBusinessHead() {
         return tieBusinessHead;
     }
 
-    public static void setIndianExpressBusinessHead(String tieBusinessHead) {
-        ConfigService.tieBusinessHead = tieBusinessHead;
+    public void setIndianExpressBusinessHead(String tieBusinessHead) {
+        this.tieBusinessHead = tieBusinessHead;
     }
 
     /*
@@ -242,31 +254,31 @@ public class ConfigService {
         setFirstPostImage(config.getString("fp_image"));
     }
 
-    private static String fpBody;
-    private static String fpHead;
-    private static String fpImage;
+    private String fpBody;
+    private String fpHead;
+    private String fpImage;
 
-    public static String getFirstPostBody() {
+    public String getFirstPostBody() {
         return fpBody;
     }
 
-    public static void setFirstPostBody(String fpBody) {
-        ConfigService.fpBody = fpBody;
+    public void setFirstPostBody(String fpBody) {
+        this.fpBody = fpBody;
     }
 
-    public static String getFirstPostHead() {
+    public String getFirstPostHead() {
         return fpHead;
     }
 
-    public static void setFirstPostHead(String fpHead) {
-        ConfigService.fpHead = fpHead;
+    public void setFirstPostHead(String fpHead) {
+        this.fpHead = fpHead;
     }
 
-    public static String getFirstPostImage() {
+    public String getFirstPostImage() {
         return fpImage;
     }
 
-    public static void setFirstPostImage(String fpImage) {
-        ConfigService.fpImage = fpImage;
+    public void setFirstPostImage(String fpImage) {
+        this.fpImage = fpImage;
     }
 }

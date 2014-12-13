@@ -48,13 +48,13 @@ public class indianExpressBusiness {
             Element bodyElement = doc.body();
 
             // get page title
-            Elements titleElements = bodyElement.select(ConfigService.getIndianExpressBusinessHead());
+            Elements titleElements = bodyElement.select(ConfigService.getInstance().getIndianExpressBusinessHead());
             titleText = titleElements.first().text();
 
             // get HeaderImageUrl
             mImageURL = getImageURL(bodyElement);
 
-            String TIEArticleXPath = ConfigService.getIndianExpressBusinessBody();
+            String TIEArticleXPath = ConfigService.getInstance().getIndianExpressBusinessBody();
             Elements articleElements = doc.select(TIEArticleXPath);
 
             for(Element el: articleElements){
@@ -86,7 +86,7 @@ public class indianExpressBusiness {
 
     private String getImageURL(Element bodyElement) {
 
-        Elements mainImageElement = bodyElement.select(ConfigService.getIndianExpressBusinessImage());
+        Elements mainImageElement = bodyElement.select(ConfigService.getInstance().getIndianExpressBusinessImage());
         if (mainImageElement.size() != 0) {
             mImageURL = mainImageElement.first().attr("src");
         }

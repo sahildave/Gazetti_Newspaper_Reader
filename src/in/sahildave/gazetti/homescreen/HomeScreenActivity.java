@@ -27,12 +27,9 @@ import in.sahildave.gazetti.homescreen.adapter.EditCellDialogFragment.EditCellDi
 import in.sahildave.gazetti.homescreen.newcontent.DialogNewContent;
 import in.sahildave.gazetti.homescreen.newcontent.DialogNewContent.NewContentCallback;
 import in.sahildave.gazetti.preference.SettingsActivity;
-import in.sahildave.gazetti.util.Constants;
-import in.sahildave.gazetti.util.GazettiEnums;
+import in.sahildave.gazetti.util.*;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
-import in.sahildave.gazetti.util.NewsCatFileUtil;
-import in.sahildave.gazetti.util.UserPrefUtil;
 import in.sahildave.gazetti.welcomescreen.WelcomeScreenViewPagerActivity;
 
 import java.io.IOException;
@@ -299,6 +296,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     public void onDestroy() {
         NewsCatFileUtil.getInstance(this).destroyUtil();
         UserPrefUtil.getInstance(this).destroyUtil();
+        ConfigService.getInstance().destroyConfigService();
         super.onDestroy();
     }
 

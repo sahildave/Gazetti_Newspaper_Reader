@@ -14,18 +14,18 @@ public class StarterApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-       Crashlytics.log(Log.INFO, StarterApplication.class.getName(), "Starting Application - " + System.currentTimeMillis());
 
         Parse.initialize(this, Constants.PARSE_APP_ID, Constants.PARSE_CLIENT_KEY);
         Parse.enableLocalDatastore(this);
 
         Crashlytics.start(this);
-//        Crashlytics.getInstance().setDebugMode(true);
+        Crashlytics.getInstance().setDebugMode(false);
 
+        Crashlytics.log(Log.INFO, StarterApplication.class.getName(), "Starting Application - " + System.currentTimeMillis());
         ParseConfig.getInBackground(new ConfigCallback() {
             @Override
             public void done(ParseConfig config, ParseException e) {
-                new ConfigService();
+                ConfigService.getInstance();
             }
         });
     }

@@ -46,17 +46,18 @@ public class toi {
             doc = connection.get();
 
             // get Title
-            String ToiTitleXPath = ConfigService.getTOIHead();
+            String ToiTitleXPath = ConfigService.getInstance().getTOIHead();
             titleText = doc.select(ToiTitleXPath).text();
 
             // get HeaderImageUrl
             mImageURL = getImageURL(doc);
 
-            String ToiArticleXPath = ConfigService.getTOIBody();
+            String ToiArticleXPath = ConfigService.getInstance().getTOIBody();
             Element bodyArticleElements = doc.select(ToiArticleXPath).first();
             String temp = bodyArticleElements.html().replace("<br />", "$$$");
+
             Document bodyNewLine = Jsoup.parse(temp);
-            bodyText = bodyNewLine.body().text().replace("$$$", "\n");
+            bodyText = bodyNewLine.text().replace("$$$", "\n");
 
             result[0] = titleText;
             result[1] = mImageURL;
@@ -80,8 +81,8 @@ public class toi {
 
     private String getImageURL(Element doc) {
 
-        Elements mainImageElement = doc.select(ConfigService.getTOIImageFirst());
-        Elements carouselElements = doc.select(ConfigService.getTOIImageSecond());
+        Elements mainImageElement = doc.select(ConfigService.getInstance().getTOIImageFirst());
+        Elements carouselElements = doc.select(ConfigService.getInstance().getTOIImageSecond());
 
         if (mainImageElement.size() != 0) {
             mImageURL = mainImageElement.first().attr("src");

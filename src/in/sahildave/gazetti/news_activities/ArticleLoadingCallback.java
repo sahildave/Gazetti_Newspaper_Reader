@@ -115,7 +115,6 @@ public class ArticleLoadingCallback {
             mTitleTextView = (TextView) headerStub.findViewById(R.id.article_title);
             mTitleTextView.setText(titleText);
             detailViewProgress.progressiveStop();
-            detailViewProgress.setVisibility(View.GONE);
         } else {
             mTitleTextView = (TextView) headerStub.findViewById(R.id.article_header_title);
             mTitleTextView.setText(titleText);
@@ -193,8 +192,6 @@ public class ArticleLoadingCallback {
                             });
 
                     detailViewProgress.progressiveStop();
-                    detailViewProgress.setVisibility(View.GONE);
-
                 }
 
                 @Override

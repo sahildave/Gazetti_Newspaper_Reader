@@ -47,14 +47,14 @@ public class firstPost {
             Element bodyElement = doc.body();
 
             // get Title
-            String FirstPostTitleXPath = ConfigService.getFirstPostHead();
+            String FirstPostTitleXPath = ConfigService.getInstance().getFirstPostHead();
             Elements titleElements = bodyElement.select(FirstPostTitleXPath);
             titleText = titleElements.first().text();
 
             // get HeaderImageUrl
             mImageURL = getImageURL(bodyElement);
 
-            String FirstPostArticleXPath = ConfigService.getFirstPostBody();
+            String FirstPostArticleXPath = ConfigService.getInstance().getFirstPostBody();
             Elements articleElements = doc.select(FirstPostArticleXPath);
 
             for(Element el: articleElements){
@@ -85,7 +85,7 @@ public class firstPost {
     }
 
     private String getImageURL(Element bodyElement) {
-        Elements mainImageElement = bodyElement.select(ConfigService.getFirstPostImage());
+        Elements mainImageElement = bodyElement.select(ConfigService.getInstance().getFirstPostImage());
 
         if (mainImageElement.size() != 0) {
             mImageURL = mainImageElement.get(1).attr("src");
