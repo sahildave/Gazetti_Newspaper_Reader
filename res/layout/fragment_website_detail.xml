@@ -86,7 +86,7 @@
                         android:text="READ IT\nLATER"/>
             </RelativeLayout>
 
-            <in.sahildave.gazetti.widgets.TextViewEx
+            <TextView
                     android:id="@+id/article_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -154,7 +154,6 @@
             android:layout_width="match_parent"
             android:layout_height="6dp"
             android:indeterminate="true"
-            android:visibility="gone"
             app:spb_color="#33b5e5"
             app:spb_interpolator="spb_interpolator_acceleratedecelerate"
             app:spb_mirror_mode="false"

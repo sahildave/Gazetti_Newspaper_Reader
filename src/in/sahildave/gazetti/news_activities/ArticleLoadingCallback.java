@@ -20,7 +20,6 @@ import com.squareup.picasso.RequestCreator;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import in.sahildave.gazetti.R;
 import in.sahildave.gazetti.util.BitmapTransform;
-import in.sahildave.gazetti.widgets.TextViewEx;
 
 /**
  * Created by sahil on 4/10/14.
@@ -45,7 +44,7 @@ public class ArticleLoadingCallback {
     TextView mArticlePubDateView;
 
     // Body
-    TextViewEx mArticleTextView;
+    TextView mArticleTextView;
     String bodyText = "";
 
     // Footer
@@ -83,7 +82,7 @@ public class ArticleLoadingCallback {
         this.rootView = rootView;
 
         // initialize article views
-        mArticleTextView = (TextViewEx) rootView.findViewById(R.id.article_body);
+        mArticleTextView = (TextView) rootView.findViewById(R.id.article_body);
         mArticlePubDateView = (TextView) rootView.findViewById(R.id.pubDateView);
         mSubtitleLayout = (RelativeLayout) rootView.findViewById(R.id.subtitleLayout);
         mScrollToReadLayout = (LinearLayout) rootView.findViewById(R.id.scrollToReadLayout);
@@ -91,7 +90,6 @@ public class ArticleLoadingCallback {
 
         // Progress Bar
         detailViewProgress = (SmoothProgressBar) rootView.findViewById(R.id.detailViewProgressBar);
-        detailViewProgress.setVisibility(View.VISIBLE);
         detailViewProgress.progressiveStart();
     }
 
@@ -109,7 +107,7 @@ public class ArticleLoadingCallback {
         mArticleFooter.setVisibility(View.VISIBLE);
         mArticlePubDateView.setText(mArticlePubDate);
         mArticleTextView.setVisibility(View.VISIBLE);
-        mArticleTextView.setText(bodyText, true);
+        mArticleTextView.setText(bodyText);
 
         if (mImageURL == null) {
             mTitleTextView = (TextView) headerStub.findViewById(R.id.article_title);
