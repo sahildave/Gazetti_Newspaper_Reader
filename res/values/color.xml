@@ -34,4 +34,9 @@
     <color name="green_welcome_dark">#24a043</color>
     <color name="green_welcome_text">#8FC89A</color>
     <color name="green_pressed">#24a043</color>
+
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="half_black">#808080</color>
+    <color name="fab_default">#fafafa</color>
+    <color name="fab_pressed">#f1f1f1</color>
 </resources>

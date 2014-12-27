@@ -71,7 +71,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         compiledAssetVersion = getResources().getInteger(R.integer.assetVersion);
 
         gazettiEnums = new GazettiEnums();
-        NewsCatFileUtil.getInstance(this);
         fragmentManager = getSupportFragmentManager();
         homeScreenFragment = (HomeScreenFragment) fragmentManager.findFragmentByTag("homeScreen");
 

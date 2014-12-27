@@ -9,6 +9,8 @@ import com.parse.ParseConfig;
 import com.parse.ParseException;
 import in.sahildave.gazetti.util.ConfigService;
 import in.sahildave.gazetti.util.Constants;
+import in.sahildave.gazetti.util.NewsCatFileUtil;
+import in.sahildave.gazetti.util.UserPrefUtil;
 
 public class StarterApplication extends Application {
     @Override
@@ -22,6 +24,8 @@ public class StarterApplication extends Application {
         Crashlytics.getInstance().setDebugMode(false);
 
         Crashlytics.log(Log.INFO, StarterApplication.class.getName(), "Starting Application - " + System.currentTimeMillis());
+        NewsCatFileUtil.getInstance(this);
+        UserPrefUtil.getInstance(this);
         ParseConfig.getInBackground(new ConfigCallback() {
             @Override
             public void done(ParseConfig config, ParseException e) {
