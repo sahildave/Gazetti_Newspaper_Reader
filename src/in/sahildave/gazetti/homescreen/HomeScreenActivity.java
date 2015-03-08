@@ -13,8 +13,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import com.crashlytics.android.Crashlytics;
@@ -26,7 +28,7 @@ import in.sahildave.gazetti.homescreen.adapter.AddCellDialogFragment.AddCellDial
 import in.sahildave.gazetti.homescreen.adapter.EditCellDialogFragment.EditCellDialogListener;
 import in.sahildave.gazetti.homescreen.newcontent.DialogNewContent;
 import in.sahildave.gazetti.homescreen.newcontent.DialogNewContent.NewContentCallback;
-import in.sahildave.gazetti.preference.SettingsActivity;
+import in.sahildave.gazetti.preference.FeedSelectSettingsActivity;
 import in.sahildave.gazetti.util.*;
 import in.sahildave.gazetti.util.GazettiEnums.Category;
 import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
@@ -41,11 +43,12 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         AddCellDialogListener, EditCellDialogListener, NewContentCallback {
 
     private static final String LOG_TAG = HomeScreenActivity.class.getName();
+    private static final int ENTRY_ANIMATION_LOGO = 750;
+    private static final int ENTRY_ANIMATION_TITLE = 1000;
 
     private FragmentManager fragmentManager;
     private List<CellModel> cellList;
     private GridAdapter adapter;
-    private PopupWindow popupWindow;
     private GazettiEnums gazettiEnums;
     private int compiledAssetVersion;
     private SharedPreferences sharedPreferences;
@@ -71,7 +74,6 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         compiledAssetVersion = getResources().getInteger(R.integer.assetVersion);
 
         gazettiEnums = new GazettiEnums();
-        NewsCatFileUtil.getInstance(this);
         fragmentManager = getSupportFragmentManager();
         homeScreenFragment = (HomeScreenFragment) fragmentManager.findFragmentByTag("homeScreen");
 
@@ -102,7 +104,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
             }
         }
 
-        sharedPreferences.edit().putInt(Constants.ASSET_VERSION, compiledAssetVersion).commit();
+        sharedPreferences.edit().putInt(Constants.ASSET_VERSION, compiledAssetVersion).apply();
     }
 
     private void setupCustomActionBar() {
@@ -110,82 +112,37 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
                 ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(actionBarCustomView, params);
+        TextView heading = (TextView) actionBarCustomView.findViewById(R.id.homescreen_action_bar_title);
+        ImageView gazettiLogo = (ImageView) actionBarCustomView.findViewById(R.id.gazetti_logo);
 
-        setUpPopupWindow();
-        ImageButton overflow = (ImageButton) actionBarCustomView.findViewById(R.id.overflow);
-        overflow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.showAsDropDown(v);
-            }
-        });
+        heading.setAnimation(getEntryAnimation(ENTRY_ANIMATION_TITLE));
+        gazettiLogo.setAnimation(getEntryAnimation(ENTRY_ANIMATION_LOGO));
     }
 
-    private void setUpPopupWindow() {
-        popupWindow = new PopupWindow(this);
-        // some other visual settings
-        popupWindow.setFocusable(true);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
-        popupWindow.setWidth(getPixelForDp(120));
-        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+    private AnimationSet getEntryAnimation(int inAnimationDuration) {
+        //In
+        AnimationSet mInAnimationSet = new AnimationSet(false);
 
-        // the drop down list is a list view
-        final ListView popUpDropDownList = new ListView(this);
-        List<String> optionList = new ArrayList<String>();
-        optionList.add(0, "Bookmarks");
-        optionList.add(1, "Edit Feed");
+        TranslateAnimation mSlideInAnimation = new TranslateAnimation(
+                TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
+                TranslateAnimation.RELATIVE_TO_SELF, -1.0f,
+                TranslateAnimation.RELATIVE_TO_SELF, 0.0f);
+        mSlideInAnimation.setFillAfter(true);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, optionList){
+        AlphaAnimation mFadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
+        mFadeInAnimation.setFillAfter(true);
 
+        mInAnimationSet.addAnimation(mSlideInAnimation);
+        mInAnimationSet.addAnimation(mFadeInAnimation);
 
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                // setting the ID and text for every items in the list
-                String text = getItem(position);
+        mInAnimationSet.setDuration(inAnimationDuration);
 
-                // visual settings for the list item
-                TextView listItem = new TextView(HomeScreenActivity.this);
+        return mInAnimationSet;
 
-                listItem.setText(text);
-                listItem.setTag(position);
-                listItem.setTextSize(16);
-                listItem.setPadding(24, 16, 16, 16);
-                listItem.setBackgroundColor(Color.parseColor("#333333"));
-                listItem.setTextColor(Color.parseColor("#FFFFFF"));
-                listItem.setMinHeight(getPixelForDp(36));
-                listItem.setGravity(Gravity.CENTER_VERTICAL);
-
-                return listItem;
-            }
-        };
-
-        popUpDropDownList.setAdapter(arrayAdapter);
-        popupWindow.setContentView(popUpDropDownList);
-
-        popUpDropDownList.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = (String) popUpDropDownList.getAdapter().getItem(position);
-                popupWindow.dismiss();
-
-                if (item.equalsIgnoreCase("Edit Feed")) {
-                    Intent settingIntent = new Intent(HomeScreenActivity.this, SettingsActivity.class);
-                    startActivity(settingIntent);
-                } else if (item.equalsIgnoreCase("Bookmarks")) {
-                    Intent bookmarkIntent = new Intent(HomeScreenActivity.this, BookmarkListActivity.class);
-                    startActivity(bookmarkIntent);
-                }
-            }
-        });
     }
-
-    private int getPixelForDp(int dp) {
-        return (int) (dp * this.getResources().getDisplayMetrics().density);
-    }
-
 
     private boolean isFirstRun() {
         SharedPreferences preferences = getSharedPreferences(Constants.IS_FIRST_RUN, MODE_PRIVATE);
@@ -219,6 +176,18 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
         EditCellDialogFragment editCellDialog = EditCellDialogFragment.newInstance(position, newspaperId, category);
         editCellDialog.show(fragmentManager, "editCell");
 
+    }
+
+    @Override
+    public void openEditFeedSettings() {
+        Intent settingIntent = new Intent(HomeScreenActivity.this, FeedSelectSettingsActivity.class);
+        startActivity(settingIntent);
+    }
+
+    @Override
+    public void startBookmarkActivity() {
+        Intent bookmarkIntent = new Intent(HomeScreenActivity.this, BookmarkListActivity.class);
+        startActivity(bookmarkIntent);
     }
 
     @Override

@@ -1,23 +1,30 @@
 package in.sahildave.gazetti.homescreen;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.*;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
+import android.widget.ImageView;
 import com.crashlytics.android.Crashlytics;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
-import com.nineoldandroids.view.ViewHelper;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import in.sahildave.gazetti.R;
@@ -25,10 +32,12 @@ import in.sahildave.gazetti.homescreen.adapter.CellModel;
 import in.sahildave.gazetti.homescreen.adapter.GridAdapter;
 import in.sahildave.gazetti.news_activities.WebsiteListActivity;
 import in.sahildave.gazetti.util.BitmapTransform;
-import in.sahildave.gazetti.util.GazettiEnums.Category;
-import in.sahildave.gazetti.util.GazettiEnums.Newspapers;
+import in.sahildave.gazetti.util.Constants;
 import in.sahildave.gazetti.util.NewsCatFileUtil;
 import in.sahildave.gazetti.util.UserPrefUtil;
+import in.sahildave.gazetti.widget.fab.PlusFloatingActionButton;
+import in.sahildave.gazetti.widget.fab.FloatingActionButton;
+import in.sahildave.gazetti.widget.fab.FloatingActionsMenu;
 
 import java.util.List;
 import java.util.Random;
@@ -46,6 +55,10 @@ public class HomeScreenFragment extends Fragment {
     private ImageView phoneBackgroundImage;
     private KenBurnsView kenBurnsView;
     private Activity activity;
+    private PlusFloatingActionButton fabAddNew;
+    private FloatingActionButton fabBookmark;
+    private FloatingActionButton fabEditFeeds;
+    private FloatingActionsMenu fabMenu;
 
     public HomeScreenFragment() {
 
@@ -66,6 +79,8 @@ public class HomeScreenFragment extends Fragment {
 
         public void showEditCellDialog(int position, String newspaper, String category, List<CellModel> cellList,
                                        GridAdapter adapter);
+        public void openEditFeedSettings();
+        public void startBookmarkActivity();
     }
 
     @Override
@@ -102,6 +117,10 @@ public class HomeScreenFragment extends Fragment {
         gridview = (GridView) rootView.findViewById(R.id.gridview);
         phoneBackgroundImage = (ImageView) rootView.findViewById(R.id.phone_homescreen_background);
 
+        fabMenu = (FloatingActionsMenu) rootView.findViewById(R.id.floating_action_menu);
+        fabAddNew = (PlusFloatingActionButton) rootView.findViewById(R.id.fab_add_new_cell);
+        fabBookmark = (FloatingActionButton) rootView.findViewById(R.id.fab_bookmark);
+        fabEditFeeds = (FloatingActionButton) rootView.findViewById(R.id.fab_edit_feeds);
         return rootView;
     }
 
@@ -112,67 +131,91 @@ public class HomeScreenFragment extends Fragment {
         setupImageBackground(view);
         setupCellGrid();
         registerForContextMenu(gridview);
+        setupFab();
+
         gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                CellModel clickedObject = cellList.get(position);
 
-                if (position == (cellList.size() - 1)) {
-                    activityCallback.showAddNewCellDialog(cellList, adapter);
-                } else {
-                    CellModel clickedObject = cellList.get(position);
+                String npId = clickedObject.getNewspaperId();
+                String catId = clickedObject.getCategoryId();
+                String npName = clickedObject.getNewspaperTitle();
+                String catName = clickedObject.getCategoryTitle();
 
-                    String npId = clickedObject.getNewspaperId();
-                    String catId = clickedObject.getCategoryId();
-                    String npName = clickedObject.getNewspaperTitle();
-                    String catName = clickedObject.getCategoryTitle();
+                npId = String.valueOf(Integer.parseInt(npId) + 1);
 
-                    npId = String.valueOf(Integer.parseInt(npId) + 1);
-
-                    Intent headlinesIntent = new Intent(getActivity(), WebsiteListActivity.class);
-                    headlinesIntent.putExtra("npId", npId);
-                    headlinesIntent.putExtra("catId", catId);
-                    headlinesIntent.putExtra("npName", npName);
-                    headlinesIntent.putExtra("catName", catName);
-                    startActivity(headlinesIntent);
-                }
-
+                Intent headlinesIntent = new Intent(getActivity(), WebsiteListActivity.class);
+                headlinesIntent.putExtra("npId", npId);
+                headlinesIntent.putExtra("catId", catId);
+                headlinesIntent.putExtra("npName", npName);
+                headlinesIntent.putExtra("catName", catName);
+                startActivity(headlinesIntent);
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         if (phoneMode) {
-
             gridview.setOnScrollListener(new OnScrollListener() {
-
                 @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                }
-
+                public void onScrollStateChanged(AbsListView view, int scrollState) {}
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     if (firstVisibleItem != 0) {
                         return;
                     }
                     if (null != gridview.getChildAt(0)) {
-
                         int actionBarTopMargin = gridview.getChildAt(0).getTop() - actionBarCustomView.getHeight();
-
                         if (actionBarTopMargin < ((-1) * actionBarCustomView.getHeight())) {
                             actionBarTopMargin = ((-1) * actionBarCustomView.getHeight());
                         }
-                        ViewHelper.setTranslationY(actionBarCustomView, actionBarTopMargin);
-
+                        actionBarCustomView.setTranslationY(actionBarTopMargin);
                     }
                 }
-
             });
         }
+    }
 
+    private void setupFab() {
+        fabAddNew.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fabMenu.collapse();
+                activityCallback.showAddNewCellDialog(cellList, adapter);
+            }
+        });
+
+        fabBookmark.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fabMenu.collapse();
+                activityCallback.startBookmarkActivity();
+            }
+        });
+
+        fabEditFeeds.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fabMenu.collapse();
+                activityCallback.openEditFeedSettings();
+            }
+        });
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fabMenu.setVisibility(View.VISIBLE);
+            }
+        }, 500);
     }
 
     private void setupCellGrid() {
 //        Log.d(LOG_TAG, "Setting up cell grid");
         cellList = UserPrefUtil.getInstance(getActivity()).getUserPrefCellList();
-        putAddNewCellInList();
-
         adapter = new GridAdapter(getActivity(), cellList);
 
         SwingBottomInAnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(adapter);
@@ -180,17 +223,6 @@ public class HomeScreenFragment extends Fragment {
         animAdapterMultiple.setAbsListView(gridview);
 
         gridview.setAdapter(animAdapterMultiple);
-    }
-
-    private void putAddNewCellInList() {
-        if (cellList.size() > 0) {
-            CellModel modelObject = cellList.get(cellList.size() - 1);
-            if (!modelObject.getNewspaperImage().equals("add_new")) {
-                cellList.add(new CellModel(Newspapers.ADD_NEW, Category.ADD_NEW));
-            }
-        } else {
-            cellList.add(new CellModel(Newspapers.ADD_NEW, Category.ADD_NEW));
-        }
     }
 
     private void setupImageBackground(View view) {
@@ -275,17 +307,9 @@ public class HomeScreenFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.edit:
-                if (position == (cellList.size() - 1)) {
-                    Toast.makeText(getActivity(), "Cannot Edit", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
                 activityCallback.showEditCellDialog(position, newspaper, category, cellList, adapter);
                 return true;
             case R.id.delete:
-                if (position == (cellList.size() - 1)) {
-                    Toast.makeText(getActivity(), "Cannot Delete", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
                 UserPrefUtil.getInstance(getActivity()).deleteUserPref(cellList.get(position));
                 cellList.remove(position);
                 adapter.notifyDataSetChanged();

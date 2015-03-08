@@ -1,23 +1,23 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="?attr/actionBarSize"
+              android:layout_height="56dp"
               android:background="@drawable/actionbar_transparent_gradient"
               android:orientation="horizontal">
 
     <ImageView
+            android:id="@+id/gazetti_logo"
             android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="left"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/ic_home"/>
 
     <TextView
             android:id="@+id/homescreen_action_bar_title"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:gravity="center"
             android:singleLine="true"
             android:text="@string/app_name"
@@ -25,14 +25,4 @@
             android:textColor="@android:color/white"
             android:textStyle="bold"/>
 
-    <ImageButton
-            android:id="@+id/overflow"
-            android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="right"
-            android:background="?attr/selectableItemBackground"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:src="@drawable/ic_overflow"/>
-
-</LinearLayout>
+</FrameLayout>
