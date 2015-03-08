@@ -1,10 +1,13 @@
 package in.sahildave.gazetti.homescreen;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -29,6 +32,7 @@ import in.sahildave.gazetti.homescreen.adapter.CellModel;
 import in.sahildave.gazetti.homescreen.adapter.GridAdapter;
 import in.sahildave.gazetti.news_activities.WebsiteListActivity;
 import in.sahildave.gazetti.util.BitmapTransform;
+import in.sahildave.gazetti.util.Constants;
 import in.sahildave.gazetti.util.NewsCatFileUtil;
 import in.sahildave.gazetti.util.UserPrefUtil;
 import in.sahildave.gazetti.widget.fab.PlusFloatingActionButton;
@@ -148,24 +152,23 @@ public class HomeScreenFragment extends Fragment {
                 startActivity(headlinesIntent);
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         if (phoneMode) {
-
             gridview.setOnScrollListener(new OnScrollListener() {
-
                 @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                }
-
+                public void onScrollStateChanged(AbsListView view, int scrollState) {}
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     if (firstVisibleItem != 0) {
                         return;
                     }
                     if (null != gridview.getChildAt(0)) {
-
                         int actionBarTopMargin = gridview.getChildAt(0).getTop() - actionBarCustomView.getHeight();
-
                         if (actionBarTopMargin < ((-1) * actionBarCustomView.getHeight())) {
                             actionBarTopMargin = ((-1) * actionBarCustomView.getHeight());
                         }
@@ -174,7 +177,6 @@ public class HomeScreenFragment extends Fragment {
                 }
             });
         }
-
     }
 
     private void setupFab() {

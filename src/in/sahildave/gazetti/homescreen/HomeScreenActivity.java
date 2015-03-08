@@ -49,12 +49,10 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
     private FragmentManager fragmentManager;
     private List<CellModel> cellList;
     private GridAdapter adapter;
-    private PopupWindow popupWindow;
     private GazettiEnums gazettiEnums;
     private int compiledAssetVersion;
     private SharedPreferences sharedPreferences;
     private HomeScreenFragment homeScreenFragment;
-    private AnimationSet mInAnimationSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +123,7 @@ public class HomeScreenActivity extends ActionBarActivity implements HomeScreenF
 
     private AnimationSet getEntryAnimation(int inAnimationDuration) {
         //In
-        mInAnimationSet = new AnimationSet(false);
+        AnimationSet mInAnimationSet = new AnimationSet(false);
 
         TranslateAnimation mSlideInAnimation = new TranslateAnimation(
                 TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
