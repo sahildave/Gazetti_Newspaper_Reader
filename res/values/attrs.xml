@@ -10,7 +10,7 @@
         </attr>
         <attr name="fab_title" format="string"/>
     </declare-styleable>
-    <declare-styleable name="AddFloatingActionButton">
+    <declare-styleable name="PlusFloatingActionButton">
         <attr name="fab_plusIconColor" format="color"/>
     </declare-styleable>
     <declare-styleable name="FloatingActionsMenu">

@@ -15,7 +15,7 @@ import in.sahildave.gazetti.R;
 
 public class SettingsActivity extends PreferenceActivity {
 
-    int ActionBarColorId = -1;
+    int actionBarColorId = -1;
     private String app_ver;
 
     @Override
@@ -36,13 +36,13 @@ public class SettingsActivity extends PreferenceActivity {
 
         setupSimplePreferencesScreen();
 
-        ActionBarColorId = getIntent().getIntExtra("ActionBarColor", -1);
+        actionBarColorId = getIntent().getIntExtra("ActionBarColor", -1);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
 
-            if (ActionBarColorId != -1) {
+            if (actionBarColorId != -1) {
                 getActionBar().setDisplayShowTitleEnabled(false);
-                getActionBar().setBackgroundDrawable(new ColorDrawable(ActionBarColorId));
+                getActionBar().setBackgroundDrawable(new ColorDrawable(actionBarColorId));
                 getActionBar().setDisplayShowTitleEnabled(true);
             } else {
                 getActionBar().setDisplayShowTitleEnabled(false);
@@ -56,12 +56,7 @@ public class SettingsActivity extends PreferenceActivity {
         Preference feedSelectPref = (Preference) findPreference("feedSelectPref");
         feedSelectPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-
-                Intent feedIntent = new Intent(SettingsActivity.this, FeedSelectSettingsActivity.class);
-                if (ActionBarColorId != -1) {
-                    feedIntent.putExtra("ActionBarColor", ActionBarColorId);
-                }
-                startActivity(feedIntent);
+                startFeedSelector();
                 return true;
             }
         });
@@ -73,27 +68,21 @@ public class SettingsActivity extends PreferenceActivity {
             public boolean onPreferenceClick(Preference preference) {
 
                 Intent licenseIntent = new Intent(SettingsActivity.this, LicensesActivity.class);
-                if (ActionBarColorId != -1) {
-                    licenseIntent.putExtra("ActionBarColor", ActionBarColorId);
+                if (actionBarColorId != -1) {
+                    licenseIntent.putExtra("ActionBarColor", actionBarColorId);
                 }
                 startActivity(licenseIntent);
                 return true;
             }
         });
+    }
 
-//		// About Me
-//		Preference aboutPref = (Preference) findPreference("aboutPref");
-//		aboutPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-//			public boolean onPreferenceClick(Preference preference) {
-//
-//				Intent aboutMeIntent = new Intent(SettingsActivity.this, AboutMeActivity.class);
-//				if (ActionBarColorId != -1) {
-//					aboutMeIntent.putExtra("ActionBarColor", ActionBarColorId);
-//				}
-//				startActivity(aboutMeIntent);
-//				return false;
-//			}
-//		});
+    private void startFeedSelector() {
+        Intent feedIntent = new Intent(this, FeedSelectSettingsActivity.class);
+        if (actionBarColorId != -1) {
+            feedIntent.putExtra("ActionBarColor", actionBarColorId);
+        }
+        startActivity(feedIntent);
     }
 
     @Override
