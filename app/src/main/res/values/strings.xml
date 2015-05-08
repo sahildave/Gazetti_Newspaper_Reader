@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Gazetti</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_app">Gazetti</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="edit_cell_dialog_ok">OK</string>
+    <string name="add_cell_dialog_add">Add</string>
+    <string name="add_cell_dialog_cancel">Cancel</string>
+
+    <string-array name="newspaper_array">
+        <item>The Hindu</item>
+        <item>The Times of India</item>
+        <item>First Post</item>
+        <item>The Indian Express</item>
+    </string-array>
+    <string-array name="toi_cat">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+        <item>Business</item>
+        <item>Blogs and Editorials</item>
+    </string-array>
+    <string-array name="hindu_cat">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+        <item>Business</item>
+        <item>Blogs and Editorials</item>
+    </string-array>
+    <string-array name="fp_cat">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+        <item>Business</item>
+        <item>Blogs and Editorials</item>
+    </string-array>
+    <string-array name="tie_cat">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+        <item>Business</item>
+        <item>Blogs and Editorials</item>
+    </string-array>
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>National</item>
+        <item>International</item>
+        <item>Sports</item>
+        <item>Science</item>
+        <item>Entertainment</item>
+        <item>Business</item>
+        <item>Blogs and Editorials</item>
+    </string-array>
+
+    <array name="action_bar_colors">
+        <item>@color/blue_nation</item>
+        <item>@color/orange_world</item>
+        <item>@color/green_sports</item>
+        <item>@color/purple_science</item>
+        <item>@color/red_entertainment</item>
+        <item>@color/grey_blue_business</item>
+        <item>@color/brown_opinions</item>
+    </array>
+    <array name="explist_newspaper_images">
+        <item>@drawable/ic_hindu</item>
+        <item>@drawable/ic_toi</item>
+        <item>@drawable/ic_fp</item>
+        <item>@drawable/ic_tie</item>
+    </array>
+
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="title_activity_welcome_screen_view_pager">Welcome</string>
+    <string name="title_activity_licenses">Licenses</string>
+    <string name="swipe">  &#60;  SWIPE LEFT  &#60;  </string>
+
+    <string name="welcome_exp_list_button_enabled">Let\'s Get Started</string>
+    <string name="welcome_exp_list_button_disabled">Select Some Feeds</string>
+    <string-array name="jazzy_effects">
+        <item>Standard</item>
+        <item>Tablet</item>
+        <item>CubeIn</item>
+        <item>CubeOut</item>
+        <item>FlipVertical</item>
+        <item>FlipHorizontal</item>
+        <item>Stack</item>
+        <item>ZoomIn</item>
+        <item>ZoomOut</item>
+        <item>RotateUp</item>
+        <item>RotateDown</item>
+        <item>Accordion</item>
+    </string-array>
+</resources>
