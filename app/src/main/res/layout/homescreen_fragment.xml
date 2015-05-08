@@ -1,0 +1,99 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/in.sahildave.gazetti"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <ImageView
+        android:id="@+id/phone_homescreen_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@android:color/darker_gray"
+        android:scaleType="centerCrop"/>
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#77000000"
+        android:clipToPadding="false"
+        android:columnWidth="@dimen/cell_dimen"
+        android:fadingEdge="none"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:paddingRight="@dimen/phone_homescreen_horizontal"
+        android:paddingTop="?attr/actionBarSize"
+        android:scrollbars="none"
+        android:stretchMode="spacingWidthUniform"
+        android:verticalSpacing="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/photoCreditLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:gravity="bottom|right"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/photoCreditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+    </LinearLayout>
+
+    <in.sahildave.gazetti.widget.fab.FloatingActionsMenu
+        android:id="@+id/floating_action_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp">
+        <!--app:fab_addButtonColorNormal="@color/fab_default"-->
+        <!--app:fab_addButtonColorPressed="@color/fab_pressed"-->
+        <!--app:fab_addButtonPlusIconColor="@color/half_black"-->
+        <!--app:fab_labelStyle="@style/fab_label_style"-->
+
+
+        <in.sahildave.gazetti.widget.fab.PlusFloatingActionButton
+            android:id="@+id/fab_add_new_cell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+            <!--app:fab_plusIconColor="@color/half_black"-->
+            <!--app:fab_colorNormal="@color/fab_default"-->
+            <!--app:fab_colorPressed="@color/fab_pressed"-->
+            <!--app:fab_title="Add New"-->
+            <!--app:fab_size="mini"/>-->
+
+
+        <in.sahildave.gazetti.widget.fab.FloatingActionButton
+            android:id="@+id/fab_bookmark"
+            android:layout_width="56dp"
+            android:layout_height="56dp"/>
+            <!--app:fab_icon="@drawable/ic_bookmark"-->
+            <!--app:fab_colorNormal="@color/fab_default"-->
+            <!--app:fab_title="Bookmarks"-->
+            <!--app:fab_size="mini"-->
+            <!--app:fab_colorPressed="@color/fab_pressed"/>-->
+
+        <in.sahildave.gazetti.widget.fab.FloatingActionButton
+            android:id="@+id/fab_edit_feeds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+            <!--app:fab_icon="@drawable/ic_edit"-->
+            <!--app:fab_colorNormal="@color/fab_default"-->
+            <!--app:fab_title="Edit Feeds"-->
+            <!--app:fab_size="mini"-->
+            <!--app:fab_colorPressed="@color/fab_pressed"/>-->
+    </in.sahildave.gazetti.widget.fab.FloatingActionsMenu>
+
+</FrameLayout>

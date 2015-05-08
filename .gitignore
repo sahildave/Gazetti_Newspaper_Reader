@@ -1,41 +1,3 @@
-*.pydevproject
-.metadata
-.gradle
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
-.loadpath
-.classpath
-
-# Idea Files
-/.idea
-/out
-/*.iml
-/*.eml
-
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
-# CDT-specific
-.cproject
-
-# PDT-specific
-.buildpath
-
-# sbteclipse plugin 
-.target
-
-# TeXlipse plugin
-.texlipse
-	
 # Built application files
 *.apk
 *.ap_
@@ -51,7 +13,11 @@ bin/
 gen/
 
 # Gradle files
+gradlew
+gradlew.*
+gradle.*
 .gradle/
+gradle/
 build/
 
 # Local configuration file (sdk path, etc)
@@ -62,6 +28,24 @@ proguard/
 
 # Log Files
 *.log
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+.idea
+*.iml
+credential.properties
+/captures
 
-#CLOUD CODE FILES
+#Cloud Code Files
+app/cloud/config
 *.js~
+
+#Properties Files
+local.properties
+app/fabric.properties
+app/src/main/crashlytics.properties
+
+app/src/main/res/values/api_key.xml
